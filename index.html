@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revisão Final do 2º Ano EF - Relatório de Sessões</title>
+    <title>Revisão Dinâmica do 2º Ano EF - Gerada pela Gemini</title>
     <!-- Carrega o Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Analytics (GA4) - ADICIONADO -->
+    <!--
+      *** IMPORTANTE: SUBSTITUA 'G-YOUR_GA_MEASUREMENT_ID' pelo seu próprio ID de Medição do Google Analytics ***
+      O ID é necessário para rastrear os acessos e o uso do aplicativo.
+    -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Configuração do GA4. Lembre-se de mudar 'G-YOUR_GA_MEASUREMENT_ID'
+      gtag('config', 'G-YOUR_GA_MEASUREMENT_ID');
+    </script>
+    <!-- Fim Google Analytics -->
+
     <style>
         /* Estilo base com fonte Inter (Para aparência infantil e moderna) */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
@@ -69,14 +86,15 @@
 
     <script type="text/javascript">
         // Variável GLOBAL para a chave da API do Gemini.
-        // Insira sua chave aqui para ativar a análise de habilidades pela IA.
-        // Se a chave for fornecida pelo ambiente, o valor é ajustado automaticamente.
         const GEMINI_API_KEY = typeof __api_key !== 'undefined' ? __api_key : "AIzaSyACVGLQaSiSMmwDz0guErlWnjQjCpv96iY"; 
+        
+        // Define o tamanho fixo da sessão
+        const SESSION_SIZE = 5; 
 
-        // Variável de estado global, redefinida a cada recarregamento da página (conforme solicitado)
+        // Variável de estado global
         let state = {};
 
-        // Variável para armazenar as estatísticas consolidadas (não reseta em nova sessão, mas reseta em recarga de página)
+        // Variável para armazenar as estatísticas consolidadas
         let allTimeStats = {
             math: { name: "Matemática", correct: 0, wrong: 0, total: 0, color: "blue" },
             portuguese: { name: "Português", correct: 0, wrong: 0, total: 0, color: "green" },
@@ -84,55 +102,31 @@
             history: { name: "História", correct: 0, wrong: 0, total: 0, color: "red" },
         };
 
+        // --- Estrutura das Matérias (agora sem o pool estático de atividades) ---
         const subjects = {
             math: {
                 name: "Matemática",
                 icon: "🔢",
                 color: "bg-blue-500",
-                activities: [
-                    // Adicionada a propriedade 'skill' para cada questão
-                    { question: "Quanto é 5 + 3?", answer: "8", options: ["10", "8", "7", "5"], skill: "Adição Simples (Números Inteiros)" },
-                    { question: "Qual número vem antes do 15?", answer: "14", options: ["16", "14", "13", "10"], skill: "Sequência Numérica (Antecessor)" },
-                    { question: "Se você tem 12 maçãs e come 4, quantas restam?", answer: "8", options: ["6", "9", "8", "7"], skill: "Subtração Contextual (Problemas)" },
-                    { question: "Qual é o dobro de 6?", answer: "12", options: ["10", "12", "18", "6"], skill: "Conceito de Dobro (Multiplicação)" },
-                    { question: "Quantos lados tem um quadrado?", answer: "4", options: ["3", "5", "4", "6"], skill: "Geometria Básica (Formas Planas)" },
-                ]
+                topics: "Adição e subtração de 2 dígitos, valor posicional (unidade, dezena), conceito de metade e dobro, geometria (formas básicas, lados), sequência numérica."
             },
             portuguese: {
                 name: "Português",
                 icon: "📖",
                 color: "bg-green-500",
-                activities: [
-                    { question: "Qual palavra está escrita corretamente?", answer: "Cachorro", options: ["Caxorro", "Cachorro", "Kachorro", "Cashorro"], skill: "Ortografia (Dígrafo CH)" },
-                    { question: "O plural de 'casa' é...", answer: "Casas", options: ["Casa", "Casinhas", "Casões", "Casas"], skill: "Flexão de Gênero e Número (Substantivos)" },
-                    { question: "Qual destas é uma vogal?", answer: "O", options: ["B", "C", "D", "O"], skill: "Reconhecimento de Vogais" },
-                    { question: "Complete a frase: 'Eu gosto de ___ pão.'", answer: "Comer", options: ["Beber", "Dormir", "Comer", "Falar"], skill: "Compreensão de Sentido (Verbos)" },
-                    { question: "Qual é a sílaba tônica de 'MESA'?", answer: "ME", options: ["SA", "ME", "MES", "Nenhuma"], skill: "Separação Silábica (Sílaba Tônica)" },
-                ]
+                topics: "Ortografia (vogais, consoantes, dígrafos CH/LH/NH), sinônimos e antônimos, plural de substantivos, artigos definidos, pontuação básica (ponto final, interrogação), ordem alfabética."
             },
             science: {
                 name: "Ciências",
                 icon: "🔬",
                 color: "bg-yellow-500",
-                activities: [
-                    { question: "O que o sol nos fornece?", answer: "Luz e calor", options: ["Água e vento", "Luz e calor", "Sombra e chuva", "Neve e gelo"], skill: "Fontes de Energia (Luz e Calor)" },
-                    { question: "Qual animal rasteja?", answer: "Cobra", options: ["Pássaro", "Cobra", "Cachorro", "Gato"], skill: "Classificação Animal (Locomoção)" },
-                    { question: "O que as plantas usam para fazer comida?", answer: "Luz solar", options: ["Luz artificial", "Escuridão", "Luz solar", "Fogo"], skill: "Ciclo de Vida das Plantas (Fotossíntese)" },
-                    { question: "Qual é o nome do nosso planeta?", answer: "Terra", options: ["Marte", "Vênus", "Terra", "Júpiter"], skill: "Sistema Solar (Planetas)" },
-                    { question: "Qual é a principal fonte de água potável?", answer: "Rios e lagos", options: ["Oceanos", "Rios e lagos", "Piscina", "Refrigerante"], skill: "Recursos Hídricos (Água Potável)" },
-                ]
+                topics: "Seres vivos e não vivos, ciclo da água (evaporação, nuvem), partes das plantas (raiz, folha), fontes de luz e calor (Sol), corpo humano (sentidos, ossos), cuidados com o meio ambiente (reciclagem)."
             },
             history: {
                 name: "História",
                 icon: "🏛️",
                 color: "bg-red-500",
-                activities: [
-                    { question: "Onde as pessoas costumavam escrever antes do papel?", answer: "Pedra e argila", options: ["Celulares", "Computadores", "Pedra e argila", "Plástico"], skill: "Evolução da Escrita (Registros Históricos)" },
-                    { question: "Quem descobriu o Brasil?", answer: "Pedro Álvares Cabral", options: ["Tiradentes", "Dom Pedro I", "Pedro Álvares Cabral", "Santos Dumont"], skill: "História do Brasil (Descobrimento)" },
-                    { question: "O que é 'ontem'?", answer: "O dia que passou", options: ["O dia que passou", "O dia de hoje", "O dia que virá", "A noite"], skill: "Noções Temporais (Passado)" },
-                    { question: "Qual é o nome da sua família de origem?", answer: "Sobrenome", options: ["Nome", "Apelido", "Sobrenome", "Primeiro nome"], skill: "Identidade Pessoal (Sobrenome e Família)" },
-                    { question: "O que comemoramos no dia 7 de Setembro?", answer: "Independência do Brasil", options: ["Natal", "Páscoa", "Independência do Brasil", "Dia das Mães"], skill: "Datas Comemorativas (Independência)" },
-                ]
+                topics: "Noções temporais (ontem, hoje, amanhã), documentos pessoais (certidão), fases da vida (bebê, criança), família e convivência social (regras), datas comemorativas (7 de Setembro), meios de transporte antigos e atuais."
             }
         };
 
@@ -152,7 +146,6 @@
                         await new Promise(resolve => setTimeout(resolve, delay));
                         continue;
                     }
-                    // Para outros erros HTTP, lança erro para sair do loop
                     throw new Error(`Erro HTTP: ${response.status}`); 
                 } catch (error) {
                     if (i === maxRetries - 1) throw error;
@@ -162,22 +155,95 @@
             }
         }
 
+        // --- Geração de Questões Dinâmicas (Chave do novo sistema) ---
+
+        /**
+         * Chama a Gemini API para gerar 5 questões de múltipla escolha para o tema.
+         * @param {string} subjectKey - Chave da matéria (ex: 'math').
+         * @returns {Promise<Array>} - Array de objetos de atividade formatados.
+         */
+        async function generateQuestionsFromGemini(subjectKey) {
+            const subjectData = subjects[subjectKey];
+            const subjectName = subjectData.name;
+            const topicList = subjectData.topics;
+            
+            const systemPrompt = `Você é um gerador de questões acadêmicas para estudantes do 2º ano do Ensino Fundamental. Crie ${SESSION_SIZE} perguntas únicas e inéditas sobre o tema solicitado. Cada pergunta deve ser uma questão de múltipla escolha com 4 opções, sendo 1 correta e 3 incorretas, mas plausíveis. O tom deve ser simples e infantil. Garanta que o output seja um array JSON estrito, sem nenhum texto extra.`;
+            
+            const userQuery = `Gere ${SESSION_SIZE} questões inéditas para alunos do 2º ano do Ensino Fundamental, na matéria de ${subjectName}. Os tópicos para cobrir são: ${topicList}.`;
+            
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                "question": { "type": "STRING", "description": "The question text, suitable for a 2nd-grade student." },
+                                "correct_answer": { "type": "STRING", "description": "The single correct answer for the question." },
+                                "incorrect_options": { "type": "ARRAY", "items": { "type": "STRING" }, "description": "Three plausible but incorrect answer options." },
+                                "skill": { "type": "STRING", "description": "The specific 2nd-grade skill being tested (e.g., 'Adição Simples', 'Ciclo da Água')." },
+                                "rationale": { "type": "STRING", "description": "A curta explicação de por que a resposta está correta, para ser usada no relatório final." }
+                            },
+                            required: ["question", "correct_answer", "incorrect_options", "skill", "rationale"]
+                        }
+                    }
+                }
+            };
+            
+            try {
+                const response = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (jsonText) {
+                    const generatedQuestions = JSON.parse(jsonText);
+                    
+                    // Converte o formato da API para o formato interno do aplicativo
+                    return generatedQuestions.map(q => {
+                        return {
+                            question: q.question,
+                            answer: q.correct_answer, 
+                            options: [q.correct_answer, ...q.incorrect_options], // Combina e embaralha depois no renderActivity
+                            skill: q.skill,
+                            rationale: q.rationale,
+                            isCorrect: null 
+                        };
+                    });
+                } else {
+                    console.error("API response missing JSON content:", result);
+                    throw new Error("A API não retornou o formato de questões esperado.");
+                }
+            } catch (error) {
+                console.error("Erro ao chamar a API Gemini para gerar questões:", error);
+                throw new Error(`Falha ao gerar questões: ${error.message}. Verifique sua chave de API.`);
+            }
+        }
+
         // --- Funções de Estado e Controle ---
 
         /**
-         * Inicializa o estado da sessão (mantendo as estatísticas consolidadas).
+         * Inicializa o estado da sessão.
          */
         function resetApp() {
-            // Mantém allTimeStats, mas reseta o estado da sessão atual
             state = {
-                currentStage: 1, // 1: Seleção de Tema, 2: Transição, 3: Atividade, 4: Feedback, 5: Relatório, 6: Fim de Sessão
+                currentStage: 1, // 1: Seleção de Tema, 2: Transição/Carregamento, 3: Atividade, 4: Feedback, 5: Relatório, 6: Fim de Sessão
                 currentSubject: null,
-                sessionActivities: [], // Atividades para a sessão atual
+                sessionActivities: [], 
                 activityIndex: 0,
-                maxScore: 5, // Número fixo de questões
+                maxScore: SESSION_SIZE, 
                 score: 0,
                 sessionId: generateSessionId(),
-                isLastAnswerCorrect: null // Guarda o resultado da última resposta para o Stage 4
+                isLastAnswerCorrect: null 
             };
             renderApp();
         }
@@ -196,7 +262,6 @@
                 allTimeStats[subjectKey].wrong += wrong;
                 allTimeStats[subjectKey].total += total;
             } else {
-                // Caso o assunto seja novo ou não esteja em allTimeStats
                 allTimeStats[subjectKey] = {
                     name: subjects[subjectKey] ? subjects[subjectKey].name : subjectKey,
                     correct: correct,
@@ -212,20 +277,45 @@
          * Prepara e inicia uma nova sessão de revisão.
          * @param {string} subjectKey - Chave da matéria (ex: 'math').
          */
-        function startSession(subjectKey) {
-            const subjectData = subjects[subjectKey];
-            if (!subjectData) {
-                console.error("Assunto não encontrado:", subjectKey);
+        async function startSession(subjectKey) {
+            state.currentSubject = subjectKey;
+            state.currentStage = 2; // Inicia a transição/carregamento
+            renderApp(); // Renderiza a tela de carregamento
+
+            if (!GEMINI_API_KEY) {
+                state.currentStage = 1; 
+                renderApp();
+                // Exibir alerta na tela inicial ou em um modal personalizado
+                document.getElementById('app').querySelector('.container-box').innerHTML += `
+                    <div class="mt-6 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
+                        <p class="font-bold">🔑 Chave de API Ausente!</p>
+                        <p class="text-sm">Por favor, insira sua chave Gemini API no código-fonte para gerar questões dinamicamente.</p>
+                    </div>
+                `;
                 return;
             }
-            state.currentSubject = subjectKey;
-            
-            // Randomiza a ordem das atividades para maior rejogabilidade
-            state.sessionActivities = [...subjectData.activities].sort(() => 0.5 - Math.random()).slice(0, state.maxScore); 
-            state.activityIndex = 0;
-            state.score = 0;
-            state.currentStage = 2; // Inicia a transição
-            renderApp();
+
+            try {
+                const generatedActivities = await generateQuestionsFromGemini(subjectKey);
+                
+                // 4. Configura o estado da sessão
+                state.sessionActivities = generatedActivities;
+                state.activityIndex = 0;
+                state.score = 0;
+                state.currentStage = 3; // Inicia a atividade
+                renderApp();
+
+            } catch (error) {
+                // Em caso de falha na API, volta para a seleção e mostra o erro
+                state.currentStage = 1;
+                renderApp();
+                 document.getElementById('app').querySelector('.container-box').innerHTML += `
+                    <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
+                        <p class="font-bold">❌ Erro na Geração de Questões!</p>
+                        <p class="text-sm">Detalhes: ${error.message}</p>
+                    </div>
+                `;
+            }
         }
 
         /**
@@ -246,7 +336,7 @@
                  currentActivity.isCorrect = false;
             }
             
-            // Vai para o estágio de feedback
+            // Vai para o estágio de feedback (Stage 4)
             state.currentStage = 4;
             renderApp();
         }
@@ -283,14 +373,13 @@
                 return;
             }
 
-            // Mapeia os resultados da sessão para o prompt
             const sessionResults = state.sessionActivities.map((activity, index) => {
                 const result = activity.isCorrect ? 'ACERTO' : 'ERRO';
-                return `Questão ${index + 1}: Habilidade: "${activity.skill}", Resultado: ${result}`;
+                // Usa a questão e a habilidade para a análise
+                return `Questão ${index + 1}: Pergunta: "${activity.question}", Habilidade: "${activity.skill}", Resultado: ${result}`;
             }).join('; ');
 
-            // Instrução para o Gemini forçar a formatação com quebras de linha para cada habilidade.
-            const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n\\n' para parágrafos vazios ou listas) listando cada habilidade testada com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
+            const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n' ou quebras de parágrafo) listando cada habilidade testada com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
             
             const userQuery = `Analise a seguinte sessão de revisão na matéria de ${subjectName}. A criança tentou ${state.maxScore} questões. Aqui estão os resultados (Questão, Habilidade, Resultado): ${sessionResults}. Gere o relatório e as dicas.`;
             
@@ -318,7 +407,7 @@
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span class="text-gray-700 font-semibold">Analisando habilidades...</span>
+                    <span class="text-gray-700 font-semibold">Analisando habilidades dinamicamente...</span>
                 </div>
             `;
 
@@ -337,11 +426,9 @@
                     const analysis = parsedJson.skill_analysis;
                     const tips = parsedJson.improvement_tips;
 
-                    // Atualiza a UI com o relatório e as dicas
-                    // Uso de 'whitespace-pre-wrap' para respeitar as quebras de linha do Gemini
                     reportContainer.innerHTML = `
                         <div class="mt-6 p-5 bg-gray-50 rounded-lg shadow-inner text-left">
-                            <h3 class="text-2xl font-extrabold mb-3 text-pink-600">🎯 Amostragem de Habilidades</h3>
+                            <h3 class="text-2xl font-extrabold mb-3 text-pink-600">🎯 Amostragem de Habilidades (Análise Gemini)</h3>
                             
                             <pre class="mb-4 text-md text-gray-700 whitespace-pre-wrap">${analysis}</pre>
                             
@@ -358,7 +445,7 @@
                     `;
                 }
             } catch (error) {
-                console.error("Erro ao chamar a API Gemini:", error);
+                console.error("Erro ao chamar a API Gemini para análise:", error);
                  reportContainer.innerHTML = `
                     <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
                         <p class="font-bold">❌ Erro de Conexão ou API:</p>
@@ -375,21 +462,25 @@
          * Renderiza a tela de Seleção de Tema (Stage 1).
          */
         function renderSelection() {
+            
             const subjectCards = Object.keys(subjects).map(key => {
                 const subj = subjects[key];
+
                 return `
                     <div class="subject-card cursor-pointer hover:shadow-xl" onclick="startSession('${key}')">
                         <div class="text-4xl mb-2">${subj.icon}</div>
                         <h3 class="text-xl font-bold text-gray-800">${subj.name}</h3>
-                        <p class="text-sm text-gray-500">5 Questões - Clique para Iniciar</p>
+                        <p class="text-sm text-gray-500">Sessão: ${SESSION_SIZE} Questões.</p>
+                        <p class="text-md font-semibold mt-1 text-pink-600">Conteúdo Gerado na Hora!</p>
+                        <p class="text-xs text-gray-400">Tópicos: ${subj.topics.split(',').slice(0, 3).join(', ')}...</p>
                     </div>
                 `;
             }).join('');
 
             const html = `
                 <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-                    <h1 class="text-3xl font-extrabold mb-4 text-pink-600">Revisão do 2º Ano EF</h1>
-                    <p class="text-gray-600 mb-6">Escolha a área de revisão para começar a aventura de aprendizado!</p>
+                    <h1 class="text-3xl font-extrabold mb-4 text-pink-600">Revisão Dinâmica do 2º Ano EF</h1>
+                    <p class="text-gray-600 mb-6">Escolha o tema. A cada sessão, a Gemini criará ${SESSION_SIZE} questões inéditas para você!</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                         ${subjectCards}
@@ -411,19 +502,22 @@
         }
 
         /**
-         * Renderiza a tela de Transição (Stage 2).
+         * Renderiza a tela de Transição/Carregamento (Stage 2).
          */
         function renderTransition() {
             const subj = subjects[state.currentSubject];
             const html = `
                 <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-                    <h2 class="text-4xl font-extrabold mb-4 text-pink-600 animate-pulse">Preparação para ${subj.name} ${subj.icon}</h2>
-                    <p class="text-xl text-gray-700 mb-8">Vamos começar 5 desafios!</p>
+                    <h2 class="text-4xl font-extrabold mb-4 text-pink-600">Gerando Questões...</h2>
+                    <p class="text-xl text-gray-700 mb-8">A Gemini está criando ${SESSION_SIZE} novos desafios para você em ${subj.name} ${subj.icon}.</p>
                     
-                    <button onclick="state.currentStage = 3; renderApp();" 
-                            class="px-8 py-4 ${subj.color} text-white font-extrabold text-xl rounded-xl shadow-lg theme-button hover:opacity-90 transition duration-150">
-                        COMEÇAR!
-                    </button>
+                    <div class="flex justify-center items-center">
+                        <svg class="animate-spin h-10 w-10 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-lg text-gray-500 mt-4">Pode demorar alguns segundos...</p>
                 </div>
             `;
             document.getElementById('app').innerHTML = html;
@@ -436,15 +530,18 @@
             const currentActivity = state.sessionActivities[state.activityIndex];
             const subj = subjects[state.currentSubject];
 
-            // Embaralha as opções para não ser sempre a mesma ordem
+            // Embaralha as opções para que a resposta correta não seja sempre a primeira
             const shuffledOptions = [...currentActivity.options].sort(() => 0.5 - Math.random());
 
             const optionsHtml = shuffledOptions.map(option => `
-                <button onclick="submitAnswer('${option}')"
+                <button onclick="submitAnswer('${option.replace(/'/g, "\\'")}')"
                         class="w-full py-3 px-4 mb-3 bg-gray-100 text-gray-800 font-semibold rounded-lg border-2 border-gray-300 hover:bg-pink-100 hover:border-pink-500 transition duration-100 text-lg text-left shadow-md">
                     ${option}
                 </button>
             `).join('');
+            
+            // Certifique-se de que a questão também é exibida
+            const questionText = currentActivity.question || "Carregando pergunta...";
 
             const html = `
                 <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-left border-t-8 border-${subj.color.split('-')[1]}-500">
@@ -453,7 +550,8 @@
                         <span class="text-2xl font-extrabold text-pink-600">Questão ${state.activityIndex + 1} / ${state.maxScore}</span>
                     </div>
 
-                    <p class="text-2xl font-bold mb-6 text-gray-900">${currentActivity.question}</p>
+                    <p class="text-2xl font-bold mb-6 text-gray-900">${questionText}</p>
+                    <p class="text-xs text-gray-400 mb-4">Habilidade: ${currentActivity.skill}</p>
 
                     <div class="options-container">
                         ${optionsHtml}
@@ -473,13 +571,20 @@
             const textColor = isCorrect ? "text-blue-800" : "text-red-800";
             const buttonColor = isCorrect ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-600";
             
-            const buttonText = state.activityIndex < state.maxScore ? "Próxima Questão" : "Ver Relatório Final";
+            const currentActivity = state.sessionActivities[state.activityIndex];
+
+            const buttonText = state.activityIndex < state.maxScore - 1 ? "Próxima Questão" : "Ver Relatório Final";
 
             const html = `
                 <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
                     <div class="p-8 rounded-2xl border-4 ${bgColor} ${textColor} animate-bounce" style="animation-duration: 0.5s;">
                         <p class="text-4xl font-extrabold mb-4">${isCorrect ? "✅" : "❌"}</p>
                         <h2 class="text-3xl font-bold">${message}</h2>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg text-left">
+                        <p class="font-bold text-lg text-pink-600">Resposta Correta:</p>
+                        <p class="text-xl text-gray-800">${currentActivity.answer}</p>
                     </div>
 
                     <button onclick="nextQuestion()" 
@@ -496,7 +601,7 @@
          * Renderiza a tela de Relatório Consolidado (Stage 5).
          */
         function renderReport() {
-            const statsEntries = Object.values(allTimeStats).filter(stat => stat.total > 0); // Filtra apenas matérias jogadas
+            const statsEntries = Object.values(allTimeStats).filter(stat => stat.total > 0); 
 
             let reportHtml = '';
             
@@ -558,7 +663,6 @@
             const correctAnswers = state.score;
             const wrongAnswers = totalQuestions - correctAnswers;
             
-            // AGREGAR RESULTADOS ANTES DE MOSTRAR O FIM
             aggregateSessionResults();
 
             let feedbackMessage = "";
@@ -599,7 +703,7 @@
             `;
             document.getElementById('app').innerHTML = html;
             
-            // Inicia a geração do relatório de habilidades e dicas
+            // Chama a análise da Gemini imediatamente após renderizar a tela
             generateSkillReportAndTips();
         }
 
@@ -616,14 +720,14 @@
                     case 3:
                         renderActivity();
                         break;
-                    case 4: // Novo Stage para o Feedback
+                    case 4: 
                         renderFeedback();
                         break;
                     case 5:
-                        renderReport(); // Stage para o Relatório Consolidado
+                        renderReport(); 
                         break;
                     case 6:
-                        renderEnd(); // Stage para o Resumo e Análise de Habilidades
+                        renderEnd(); 
                         break;
                     default:
                         renderSelection();
