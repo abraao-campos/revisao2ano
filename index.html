@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisão Final do 2º Ano EF - Relatório de Sessões</title>
+    <!-- Carrega o Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo base com fonte Inter (Para aparência infantil e moderna) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fce4ec; /* Rosa claro base */
+            transition: background-color 0.5s ease-in-out;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container-box {
+            max-width: 650px;
+            min-height: 400px;
+        }
+
+        .theme-button {
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 0 #d81b60; /* Sombra 3D Rosa */
+            border-radius: 1rem;
+        }
+
+        .theme-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 0 #c2185b;
+        }
+
+        .theme-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 #d81b60;
+        }
+
+        .subject-card {
+            background-color: #ffffff;
+            border: 2px solid #ff4081;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="w-full p-4 md:p-8">
+        <!-- O conteúdo será injetado aqui pelo JavaScript -->
+    </div>
+
+    <script type="text/javascript">
+        // Variável GLOBAL para a chave da API do Gemini.
+        // Insira sua chave aqui para ativar a análise de habilidades pela IA.
+        // Se a chave for fornecida pelo ambiente, o valor é ajustado automaticamente.
+        const GEMINI_API_KEY = typeof __api_key !== 'undefined' ? __api_key : "AIzaSyACVGLQaSiSMmwDz0guErlWnjQjCpv96iY"; 
+
+        // Variável de estado global, redefinida a cada recarregamento da página (conforme solicitado)
+        let state = {};
+
+        // Variável para armazenar as estatísticas consolidadas (não reseta em nova sessão, mas reseta em recarga de página)
+        let allTimeStats = {
+            math: { name: "Matemática", correct: 0, wrong: 0, total: 0, color: "blue" },
+            portuguese: { name: "Português", correct: 0, wrong: 0, total: 0, color: "green" },
+            science: { name: "Ciências", correct: 0, wrong: 0, total: 0, color: "yellow" },
+            history: { name: "História", correct: 0, wrong: 0, total: 0, color: "red" },
+        };
+
+        const subjects = {
+            math: {
+                name: "Matemática",
+                icon: "🔢",
+                color: "bg-blue-500",
+                activities: [
+                    // Adicionada a propriedade 'skill' para cada questão
+                    { question: "Quanto é 5 + 3?", answer: "8", options: ["10", "8", "7", "5"], skill: "Adição Simples (Números Inteiros)" },
+                    { question: "Qual número vem antes do 15?", answer: "14", options: ["16", "14", "13", "10"], skill: "Sequência Numérica (Antecessor)" },
+                    { question: "Se você tem 12 maçãs e come 4, quantas restam?", answer: "8", options: ["6", "9", "8", "7"], skill: "Subtração Contextual (Problemas)" },
+                    { question: "Qual é o dobro de 6?", answer: "12", options: ["10", "12", "18", "6"], skill: "Conceito de Dobro (Multiplicação)" },
+                    { question: "Quantos lados tem um quadrado?", answer: "4", options: ["3", "5", "4", "6"], skill: "Geometria Básica (Formas Planas)" },
+                ]
+            },
+            portuguese: {
+                name: "Português",
+                icon: "📖",
+                color: "bg-green-500",
+                activities: [
+                    { question: "Qual palavra está escrita corretamente?", answer: "Cachorro", options: ["Caxorro", "Cachorro", "Kachorro", "Cashorro"], skill: "Ortografia (Dígrafo CH)" },
+                    { question: "O plural de 'casa' é...", answer: "Casas", options: ["Casa", "Casinhas", "Casões", "Casas"], skill: "Flexão de Gênero e Número (Substantivos)" },
+                    { question: "Qual destas é uma vogal?", answer: "O", options: ["B", "C", "D", "O"], skill: "Reconhecimento de Vogais" },
+                    { question: "Complete a frase: 'Eu gosto de ___ pão.'", answer: "Comer", options: ["Beber", "Dormir", "Comer", "Falar"], skill: "Compreensão de Sentido (Verbos)" },
+                    { question: "Qual é a sílaba tônica de 'MESA'?", answer: "ME", options: ["SA", "ME", "MES", "Nenhuma"], skill: "Separação Silábica (Sílaba Tônica)" },
+                ]
+            },
+            science: {
+                name: "Ciências",
+                icon: "🔬",
+                color: "bg-yellow-500",
+                activities: [
+                    { question: "O que o sol nos fornece?", answer: "Luz e calor", options: ["Água e vento", "Luz e calor", "Sombra e chuva", "Neve e gelo"], skill: "Fontes de Energia (Luz e Calor)" },
+                    { question: "Qual animal rasteja?", answer: "Cobra", options: ["Pássaro", "Cobra", "Cachorro", "Gato"], skill: "Classificação Animal (Locomoção)" },
+                    { question: "O que as plantas usam para fazer comida?", answer: "Luz solar", options: ["Luz artificial", "Escuridão", "Luz solar", "Fogo"], skill: "Ciclo de Vida das Plantas (Fotossíntese)" },
+                    { question: "Qual é o nome do nosso planeta?", answer: "Terra", options: ["Marte", "Vênus", "Terra", "Júpiter"], skill: "Sistema Solar (Planetas)" },
+                    { question: "Qual é a principal fonte de água potável?", answer: "Rios e lagos", options: ["Oceanos", "Rios e lagos", "Piscina", "Refrigerante"], skill: "Recursos Hídricos (Água Potável)" },
+                ]
+            },
+            history: {
+                name: "História",
+                icon: "🏛️",
+                color: "bg-red-500",
+                activities: [
+                    { question: "Onde as pessoas costumavam escrever antes do papel?", answer: "Pedra e argila", options: ["Celulares", "Computadores", "Pedra e argila", "Plástico"], skill: "Evolução da Escrita (Registros Históricos)" },
+                    { question: "Quem descobriu o Brasil?", answer: "Pedro Álvares Cabral", options: ["Tiradentes", "Dom Pedro I", "Pedro Álvares Cabral", "Santos Dumont"], skill: "História do Brasil (Descobrimento)" },
+                    { question: "O que é 'ontem'?", answer: "O dia que passou", options: ["O dia que passou", "O dia de hoje", "O dia que virá", "A noite"], skill: "Noções Temporais (Passado)" },
+                    { question: "Qual é o nome da sua família de origem?", answer: "Sobrenome", options: ["Nome", "Apelido", "Sobrenome", "Primeiro nome"], skill: "Identidade Pessoal (Sobrenome e Família)" },
+                    { question: "O que comemoramos no dia 7 de Setembro?", answer: "Independência do Brasil", options: ["Natal", "Páscoa", "Independência do Brasil", "Dia das Mães"], skill: "Datas Comemorativas (Independência)" },
+                ]
+            }
+        };
+
+        function generateSessionId() {
+            return 'sess-' + Date.now() + Math.random().toString(16).slice(2);
+        }
+
+        // Função de utilidade para o API Call (Exponential Backoff)
+        async function fetchWithRetry(url, options, maxRetries = 5) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) return response;
+                    if (response.status === 401) throw new Error("Chave de API inválida.");
+                    if (response.status === 429) {
+                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    }
+                    // Para outros erros HTTP, lança erro para sair do loop
+                    throw new Error(`Erro HTTP: ${response.status}`); 
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+
+        // --- Funções de Estado e Controle ---
+
+        /**
+         * Inicializa o estado da sessão (mantendo as estatísticas consolidadas).
+         */
+        function resetApp() {
+            // Mantém allTimeStats, mas reseta o estado da sessão atual
+            state = {
+                currentStage: 1, // 1: Seleção de Tema, 2: Transição, 3: Atividade, 4: Feedback, 5: Relatório, 6: Fim de Sessão
+                currentSubject: null,
+                sessionActivities: [], // Atividades para a sessão atual
+                activityIndex: 0,
+                maxScore: 5, // Número fixo de questões
+                score: 0,
+                sessionId: generateSessionId(),
+                isLastAnswerCorrect: null // Guarda o resultado da última resposta para o Stage 4
+            };
+            renderApp();
+        }
+
+        /**
+         * Adiciona os resultados da sessão atual às estatísticas consolidadas.
+         */
+        function aggregateSessionResults() {
+            const subjectKey = state.currentSubject;
+            const correct = state.score;
+            const total = state.maxScore;
+            const wrong = total - correct;
+
+            if (allTimeStats[subjectKey]) {
+                allTimeStats[subjectKey].correct += correct;
+                allTimeStats[subjectKey].wrong += wrong;
+                allTimeStats[subjectKey].total += total;
+            } else {
+                // Caso o assunto seja novo ou não esteja em allTimeStats
+                allTimeStats[subjectKey] = {
+                    name: subjects[subjectKey] ? subjects[subjectKey].name : subjectKey,
+                    correct: correct,
+                    wrong: wrong,
+                    total: total,
+                    color: "gray"
+                };
+            }
+            console.log("Estatísticas consolidadas atualizadas:", allTimeStats);
+        }
+
+        /**
+         * Prepara e inicia uma nova sessão de revisão.
+         * @param {string} subjectKey - Chave da matéria (ex: 'math').
+         */
+        function startSession(subjectKey) {
+            const subjectData = subjects[subjectKey];
+            if (!subjectData) {
+                console.error("Assunto não encontrado:", subjectKey);
+                return;
+            }
+            state.currentSubject = subjectKey;
+            
+            // Randomiza a ordem das atividades para maior rejogabilidade
+            state.sessionActivities = [...subjectData.activities].sort(() => 0.5 - Math.random()).slice(0, state.maxScore); 
+            state.activityIndex = 0;
+            state.score = 0;
+            state.currentStage = 2; // Inicia a transição
+            renderApp();
+        }
+
+        /**
+         * Processa a resposta do usuário e avança para a tela de feedback.
+         * @param {string} selectedOption - A opção escolhida pelo usuário.
+         */
+        function submitAnswer(selectedOption) {
+            const currentActivity = state.sessionActivities[state.activityIndex];
+            
+            // Verifica a resposta
+            const isCorrect = selectedOption === currentActivity.answer;
+            state.isLastAnswerCorrect = isCorrect;
+
+            if (isCorrect) {
+                state.score++;
+                currentActivity.isCorrect = true; 
+            } else {
+                 currentActivity.isCorrect = false;
+            }
+            
+            // Vai para o estágio de feedback
+            state.currentStage = 4;
+            renderApp();
+        }
+        
+        /**
+         * Avança para a próxima questão ou para o fim da sessão. Chamado pelo botão de feedback.
+         */
+        function nextQuestion() {
+            state.activityIndex++;
+            if (state.activityIndex < state.maxScore) {
+                // Se ainda houver atividades, vai para a próxima (Stage 3)
+                state.currentStage = 3; 
+            } else {
+                // Se a sessão terminou, vai para o fim (Stage 6)
+                state.currentStage = 6;
+            }
+            renderApp();
+        }
+
+        /**
+         * Função principal que chama a API do Gemini para análise de habilidades e dicas.
+         */
+        async function generateSkillReportAndTips() {
+            const reportContainer = document.getElementById('skill-report-container');
+            const subjectName = subjects[state.currentSubject].name;
+            
+            if (!GEMINI_API_KEY) {
+                reportContainer.innerHTML = `
+                    <div class="mt-6 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
+                        <p class="font-bold">🔑 Chave de API Ausente!</p>
+                        <p class="text-sm">Insira a chave Gemini API no código para gerar a análise de habilidades e as dicas personalizadas.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Mapeia os resultados da sessão para o prompt
+            const sessionResults = state.sessionActivities.map((activity, index) => {
+                const result = activity.isCorrect ? 'ACERTO' : 'ERRO';
+                return `Questão ${index + 1}: Habilidade: "${activity.skill}", Resultado: ${result}`;
+            }).join('; ');
+
+            // Instrução para o Gemini forçar a formatação com quebras de linha para cada habilidade.
+            const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n\\n' para parágrafos vazios ou listas) listando cada habilidade testada com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
+            
+            const userQuery = `Analise a seguinte sessão de revisão na matéria de ${subjectName}. A criança tentou ${state.maxScore} questões. Aqui estão os resultados (Questão, Habilidade, Resultado): ${sessionResults}. Gere o relatório e as dicas.`;
+            
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "skill_analysis": { "type": "STRING" },
+                            "improvement_tips": { "type": "STRING" }
+                        },
+                        propertyOrdering: ["skill_analysis", "improvement_tips"]
+                    }
+                }
+            };
+
+            reportContainer.innerHTML = `
+                <div class="mt-6 flex items-center justify-center p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="text-gray-700 font-semibold">Analisando habilidades...</span>
+                </div>
+            `;
+
+            try {
+                const response = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (jsonText) {
+                    const parsedJson = JSON.parse(jsonText);
+                    const analysis = parsedJson.skill_analysis;
+                    const tips = parsedJson.improvement_tips;
+
+                    // Atualiza a UI com o relatório e as dicas
+                    // Uso de 'whitespace-pre-wrap' para respeitar as quebras de linha do Gemini
+                    reportContainer.innerHTML = `
+                        <div class="mt-6 p-5 bg-gray-50 rounded-lg shadow-inner text-left">
+                            <h3 class="text-2xl font-extrabold mb-3 text-pink-600">🎯 Amostragem de Habilidades</h3>
+                            
+                            <pre class="mb-4 text-md text-gray-700 whitespace-pre-wrap">${analysis}</pre>
+                            
+                            <h3 class="text-xl font-bold mt-5 mb-2 text-indigo-600">Dicas para Melhoria:</h3>
+                            <p class="text-lg text-gray-800 italic">${tips}</p>
+                        </div>
+                    `;
+                } else {
+                    reportContainer.innerHTML = `
+                        <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
+                            <p class="font-bold">❌ Erro na Geração do Relatório:</p>
+                            <p class="text-sm">A API não retornou o conteúdo esperado. Verifique a chave ou o limite de uso.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Erro ao chamar a API Gemini:", error);
+                 reportContainer.innerHTML = `
+                    <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
+                        <p class="font-bold">❌ Erro de Conexão ou API:</p>
+                        <p class="text-sm">Não foi possível gerar a análise. Detalhes: ${error.message}.</p>
+                    </div>
+                `;
+            }
+        }
+
+
+        // --- Renderização de Telas (Stages) ---
+
+        /**
+         * Renderiza a tela de Seleção de Tema (Stage 1).
+         */
+        function renderSelection() {
+            const subjectCards = Object.keys(subjects).map(key => {
+                const subj = subjects[key];
+                return `
+                    <div class="subject-card cursor-pointer hover:shadow-xl" onclick="startSession('${key}')">
+                        <div class="text-4xl mb-2">${subj.icon}</div>
+                        <h3 class="text-xl font-bold text-gray-800">${subj.name}</h3>
+                        <p class="text-sm text-gray-500">5 Questões - Clique para Iniciar</p>
+                    </div>
+                `;
+            }).join('');
+
+            const html = `
+                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
+                    <h1 class="text-3xl font-extrabold mb-4 text-pink-600">Revisão do 2º Ano EF</h1>
+                    <p class="text-gray-600 mb-6">Escolha a área de revisão para começar a aventura de aprendizado!</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        ${subjectCards}
+                    </div>
+
+                    ${Object.values(allTimeStats).some(stat => stat.total > 0) ? `
+                        <button onclick="state.currentStage = 5; renderApp();" 
+                                class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-bold text-lg rounded-xl shadow-lg theme-button hover:bg-indigo-600 transition duration-150">
+                            📊 Ver Relatório de Sessões Anteriores
+                        </button>
+                    ` : `
+                        <button class="w-full md:w-auto px-6 py-3 bg-gray-400 text-white font-bold text-lg rounded-xl shadow-lg cursor-not-allowed">
+                            📊 Relatório disponível após a 1ª revisão
+                        </button>
+                    `}
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        /**
+         * Renderiza a tela de Transição (Stage 2).
+         */
+        function renderTransition() {
+            const subj = subjects[state.currentSubject];
+            const html = `
+                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
+                    <h2 class="text-4xl font-extrabold mb-4 text-pink-600 animate-pulse">Preparação para ${subj.name} ${subj.icon}</h2>
+                    <p class="text-xl text-gray-700 mb-8">Vamos começar 5 desafios!</p>
+                    
+                    <button onclick="state.currentStage = 3; renderApp();" 
+                            class="px-8 py-4 ${subj.color} text-white font-extrabold text-xl rounded-xl shadow-lg theme-button hover:opacity-90 transition duration-150">
+                        COMEÇAR!
+                    </button>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        /**
+         * Renderiza a tela de Atividade (Questão) (Stage 3).
+         */
+        function renderActivity() {
+            const currentActivity = state.sessionActivities[state.activityIndex];
+            const subj = subjects[state.currentSubject];
+
+            // Embaralha as opções para não ser sempre a mesma ordem
+            const shuffledOptions = [...currentActivity.options].sort(() => 0.5 - Math.random());
+
+            const optionsHtml = shuffledOptions.map(option => `
+                <button onclick="submitAnswer('${option}')"
+                        class="w-full py-3 px-4 mb-3 bg-gray-100 text-gray-800 font-semibold rounded-lg border-2 border-gray-300 hover:bg-pink-100 hover:border-pink-500 transition duration-100 text-lg text-left shadow-md">
+                    ${option}
+                </button>
+            `).join('');
+
+            const html = `
+                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-left border-t-8 border-${subj.color.split('-')[1]}-500">
+                    <div class="mb-4 flex justify-between items-center">
+                        <span class="text-lg font-bold text-gray-600">${subj.icon} ${subj.name}</span>
+                        <span class="text-2xl font-extrabold text-pink-600">Questão ${state.activityIndex + 1} / ${state.maxScore}</span>
+                    </div>
+
+                    <p class="text-2xl font-bold mb-6 text-gray-900">${currentActivity.question}</p>
+
+                    <div class="options-container">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+        
+        /**
+         * Renderiza a tela de Feedback Imediato (Stage 4).
+         */
+        function renderFeedback() {
+            const isCorrect = state.isLastAnswerCorrect;
+            const message = isCorrect ? "Parabéns! Você acertou! 🎉" : "Ops! Você errou. Vamos tentar a próxima! 🤔";
+            const bgColor = isCorrect ? "bg-blue-100 border-blue-500" : "bg-red-100 border-red-500";
+            const textColor = isCorrect ? "text-blue-800" : "text-red-800";
+            const buttonColor = isCorrect ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-600";
+            
+            const buttonText = state.activityIndex < state.maxScore ? "Próxima Questão" : "Ver Relatório Final";
+
+            const html = `
+                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
+                    <div class="p-8 rounded-2xl border-4 ${bgColor} ${textColor} animate-bounce" style="animation-duration: 0.5s;">
+                        <p class="text-4xl font-extrabold mb-4">${isCorrect ? "✅" : "❌"}</p>
+                        <h2 class="text-3xl font-bold">${message}</h2>
+                    </div>
+
+                    <button onclick="nextQuestion()" 
+                            class="mt-8 px-8 py-4 ${buttonColor} text-white font-extrabold text-xl rounded-xl shadow-lg theme-button transition duration-150">
+                        ${buttonText}
+                    </button>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+
+        /**
+         * Renderiza a tela de Relatório Consolidado (Stage 5).
+         */
+        function renderReport() {
+            const statsEntries = Object.values(allTimeStats).filter(stat => stat.total > 0); // Filtra apenas matérias jogadas
+
+            let reportHtml = '';
+            
+            if (statsEntries.length === 0) {
+                reportHtml = `
+                    <p class="text-xl text-gray-500">Nenhum dado de sessão anterior encontrado. Tente completar uma revisão primeiro!</p>
+                `;
+            } else {
+                reportHtml = statsEntries.map(stat => {
+                    const percentageCorrect = stat.total > 0 ? ((stat.correct / stat.total) * 100).toFixed(0) : 0;
+                    const barColor = percentageCorrect >= 70 ? 'bg-green-500' : percentageCorrect >= 50 ? 'bg-yellow-500' : 'bg-red-500';
+
+                    return `
+                        <div class="p-5 bg-white rounded-xl shadow-lg border-l-8 border-${stat.color}-500 transition duration-300 hover:shadow-xl">
+                            <h3 class="text-2xl font-bold mb-2 text-gray-800">${stat.name}</h3>
+                            
+                            <div class="mb-3 text-sm text-gray-600">
+                                <span>Total de Questões: <span class="font-bold">${stat.total}</span></span> |
+                                <span class="text-green-600">Acertos: <span class="font-bold">${stat.correct}</span></span> |
+                                <span class="text-red-600">Erros: <span class="font-bold">${stat.wrong}</span></span>
+                            </div>
+
+                            <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
+                                <div class="h-4 rounded-full ${barColor}" style="width: ${percentageCorrect}%; transition: width 1s ease-out;"></div>
+                                <span class="absolute right-0 top-0 bottom-0 flex items-center pr-3 font-bold text-xs ${percentageCorrect > 50 ? 'text-white' : 'text-gray-800'}">
+                                    ${percentageCorrect}%
+                                </span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Aproveitamento geral.</p>
+                        </div>
+                    `;
+                }).join('');
+
+                reportHtml = `<div class="report-grid">${reportHtml}</div>`;
+            }
+
+            const html = `
+                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
+                    <h2 class="text-4xl font-extrabold mb-2 text-pink-600">📊 Relatório Consolidado</h2>
+                    <p class="text-lg text-gray-700 mb-6">Desempenho acumulado de todas as revisões nesta sessão:</p>
+                    
+                    ${reportHtml}
+
+                    <button onclick="state.currentStage = 1; renderApp();" 
+                            class="mt-8 w-full md:w-auto px-6 py-3 bg-red-500 text-white font-bold text-lg rounded-xl shadow-lg theme-button hover:bg-red-600 transition duration-150">
+                        Voltar ao Menu Principal
+                    </button>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        /**
+         * Renderiza a tela de Fim de Sessão (Stage 6).
+         */
+        function renderEnd() {
+            const subj = subjects[state.currentSubject];
+            const totalQuestions = state.maxScore;
+            const correctAnswers = state.score;
+            const wrongAnswers = totalQuestions - correctAnswers;
+            
+            // AGREGAR RESULTADOS ANTES DE MOSTRAR O FIM
+            aggregateSessionResults();
+
+            let feedbackMessage = "";
+            let emoji = "";
+            if (correctAnswers === totalQuestions) {
+                feedbackMessage = "Incrível! Você acertou todas as questões!";
+                emoji = "⭐";
+            } else if (correctAnswers >= totalQuestions * 0.7) {
+                feedbackMessage = "Muito bem! Excelente trabalho na revisão!";
+                emoji = "😊";
+            } else {
+                feedbackMessage = "Continue praticando! A repetição leva à perfeição.";
+                emoji = "👍";
+            }
+
+            const html = `
+                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center border-t-8 border-${subj.color.split('-')[1]}-500">
+                    <h2 class="text-4xl font-extrabold mb-4 text-pink-600">Revisão Finalizada! ${emoji}</h2>
+                    <p class="text-2xl font-semibold mb-4 text-gray-800">${feedbackMessage}</p>
+                    
+                    <div class="my-6 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-lg font-bold">Resumo da Sessão de ${subj.name}:</p>
+                        <p class="text-xl text-green-600 font-extrabold">Acertos: ${correctAnswers}</p>
+                        <p class="text-xl text-red-600 font-extrabold">Erros: ${wrongAnswers}</p>
+                        <p class="text-md text-gray-500">Total de Questões: ${totalQuestions}</p>
+                    </div>
+
+                    <!-- CONTAINER PARA O RELATÓRIO DE HABILIDADES GERADO PELA API -->
+                    <div id="skill-report-container" class="text-left">
+                        <!-- Conteúdo será injetado pela função generateSkillReportAndTips -->
+                    </div>
+
+                    <button onclick="state.currentStage = 1; renderApp();" 
+                            class="mt-8 px-6 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl shadow-lg theme-button hover:bg-blue-600 transition duration-150">
+                        Começar Nova Revisão (Voltar ao Início)
+                    </button>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+            
+            // Inicia a geração do relatório de habilidades e dicas
+            generateSkillReportAndTips();
+        }
+
+        // --- Controlador Principal (StateMachine) ---
+        function renderApp() {
+            try {
+                switch (state.currentStage) {
+                    case 1:
+                        renderSelection();
+                        break;
+                    case 2:
+                        renderTransition();
+                        break;
+                    case 3:
+                        renderActivity();
+                        break;
+                    case 4: // Novo Stage para o Feedback
+                        renderFeedback();
+                        break;
+                    case 5:
+                        renderReport(); // Stage para o Relatório Consolidado
+                        break;
+                    case 6:
+                        renderEnd(); // Stage para o Resumo e Análise de Habilidades
+                        break;
+                    default:
+                        renderSelection();
+                        break;
+                }
+            } catch (error) {
+                // Tratamento de erro robusto
+                console.error("Erro fatal na aplicação:", error);
+                document.getElementById('app').innerHTML = `
+                    <div class="text-center p-8 bg-red-100 border-2 border-red-500 rounded-xl">
+                        <h2 class="text-2xl text-red-700">Ocorreu um Erro!</h2>
+                        <p class="text-gray-600">Por favor, reinicie a página. Detalhes: ${error.message}</p>
+                        <button onclick="window.location.reload();" 
+                                class="mt-4 px-6 py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg theme-button hover:bg-red-600">
+                            Recarregar
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Inicia a aplicação
+        window.onload = resetApp;
+    </script>
+</body>
+</html>
