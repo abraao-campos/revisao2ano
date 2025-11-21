@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revisão Dinâmica do 2º Ano EF - Gerada pela Gemini</title>
+    <title>Revisão Dinâmica do 2º Ano EF - Qualidade e BNCC</title>
     <!-- Carrega o Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Analytics (GA4) - ADICIONADO -->
+    <!-- Google Analytics (GA4) -->
     <!--
       *** IMPORTANTE: SUBSTITUA 'G-YOUR_GA_MEASUREMENT_ID' pelo seu próprio ID de Medição do Google Analytics ***
       O ID é necessário para rastrear os acessos e o uso do aplicativo.
@@ -101,32 +101,45 @@
             science: { name: "Ciências", correct: 0, wrong: 0, total: 0, color: "yellow" },
             history: { name: "História", correct: 0, wrong: 0, total: 0, color: "red" },
         };
+        
+        // NOVO: Histórico de todas as questões geradas nesta sessão do navegador
+        let questionsHistory = {
+            math: [],
+            portuguese: [],
+            science: [],
+            history: [],
+        };
 
-        // --- Estrutura das Matérias (agora sem o pool estático de atividades) ---
+
+        // --- Estrutura das Matérias ALINHADA À BNCC (2º ANO EF) ---
         const subjects = {
             math: {
                 name: "Matemática",
                 icon: "🔢",
                 color: "bg-blue-500",
-                topics: "Adição e subtração de 2 dígitos, valor posicional (unidade, dezena), conceito de metade e dobro, geometria (formas básicas, lados), sequência numérica."
+                // Habilidades BNCC (Exemplos): EF02MA01, EF02MA05, EF02MA12
+                bncc_focus: "EF02MA01 (ler, escrever e comparar números naturais até 1000), EF02MA05 (construir fatos básicos da adição e subtração), EF02MA06 (resolver problemas de adição e subtração), EF02MA12 (identificar e planificar figuras planas e espaciais), EF02MA15 (comparar capacidade e massa)."
             },
             portuguese: {
                 name: "Português",
                 icon: "📖",
                 color: "bg-green-500",
-                topics: "Ortografia (vogais, consoantes, dígrafos CH/LH/NH), sinônimos e antônimos, plural de substantivos, artigos definidos, pontuação básica (ponto final, interrogação), ordem alfabética."
+                // Habilidades BNCC (Exemplos): EF02LP01, EF02LP07, EF02LP15
+                bncc_focus: "EF02LP01 (ler e escrever palavras com correspondências regulares e irregulares), EF02LP07 (segmentar palavras em sílabas), EF02LP10 (identificar sinônimos e antônimos), EF02LP15 (ler e compreender textos curtos, com autonomia), EF02LP18 (planejar e produzir frases e pequenos textos)."
             },
             science: {
                 name: "Ciências",
                 icon: "🔬",
                 color: "bg-yellow-500",
-                topics: "Seres vivos e não vivos, ciclo da água (evaporação, nuvem), partes das plantas (raiz, folha), fontes de luz e calor (Sol), corpo humano (sentidos, ossos), cuidados com o meio ambiente (reciclagem)."
+                // Habilidades BNCC (Exemplos): EF02CI04, EF02CI05, EF02CI06
+                bncc_focus: "EF02CI04 (descrever características de plantas e animais), EF02CI05 (identificar materiais utilizados em objetos e suas fontes), EF02CI06 (identificar e classificar os cinco sentidos), EF02CI07 (descrever o ciclo da água e a importância para a vida)."
             },
             history: {
                 name: "História",
                 icon: "🏛️",
                 color: "bg-red-500",
-                topics: "Noções temporais (ontem, hoje, amanhã), documentos pessoais (certidão), fases da vida (bebê, criança), família e convivência social (regras), datas comemorativas (7 de Setembro), meios de transporte antigos e atuais."
+                // Habilidades BNCC (Exemplos): EF02HI01, EF02HI02, EF02HI07
+                bncc_focus: "EF02HI01 (reconhecer o papel da família e da escola), EF02HI02 (identificar e descrever práticas e ritmos de vida no presente e passado), EF02HI07 (identificar e utilizar diferentes marcadores do tempo - dia/noite, semana, mês), EF02HI10 (selecionar objetos e documentos pessoais para análise)."
             }
         };
 
@@ -155,21 +168,42 @@
             }
         }
 
-        // --- Geração de Questões Dinâmicas (Chave do novo sistema) ---
+        // --- Geração de Questões Dinâmicas (PROMPT OTIMIZADO PARA BNCC E INEDITISMO) ---
 
         /**
-         * Chama a Gemini API para gerar 5 questões de múltipla escolha para o tema.
+         * Chama a Gemini API para gerar 5 questões de múltipla escolha para o tema, alinhadas à BNCC.
          * @param {string} subjectKey - Chave da matéria (ex: 'math').
          * @returns {Promise<Array>} - Array de objetos de atividade formatados.
          */
         async function generateQuestionsFromGemini(subjectKey) {
             const subjectData = subjects[subjectKey];
             const subjectName = subjectData.name;
-            const topicList = subjectData.topics;
+            const bnccFocus = subjectData.bncc_focus;
             
-            const systemPrompt = `Você é um gerador de questões acadêmicas para estudantes do 2º ano do Ensino Fundamental. Crie ${SESSION_SIZE} perguntas únicas e inéditas sobre o tema solicitado. Cada pergunta deve ser uma questão de múltipla escolha com 4 opções, sendo 1 correta e 3 incorretas, mas plausíveis. O tom deve ser simples e infantil. Garanta que o output seja um array JSON estrito, sem nenhum texto extra.`;
+            // Lógica para inclusão do Histórico
+            const history = questionsHistory[subjectKey];
+            let historyPrompt = "";
+
+            if (history.length > 0) {
+                // Envia as últimas 15 questões para economizar no contexto
+                const recentHistory = history.slice(-15); 
+                const formattedHistory = recentHistory.map((q, index) => 
+                    `[#${index+1}] Habilidade: ${q.skill}, Questão: "${q.question}"`
+                ).join('\n');
+                
+                historyPrompt = `
+
+    --- HISTÓRICO DE QUESTÕES JÁ TRABALHADAS NESTA MATÉRIA (EVITAR REPETIÇÃO) ---
+    Você deve garantir que as novas 5 questões sejam **substancialmente diferentes** das questões listadas abaixo, focando em diversidade de habilidades ou, se a habilidade for repetida, usando um novo cenário/contexto:
+    ${formattedHistory}
+    --- FIM DO HISTÓRICO ---
+                `;
+            }
+
+            // PROMPT MELHORADO PARA INCLUIR EXIGÊNCIA DA BNCC, DIVERSIDADE E INEDITISMO
+            const systemPrompt = `Você é um gerador de questões acadêmicas de alta qualidade para estudantes do 2º ano do Ensino Fundamental. Crie ${SESSION_SIZE} perguntas únicas e **inéditas** sobre o tema solicitado. Cada pergunta deve ser uma questão de múltipla escolha com 4 opções, sendo 1 correta e 3 incorretas, mas plausíveis. O tom deve ser simples e infantil. Garanta que as ${SESSION_SIZE} questões sejam **distintas**, abordando diferentes habilidades e formatos. **É essencial evitar repetição de conceitos ou estruturas de frases semelhantes, especialmente em relação ao histórico fornecido.** O output deve ser um array JSON estrito, sem nenhum texto extra.`;
             
-            const userQuery = `Gere ${SESSION_SIZE} questões inéditas para alunos do 2º ano do Ensino Fundamental, na matéria de ${subjectName}. Os tópicos para cobrir são: ${topicList}.`;
+            const userQuery = `Gere ${SESSION_SIZE} questões inéditas para alunos do 2º ano do Ensino Fundamental, na matéria de ${subjectName}. As questões devem ser variadas e alinhadas estritamente com as seguintes habilidades da BNCC: ${bnccFocus}. Inclua o código da BNCC (ex: EF02MA01) no campo 'skill' de cada questão. ${historyPrompt}`;
             
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
             
@@ -183,11 +217,11 @@
                         items: {
                             type: "OBJECT",
                             properties: {
-                                "question": { "type": "STRING", "description": "The question text, suitable for a 2nd-grade student." },
-                                "correct_answer": { "type": "STRING", "description": "The single correct answer for the question." },
-                                "incorrect_options": { "type": "ARRAY", "items": { "type": "STRING" }, "description": "Three plausible but incorrect answer options." },
-                                "skill": { "type": "STRING", "description": "The specific 2nd-grade skill being tested (e.g., 'Adição Simples', 'Ciclo da Água')." },
-                                "rationale": { "type": "STRING", "description": "A curta explicação de por que a resposta está correta, para ser usada no relatório final." }
+                                "question": { "type": "STRING", "description": "O texto da questão, adequado para um aluno do 2º ano." },
+                                "correct_answer": { "type": "STRING", "description": "A única resposta correta para a questão." },
+                                "incorrect_options": { "type": "ARRAY", "items": { "type": "STRING" }, "description": "Três opções de resposta plausíveis, mas incorretas." },
+                                "skill": { "type": "STRING", "description": "A habilidade específica da BNCC testada, incluindo o código (ex: 'EF02MA01 - Leitura de números')." },
+                                "rationale": { "type": "STRING", "description": "Uma curta explicação do porquê a resposta está correta, para ser usada no relatório final." }
                             },
                             required: ["question", "correct_answer", "incorrect_options", "skill", "rationale"]
                         }
@@ -214,7 +248,7 @@
                             question: q.question,
                             answer: q.correct_answer, 
                             options: [q.correct_answer, ...q.incorrect_options], // Combina e embaralha depois no renderActivity
-                            skill: q.skill,
+                            skill: q.skill, // Agora contém o código BNCC
                             rationale: q.rationale,
                             isCorrect: null 
                         };
@@ -249,7 +283,7 @@
         }
 
         /**
-         * Adiciona os resultados da sessão atual às estatísticas consolidadas.
+         * Adiciona os resultados da sessão atual às estatísticas consolidadas E ao histórico.
          */
         function aggregateSessionResults() {
             const subjectKey = state.currentSubject;
@@ -257,6 +291,7 @@
             const total = state.maxScore;
             const wrong = total - correct;
 
+            // 1. Agrega Estatísticas
             if (allTimeStats[subjectKey]) {
                 allTimeStats[subjectKey].correct += correct;
                 allTimeStats[subjectKey].wrong += wrong;
@@ -270,7 +305,16 @@
                     color: "gray"
                 };
             }
-            console.log("Estatísticas consolidadas atualizadas:", allTimeStats);
+            
+            // 2. Adiciona ao Histórico de Questões (para evitar repetição na próxima geração)
+            state.sessionActivities.forEach(activity => {
+                questionsHistory[subjectKey].push({
+                    question: activity.question,
+                    skill: activity.skill // Inclui a BNCC para análise de diversidade
+                });
+            });
+
+            console.log("Estatísticas e Histórico consolidados atualizados.");
         }
 
         /**
@@ -375,13 +419,14 @@
 
             const sessionResults = state.sessionActivities.map((activity, index) => {
                 const result = activity.isCorrect ? 'ACERTO' : 'ERRO';
-                // Usa a questão e a habilidade para a análise
-                return `Questão ${index + 1}: Pergunta: "${activity.question}", Habilidade: "${activity.skill}", Resultado: ${result}`;
+                // Usa a questão e a habilidade (código BNCC) para a análise
+                return `Questão ${index + 1}: Pergunta: "${activity.question}", Habilidade (BNCC): "${activity.skill}", Resultado: ${result}`;
             }).join('; ');
 
-            const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n' ou quebras de parágrafo) listando cada habilidade testada com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
+            // Prompt ajustado para tratar a habilidade como código BNCC
+            const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n' ou quebras de parágrafo) listando cada habilidade testada (incluindo o código BNCC) com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
             
-            const userQuery = `Analise a seguinte sessão de revisão na matéria de ${subjectName}. A criança tentou ${state.maxScore} questões. Aqui estão os resultados (Questão, Habilidade, Resultado): ${sessionResults}. Gere o relatório e as dicas.`;
+            const userQuery = `Analise a seguinte sessão de revisão na matéria de ${subjectName}. A criança tentou ${state.maxScore} questões. Aqui estão os resultados (Questão, Habilidade BNCC, Resultado): ${sessionResults}. Gere o relatório e as dicas.`;
             
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
             
@@ -407,7 +452,7 @@
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span class="text-gray-700 font-semibold">Analisando habilidades dinamicamente...</span>
+                    <span class="text-gray-700 font-semibold">Analisando habilidades (BNCC) dinamicamente...</span>
                 </div>
             `;
 
@@ -428,7 +473,7 @@
 
                     reportContainer.innerHTML = `
                         <div class="mt-6 p-5 bg-gray-50 rounded-lg shadow-inner text-left">
-                            <h3 class="text-2xl font-extrabold mb-3 text-pink-600">🎯 Amostragem de Habilidades (Análise Gemini)</h3>
+                            <h3 class="text-2xl font-extrabold mb-3 text-pink-600">🎯 Amostragem de Habilidades (Análise BNCC)</h3>
                             
                             <pre class="mb-4 text-md text-gray-700 whitespace-pre-wrap">${analysis}</pre>
                             
@@ -471,8 +516,7 @@
                         <div class="text-4xl mb-2">${subj.icon}</div>
                         <h3 class="text-xl font-bold text-gray-800">${subj.name}</h3>
                         <p class="text-sm text-gray-500">Sessão: ${SESSION_SIZE} Questões.</p>
-                        <p class="text-md font-semibold mt-1 text-pink-600">Conteúdo Gerado na Hora!</p>
-                        <p class="text-xs text-gray-400">Tópicos: ${subj.topics.split(',').slice(0, 3).join(', ')}...</p>
+                        <!-- O foco BNCC e o texto "Alinhamento BNCC" foram removidos da exibição conforme solicitado -->
                     </div>
                 `;
             }).join('');
@@ -480,7 +524,7 @@
             const html = `
                 <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
                     <h1 class="text-3xl font-extrabold mb-4 text-pink-600">Revisão Dinâmica do 2º Ano EF</h1>
-                    <p class="text-gray-600 mb-6">Escolha o tema. A cada sessão, a Gemini criará ${SESSION_SIZE} questões inéditas para você!</p>
+                    <p class="text-gray-600 mb-6">Escolha o tema. A cada sessão, a Gemini criará ${SESSION_SIZE} questões inéditas e alinhadas à BNCC para você!</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                         ${subjectCards}
@@ -509,7 +553,7 @@
             const html = `
                 <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
                     <h2 class="text-4xl font-extrabold mb-4 text-pink-600">Gerando Questões...</h2>
-                    <p class="text-xl text-gray-700 mb-8">A Gemini está criando ${SESSION_SIZE} novos desafios para você em ${subj.name} ${subj.icon}.</p>
+                    <p class="text-xl text-gray-700 mb-8">A Gemini está criando ${SESSION_SIZE} novos desafios alinhados à BNCC e totalmente inéditos para você em ${subj.name} ${subj.icon}.</p>
                     
                     <div class="flex justify-center items-center">
                         <svg class="animate-spin h-10 w-10 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -551,7 +595,7 @@
                     </div>
 
                     <p class="text-2xl font-bold mb-6 text-gray-900">${questionText}</p>
-                    <p class="text-xs text-gray-400 mb-4">Habilidade: ${currentActivity.skill}</p>
+                    <p class="text-xs text-gray-400 mb-4">Habilidade BNCC: ${currentActivity.skill}</p>
 
                     <div class="options-container">
                         ${optionsHtml}
@@ -663,7 +707,7 @@
             const correctAnswers = state.score;
             const wrongAnswers = totalQuestions - correctAnswers;
             
-            aggregateSessionResults();
+            aggregateSessionResults(); // Agrega estatísticas E armazena questões no histórico
 
             let feedbackMessage = "";
             let emoji = "";
