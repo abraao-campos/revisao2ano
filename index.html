@@ -67,8 +67,7 @@ gap: 1rem;
 <script src="questions_mat.js"></script>
 <script src="questions_lin.js"></script>
 <script src="questions_cie.js"></script>
-<script src="questions_his.js"></script>
-<script type="text/javascript">
+<script src="questions_ch.js"></script> <script type="text/javascript">
 // ATENÇÃO: A Chave de API do Gemini é mantida apenas para a ANÁLISE DE HABILIDADES (Relatório Final)
 const GEMINI_API_KEY = typeof _api_key !== 'undefined' ? _api_key :
 "AIzaSyCTrba7udUnc_rm7ejgfUcfQqTbaNXGnuw";
@@ -81,7 +80,7 @@ const localQuestionBanks = {
     math: typeof mathQuestions !== 'undefined' ? mathQuestions : [],
     portuguese: typeof portugueseQuestions !== 'undefined' ? portugueseQuestions : [],
     science: typeof scienceQuestions !== 'undefined' ? scienceQuestions : [],
-    history: typeof historyQuestions !== 'undefined' ? historyQuestions : [],
+    history: typeof questionBank_ch !== 'undefined' ? questionBank_ch : [], // ALTERAÇÃO 2: Variável questionBank_ch
 };
 
 
@@ -92,7 +91,7 @@ let allTimeStats = {
     math: { name: "Matemática", correct: 0, wrong: 0, total: 0, color: "blue" },
     portuguese: { name: "Português", correct: 0, wrong: 0, total: 0, color: "green" },
     science: { name: "Ciências", correct: 0, wrong: 0, total: 0, color: "yellow" },
-    history: { name: "História", correct: 0, wrong: 0, total: 0, color: "red" },
+    history: { name: "Ciências Humanas (H/G)", correct: 0, wrong: 0, total: 0, color: "red" }, // ALTERAÇÃO 3: Nome para exibição
 };
 // Histórico de índices de questões já usadas (para evitar repetição)
 let questionsHistory = {
@@ -147,12 +146,12 @@ const subjects = {
         // Habilidades BNCC (Exemplos): EF02CI04, EF02CI05, EF02CI06
         bncc_focus: "EF02CI04 (descrever características de plantas e animais), EF02CI05 (identificar materiais utilizados em objetos e suas fontes), EF02CI06 (identificar e classificar os cinco sentidos), EF02CI07 (descrever o ciclo da água e a importância para a vida)."
     },
-    history: {
-        name: "História",
+    history: { // Chave interna mantida como 'history' para evitar mudanças em cascata
+        name: "Ciências Humanas (H/G)", // ALTERAÇÃO 3: Novo nome de exibição
         icon: "🕰️",
         color: "bg-red-500",
         // Habilidades BNCC (Exemplos): EF02HI01, EF02HI02, EF02HI07
-        bncc_focus: "EF02HI01 (reconhecer o papel da família e da escola), EF02HI02 (identificar e descrever práticas e ritmos de vida no presente e passado), EF02HI07 (identificar e utilizar diferentes marcadores do tempo - dia/noite, semana, mês), EF02HI10 (selecionar objetos e documentos pessoais para análise)."
+        bncc_focus: "EF02HI01 (reconhecer o papel da família e da escola), EF02HI02 (identificar e descrever práticas e ritmos de vida no presente e passado), EF02HI07 (identificar e utilizar diferentes marcadores do tempo - dia/noite, semana, mês), EF02HI10 (selecionar objetos e documentos pessoais para análise). *Inclui também habilidades de Geografia (EF02GE...)*" // ALTERAÇÃO 3: Nova descrição para BNCC
     }
 };
 
