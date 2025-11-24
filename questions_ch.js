@@ -1,10 +1,10 @@
 const questionBank_hum = [
     // ----------------------------------------------------------------------
-    // HISTÓRIA (EF02HI01 - EF02HI11) - 37 Questões
+    // HISTÓRIA (EF02HI01 - EF02HI11) - 47 Questões
     // ----------------------------------------------------------------------
 
     // Habilidade: EF02HI01 - Reconhecer espaços de sociabilidade e grupos sociais.
-    // (5 Questões)
+    // (7 Questões)
     {
         "question": "Qual dos locais abaixo é um espaço de **sociabilidade** onde você pode encontrar pessoas de diferentes famílias?",
         "answer": "Praça",
@@ -40,9 +40,23 @@ const questionBank_hum = [
         "skill": "EF02HI01 - Regras de convivência",
         "rationale": "O respeito é fundamental para a harmonia e o convívio em qualquer grupo social."
     },
+    {
+        "question": "Qual é a principal responsabilidade de um aluno em um grupo social da escola?",
+        "answer": "Ajudar os colegas e obedecer as regras",
+        "options": ["Falar o tempo todo", "Fazer o que quiser", "Ajudar os colegas e obedecer as regras", "Não participar de nada"],
+        "skill": "EF02HI01 - Regras na Escola",
+        "rationale": "Em grupo, a responsabilidade inclui o convívio harmonioso e seguir normas."
+    },
+    {
+        "question": "A **festa junina** da escola é um exemplo de espaço de sociabilidade?",
+        "answer": "Sim, pois reúne diferentes grupos da comunidade escolar",
+        "options": ["Não, é só um lugar para comer", "Não, porque só tem alunos", "Sim, pois reúne diferentes grupos da comunidade escolar", "Não, porque é muito barulhento"],
+        "skill": "EF02HI01 - Espaços de sociabilidade (Cultura)",
+        "rationale": "Eventos escolares promovem a interação entre diferentes grupos: alunos, pais, professores e vizinhança."
+    },
 
     // Habilidade: EF02HI02 - Identificar formas de registro da história (memória, relatos, objetos).
-    // (4 Questões)
+    // (5 Questões)
     {
         "question": "Qual é a forma de registro mais antiga de uma família, passada de pai para filho?",
         "answer": "Relato oral (histórias)",
@@ -70,6 +84,13 @@ const questionBank_hum = [
         "options": ["Uma lei escrita", "Uma pintura", "A memória das pessoas", "Um monumento de pedra"],
         "skill": "EF02HI02 - Limites da memória",
         "rationale": "A memória individual pode falhar ou ser alterada com o tempo, o que não acontece com documentos escritos ou objetos materiais."
+    },
+    {
+        "question": "Um **documentário** sobre a história da sua cidade é um exemplo de qual tipo de registro?",
+        "answer": "Registro audiovisual",
+        "options": ["Relato oral", "Documento escrito", "Objeto material", "Registro audiovisual"],
+        "skill": "EF02HI02 - Registros audiovisuais",
+        "rationale": "Documentários utilizam imagens e sons, sendo fontes audiovisuais da história."
     },
 
     // Habilidade: EF02HI03 - Selecionar e organizar relatos orais e objetos para a história.
@@ -111,7 +132,7 @@ const questionBank_hum = [
     },
 
     // Habilidade: EF02HI04 - Selecionar objetos e documentos para contar a história do lugar.
-    // (4 Questões)
+    // (5 Questões)
     {
         "question": "Para contar a história do seu bairro, qual dos documentos seria o mais útil?",
         "answer": "Uma foto antiga do bairro",
@@ -140,9 +161,16 @@ const questionBank_hum = [
         "skill": "EF02HI04 - Análise de documentos (Data)",
         "rationale": "A data é a informação crucial para situar o documento no tempo (antigo ou recente)."
     },
+    {
+        "question": "Qual dos documentos abaixo ajudaria a entender a história de uma **escola**?",
+        "answer": "O livro de registro de alunos mais antigo",
+        "options": ["Uma conta de água de uma casa", "O livro de registro de alunos mais antigo", "Um bilhete de cinema", "Uma tabela de basquete"],
+        "skill": "EF02HI04 - Seleção de documentos (Escola)",
+        "rationale": "O livro de registro é um documento oficial que marca a trajetória e as pessoas da escola."
+    },
 
     // Habilidade: EF02HI05 - Reconhecer o significado social e cultural de normas e regras.
-    // (5 Questões)
+    // (6 Questões)
     {
         "question": "Qual é o principal objetivo das **regras** da escola?",
         "answer": "Organizar a convivência e o aprendizado",
@@ -178,9 +206,16 @@ const questionBank_hum = [
         "skill": "EF02HI05 - Significado de regras (Esporte)",
         "rationale": "O respeito às regras e à autoridade do juiz garante que o jogo seja justo e organizado."
     },
+    {
+        "question": "Por que é importante a regra de **fazer silêncio** na biblioteca?",
+        "answer": "Para que todos possam se concentrar na leitura e estudo",
+        "options": ["Para que ninguém durma", "Para que todos possam se concentrar na leitura e estudo", "Porque o bibliotecário não gosta de barulho", "Para que o livro não caia"],
+        "skill": "EF02HI05 - Regras em espaços públicos",
+        "rationale": "O silêncio em bibliotecas é uma norma social para preservar o ambiente de estudo para todos."
+    },
 
     // Habilidade: EF02HI06 - Identificar o papel de diferentes sujeitos (escola, família, vizinhança).
-    // (4 Questões)
+    // (6 Questões)
     {
         "question": "Qual é o principal papel do **professor** na escola?",
         "answer": "Ensinar e ajudar no aprendizado",
@@ -209,20 +244,34 @@ const questionBank_hum = [
         "skill": "EF02HI06 - Papéis sociais (Zelador)",
         "rationale": "O zelador é fundamental para a manutenção e higiene do ambiente escolar."
     },
+    {
+        "question": "Qual é o papel do **carteiro** na sua comunidade?",
+        "answer": "Entregar cartas e encomendas nas casas",
+        "options": ["Vender frutas", "Consertar carros", "Entregar cartas e encomendas nas casas", "Cuidar de animais"],
+        "skill": "EF02HI06 - Papéis sociais (Comunidade)",
+        "rationale": "O carteiro é o profissional responsável pela distribuição de correspondências."
+    },
+    {
+        "question": "Se um vizinho precisa de ajuda para carregar sacolas, qual é o seu papel como membro da vizinhança?",
+        "answer": "Oferecer ajuda e ser solidário",
+        "options": ["Fingir que não viu", "Pedir dinheiro para ajudar", "Oferecer ajuda e ser solidário", "Correr para longe"],
+        "skill": "EF02HI06 - Papéis sociais (Solidariedade)",
+        "rationale": "A solidariedade e a cooperação são papéis importantes para a boa convivência na vizinhança."
+    },
 
     // Habilidade: EF02HI07 - Identificar e descrever práticas e papéis sociais (presente e passado).
-    // (5 Questões)
+    // (6 Questões)
     {
         "question": "Como as crianças **costumavam brincar** antigamente, antes dos videogames?",
         "answer": "Com brincadeiras de rua, como pique-esconde",
-        "options": ["Com brincadeiras de rua, como pique-esconde", "Apenas assistindo TV", "Usando o computador o dia todo", "Voando de avião"],
+        "options": ["Apenas assistindo TV", "Com brincadeiras de rua, como pique-esconde", "Usando o computador o dia todo", "Voando de avião"],
         "skill": "EF02HI07 - Práticas sociais (Passado)",
         "rationale": "Brincadeiras como pique-esconde, esconde-esconde e pega-pega eram comuns na rua no passado."
     },
     {
         "question": "Qual prática social mudou muito com a invenção do **telefone celular**?",
         "answer": "O modo de conversar e mandar recados",
-        "options": ["O modo de conversar e mandar recados", "A forma de cozinhar", "O modo de dirigir o carro", "A maneira de plantar"],
+        "options": ["A forma de cozinhar", "O modo de conversar e mandar recados", "O modo de dirigir o carro", "A maneira de plantar"],
         "skill": "EF02HI07 - Práticas sociais (Mudança e Tecnologia)",
         "rationale": "O celular transformou a comunicação e a forma como as pessoas se conectam à distância."
     },
@@ -247,9 +296,16 @@ const questionBank_hum = [
         "skill": "EF02HI07 - Práticas sociais (Passado e Tecnologia)",
         "rationale": "O telefone fixo era o principal meio de comunicação instantânea antes da popularização do celular."
     },
+    {
+        "question": "Qual é a prática social mais comum hoje para **ir à escola**?",
+        "answer": "Ir a pé, de carro ou de ônibus escolar",
+        "options": ["Montar a cavalo", "Ir a pé, de carro ou de ônibus escolar", "Voar de helicóptero", "Usar máquina do tempo"],
+        "skill": "EF02HI07 - Práticas sociais (Presente)",
+        "rationale": "O transporte moderno (a pé, carro, ônibus) são as formas mais comuns de locomoção diária."
+    },
 
     // Habilidade: EF02HI08 - Identificar diferentes formas de medir o tempo (calendário, relógio).
-    // (5 Questões)
+    // (6 Questões)
     {
         "question": "Qual instrumento usamos para saber o dia da semana, o mês e o ano?",
         "answer": "Calendário",
@@ -285,9 +341,16 @@ const questionBank_hum = [
         "skill": "EF02HI08 - Instrumentos de medida do tempo (Passado)",
         "rationale": "Relógios digitais são uma invenção mais recente em comparação com calendários e relógios de sol/analógicos."
     },
+    {
+        "question": "Qual é a unidade de tempo usada para medir a duração de uma **aula** ou de um **jogo de futebol**?",
+        "answer": "Horas e minutos",
+        "options": ["Semanas", "Anos", "Horas e minutos", "Séculos"],
+        "skill": "EF02HI08 - Unidades de medida do tempo (Curto prazo)",
+        "rationale": "Aulas e jogos são medidos em horas e seus submúltiplos (minutos)."
+    },
 
     // Habilidade: EF02HI09 - Identificar objetos e documentos pessoais (uso e função).
-    // (4 Questões)
+    // (5 Questões)
     {
         "question": "Qual documento é essencial para provar quem você é e sua nacionalidade?",
         "answer": "Certidão de Nascimento ou RG",
@@ -316,9 +379,16 @@ const questionBank_hum = [
         "skill": "EF02HI09 - Função de documentos (Saúde)",
         "rationale": "A carteira de vacinação é um documento de saúde que registra a imunização."
     },
+    {
+        "question": "Qual documento serve para registrar sua presença e frequência na escola?",
+        "answer": "Diário de Classe ou Caderneta",
+        "options": ["RG", "Título de Eleitor", "Diário de Classe ou Caderneta", "Passaporte"],
+        "skill": "EF02HI09 - Documentos de registro escolar",
+        "rationale": "O Diário de Classe ou caderneta registra o desempenho e a frequência do aluno."
+    },
 
     // Habilidade: EF02HI10 - Identificar diferentes formas de trabalho (atual e histórico).
-    // (4 Questões)
+    // (6 Questões)
     {
         "question": "Qual tipo de trabalho envolve o cuidado com a terra, o plantio e a colheita?",
         "answer": "Agricultor",
@@ -347,9 +417,23 @@ const questionBank_hum = [
         "skill": "EF02HI10 - Tipos de trabalho (Serviço Público)",
         "rationale": "O bombeiro presta um serviço público essencial de salvamento e combate a incêndios."
     },
+    {
+        "question": "Qual trabalho era realizado principalmente por mulheres na época das suas avós?",
+        "answer": "Costureira em casa",
+        "options": ["Motorista de trem", "Operário de fábrica", "Costureira em casa", "Mineiro de carvão"],
+        "skill": "EF02HI10 - Divisão do trabalho (Passado)",
+        "rationale": "O trabalho de costureira era tradicionalmente associado às mulheres no ambiente doméstico."
+    },
+    {
+        "question": "Qual tipo de trabalho se desenvolveu muito com a invenção do computador e da internet?",
+        "answer": "Programador ou Desenvolvedor de Software",
+        "options": ["Ferramenteiro", "Cineasta mudo", "Programador ou Desenvolvedor de Software", "Lavadeira manual"],
+        "skill": "EF02HI10 - Tipos de trabalho (Tecnologia)",
+        "rationale": "As profissões ligadas à tecnologia e ao desenvolvimento digital surgiram com o avanço da informática."
+    },
 
     // Habilidade: EF02HI11 - Identificar a importância da água e do solo.
-    // (3 Questões)
+    // (8 Questões)
     {
         "question": "Qual é a principal utilidade da **água** para a nossa saúde?",
         "answer": "Beber para manter o corpo funcionando",
@@ -371,13 +455,48 @@ const questionBank_hum = [
         "skill": "EF02HI11 - Conservação de recursos (Água)",
         "rationale": "A economia (uso consciente) é a principal forma de preservar os recursos hídricos."
     },
+    {
+        "question": "O que é **solo fértil**?",
+        "answer": "O solo bom para plantar",
+        "options": ["O solo que tem muita pedra", "O solo que tem muita água", "O solo bom para plantar", "O solo que só tem areia"],
+        "skill": "EF02HI11 - Conceito de Solo (Fértil)",
+        "rationale": "Solo fértil é aquele que possui nutrientes e condições adequadas para o desenvolvimento das plantas."
+    },
+    {
+        "question": "O que o **desmatamento** (tirar árvores) faz com o solo?",
+        "answer": "Deixa o solo desprotegido, causando erosão",
+        "options": ["Deixa o solo mais forte", "Deixa o solo desprotegido, causando erosão", "Deixa o solo mais molhado", "Faz chover mais"],
+        "skill": "EF02HI11 - Conservação do solo",
+        "rationale": "As raízes das árvores protegem o solo da erosão e da lavagem pela chuva."
+    },
+    {
+        "question": "O que acontece com a água da **chuva** que cai sobre o solo?",
+        "answer": "Parte dela é absorvida e outra parte escorre para rios e lagos",
+        "options": ["Toda ela evapora", "Toda ela é absorvida pelas plantas", "Parte dela é absorvida e outra parte escorre para rios e lagos", "Toda ela vira gelo"],
+        "skill": "EF02HI11 - Ciclo da Água (Infiltração)",
+        "rationale": "O solo funciona como um filtro natural, absorvendo e escoando a água."
+    },
+    {
+        "question": "Qual é a função das **minhocas** no solo?",
+        "answer": "Deixar o solo mais fofo e rico em nutrientes (húmus)",
+        "options": ["Tornar o solo duro", "Deixar o solo mais fofo e rico em nutrientes (húmus)", "Comer as raízes das plantas", "Fazer buracos grandes"],
+        "skill": "EF02HI11 - Importância do solo (Biologia)",
+        "rationale": "As minhocas revolvem a terra e a enriquecem com matéria orgânica (húmus), sendo vitais para o solo."
+    },
+    {
+        "question": "Para que precisamos de água para a **higiene**?",
+        "answer": "Para lavar as mãos, tomar banho e manter a saúde",
+        "options": ["Para fazer a comida voar", "Para lavar as mãos, tomar banho e manter a saúde", "Para pintar o chão", "Para encher balões"],
+        "skill": "EF02HI11 - Usos da Água (Higiene)",
+        "rationale": "A água é essencial para a limpeza pessoal e prevenção de doenças."
+    },
 
     // ----------------------------------------------------------------------
-    // GEOGRAFIA (EF02GE01 - EF02GE11) - 40 Questões
+    // GEOGRAFIA (EF02GE01 - EF02GE11) - 53 Questões
     // ----------------------------------------------------------------------
 
     // Habilidade: EF02GE01 - Identificar e comparar diferentes tipos de orientação espacial (pontos de referência, sol).
-    // (4 Questões)
+    // (6 Questões)
     {
         "question": "O que é um **ponto de referência** para se localizar?",
         "answer": "Um lugar conhecido que ajuda a se localizar",
@@ -406,9 +525,23 @@ const questionBank_hum = [
         "skill": "EF02GE01 - Instrumentos de orientação (Bússola)",
         "rationale": "A bússola usa o campo magnético terrestre para indicar os pontos cardeais."
     },
+    {
+        "question": "Se você está olhando para a frente, o que está à sua **direita**?",
+        "answer": "O lado oposto à sua esquerda",
+        "options": ["O que está atrás", "O lado oposto à sua esquerda", "O que está em cima", "O que está abaixo"],
+        "skill": "EF02GE01 - Orientação relativa (Direita/Esquerda)",
+        "rationale": "Direita e esquerda são posições relativas do corpo."
+    },
+    {
+        "question": "Qual é a principal forma de se orientar dentro de um **prédio muito grande**?",
+        "answer": "Usando números de andares e placas de indicação",
+        "options": ["Olhando para o Sol", "Usando números de andares e placas de indicação", "Escutando o barulho", "Seguindo o cheiro"],
+        "skill": "EF02GE01 - Orientação em ambientes fechados",
+        "rationale": "Em espaços internos, a orientação se dá por símbolos, números e placas indicativas."
+    },
 
     // Habilidade: EF02GE02 - Comparar os diferentes tipos de moradia (condições, materiais, locais).
-    // (4 Questões)
+    // (6 Questões)
     {
         "question": "Qual moradia é feita de **tijolos e cimento** e é muito comum nas cidades?",
         "answer": "Casa de alvenaria",
@@ -437,9 +570,23 @@ const questionBank_hum = [
         "skill": "EF02GE02 - Tipos de moradia (Apartamento)",
         "rationale": "Apartamentos são unidades habitacionais dentro de um edifício vertical (prédio)."
     },
+    {
+        "question": "Qual material de construção é mais comum em áreas de **floresta**, como a Amazônia?",
+        "answer": "Madeira",
+        "options": ["Mármore", "Aço", "Madeira", "Vidro"],
+        "skill": "EF02GE02 - Moradia e recursos locais",
+        "rationale": "A madeira é um recurso abundante e tradicionalmente usado para construir casas em áreas florestais."
+    },
+    {
+        "question": "Por que a localização de uma casa perto de um **rio** pode ser perigosa?",
+        "answer": "Risco de inundações em épocas de muita chuva",
+        "options": ["O rio tem muito barulho", "Risco de inundações em épocas de muita chuva", "O rio é sempre quente", "A água do rio voa"],
+        "skill": "EF02GE02 - Moradia e segurança",
+        "rationale": "Moradias próximas a rios ou encostas estão sob risco de desastres naturais como inundações e deslizamentos."
+    },
 
     // Habilidade: EF02GE03 - Identificar e comparar os diferentes tipos de trabalho na escola e no seu entorno.
-    // (5 Questões)
+    // (7 Questões)
     {
         "question": "Qual trabalho é essencial para manter as **contas** da escola em dia?",
         "answer": "Secretário ou administrador",
@@ -475,9 +622,23 @@ const questionBank_hum = [
         "skill": "EF02GE03 - Tipos de trabalho (Serviços de saúde)",
         "rationale": "Médicos e enfermeiros são os profissionais da saúde no entorno social."
     },
+    {
+        "question": "Qual profissional é responsável por atender e cuidar das pessoas em um **hospital** ou **posto de saúde**?",
+        "answer": "Médico ou Enfermeiro",
+        "options": ["Gari", "Cozinheiro", "Médico ou Enfermeiro", "Eletricista"],
+        "skill": "EF02GE03 - Tipos de trabalho (Saúde)",
+        "rationale": "Médicos e enfermeiros prestam serviços essenciais de saúde."
+    },
+    {
+        "question": "O **Gari** (profissional de limpeza urbana) tem qual papel social importante?",
+        "answer": "Manter a cidade limpa e saudável",
+        "options": ["Vender ingressos", "Controlar o trânsito", "Manter a cidade limpa e saudável", "Fazer pão"],
+        "skill": "EF02GE03 - Tipos de trabalho (Serviços públicos)",
+        "rationale": "O gari é essencial para a saúde pública e higiene da cidade."
+    },
 
     // Habilidade: EF02GE04 - Explicar a diferença entre cidade (urbano) e campo (rural).
-    // (4 Questões)
+    // (6 Questões)
     {
         "question": "O **campo (zona rural)** é um lugar onde predominam:",
         "answer": "Plantações, animais e natureza",
@@ -506,9 +667,23 @@ const questionBank_hum = [
         "skill": "EF02GE04 - Comparação de elementos",
         "rationale": "Semáforos e placas de trânsito são elementos essenciais para organizar o tráfego intenso das cidades."
     },
+    {
+        "question": "Na zona rural, a principal atividade econômica é o(a):",
+        "answer": "Agricultura e Pecuária",
+        "options": ["Indústria de carros", "Comércio eletrônico", "Agricultura e Pecuária", "Serviços bancários"],
+        "skill": "EF02GE04 - Atividade econômica (Rural)",
+        "rationale": "A base econômica do campo é o extrativismo, a agricultura e a pecuária."
+    },
+    {
+        "question": "Qual área tem maior quantidade de **indústrias** (fábricas)?",
+        "answer": "Zona urbana (cidade)",
+        "options": ["Zona rural (campo)", "Praia", "Montanha", "Zona urbana (cidade)"],
+        "skill": "EF02GE04 - Atividade econômica (Urbana)",
+        "rationale": "As indústrias e fábricas se concentram nas áreas urbanas devido à logística e infraestrutura."
+    },
 
     // Habilidade: EF02GE05 - Analisar mudanças e permanências na paisagem.
-    // (4 Questões)
+    // (6 Questões)
     {
         "question": "Qual elemento é um exemplo de **permanência** (que fica muito tempo) na paisagem urbana?",
         "answer": "Um monumento histórico",
@@ -537,9 +712,23 @@ const questionBank_hum = [
         "skill": "EF02GE05 - Agentes de transformação (Ser Humano)",
         "rationale": "A pavimentação é uma alteração significativa e duradoura feita pelo ser humano."
     },
+    {
+        "question": "A construção de uma **ponte** sobre um rio é um exemplo de: ",
+        "answer": "Mudança na paisagem causada pelo ser humano",
+        "options": ["Permanência natural", "Mudança na paisagem causada pelo ser humano", "Fenômeno natural", "Mudança na cor do céu"],
+        "skill": "EF02GE05 - Agentes de transformação (Infraestrutura)",
+        "rationale": "Pontes são obras de engenharia que alteram a paisagem para facilitar o transporte."
+    },
+    {
+        "question": "O **crescimento de uma floresta** em um local abandonado é um exemplo de mudança causada por qual agente?",
+        "answer": "Agente natural (natureza)",
+        "options": ["Agente cultural (ser humano)", "Agente cultural (tecnologia)", "Agente natural (natureza)", "Agente cultural (dinheiro)"],
+        "skill": "EF02GE05 - Agentes de transformação (Natureza)",
+        "rationale": "O crescimento de vegetação (floresta) é um processo natural, sem intervenção humana direta."
+    },
 
     // Habilidade: EF02GE06 - Identificar diferenças de luminosidade e temperatura (dia e noite).
-    // (5 Questões)
+    // (7 Questões)
     {
         "question": "Qual é a principal fonte de **luz** e **calor** durante o dia?",
         "answer": "O Sol",
@@ -575,9 +764,23 @@ const questionBank_hum = [
         "skill": "EF02GE06 - Importância da luz",
         "rationale": "A leitura exige luz suficiente para a visão."
     },
+    {
+        "question": "Qual astro podemos ver no céu durante a noite, mas que **não emite luz própria**?",
+        "answer": "A Lua",
+        "options": ["O Sol", "A estrela", "A lâmpada", "A Lua"],
+        "skill": "EF02GE06 - Fenômenos celestes (Noite)",
+        "rationale": "A Lua reflete a luz do Sol; ela não possui luz própria."
+    },
+    {
+        "question": "Se o dia está muito **nublado**, o que acontece com a luminosidade?",
+        "answer": "Fica menos intensa (mais escuro)",
+        "options": ["Aumenta muito", "Fica menos intensa (mais escuro)", "Fica com cheiro ruim", "Não muda nada"],
+        "skill": "EF02GE06 - Luminosidade e Clima",
+        "rationale": "As nuvens bloqueiam a luz solar, diminuindo a intensidade da luminosidade na superfície."
+    },
 
     // Habilidade: EF02GE07 - Descrever as atividades de trabalho na zona rural e urbana (produção e circulação).
-    // (4 Questões)
+    // (7 Questões)
     {
         "question": "A criação de animais e o cultivo de frutas e legumes acontece principalmente em qual espaço?",
         "answer": "Campo (zona rural)",
@@ -606,9 +809,30 @@ const questionBank_hum = [
         "skill": "EF02GE07 - Tipos de trabalho (Comércio)",
         "rationale": "O comércio é a atividade de compra e venda de mercadorias, típica da zona urbana."
     },
+    {
+        "question": "Qual é a principal atividade do setor de **serviços** (ex: médico, professor)?",
+        "answer": "Prestar ajuda e assistência às pessoas",
+        "options": ["Construir casas", "Plantar alimentos", "Prestar ajuda e assistência às pessoas", "Fabricar objetos"],
+        "skill": "EF02GE07 - Tipos de trabalho (Serviços)",
+        "rationale": "O setor de serviços oferece atividades não-materiais, como educação, saúde e transporte."
+    },
+    {
+        "question": "O trabalho do **motorista de caminhão** é essencial para qual parte da economia?",
+        "answer": "Circulação de produtos (transporte)",
+        "options": ["Plantio", "Fabricação", "Venda", "Circulação de produtos (transporte)"],
+        "skill": "EF02GE07 - Tipos de trabalho (Circulação)",
+        "rationale": "O caminhoneiro faz a circulação de produtos do campo/indústria para o comércio/consumidor."
+    },
+    {
+        "question": "Qual trabalho da zona urbana precisa de produtos da zona rural?",
+        "answer": "Padeiro (usa farinha de trigo)",
+        "options": ["Bibliotecário", "Padeiro (usa farinha de trigo)", "Programador de computador", "Vendedor de ingressos"],
+        "skill": "EF02GE07 - Interligação Rural/Urbano",
+        "rationale": "O padeiro (urbano) precisa do trigo (rural) para fazer a farinha."
+    },
 
     // Habilidade: EF02GE08 - Identificar e descrever fenômenos da natureza (chuva, vento, calor, frio).
-    // (4 Questões)
+    // (6 Questões)
     {
         "question": "Qual fenômeno da natureza é essencial para a agricultura, mas em excesso pode causar inundações?",
         "answer": "Chuva",
@@ -637,9 +861,23 @@ const questionBank_hum = [
         "skill": "EF02GE08 - Fenômenos climáticos (Calor e Saúde)",
         "rationale": "A hidratação é crucial para regular a temperatura do corpo em dias quentes."
     },
+    {
+        "question": "Qual fenômeno causa a queda de **neve**?",
+        "answer": "Baixa temperatura e umidade do ar",
+        "options": ["Muito calor", "Muita poeira", "Baixa temperatura e umidade do ar", "Vento fraco"],
+        "skill": "EF02GE08 - Fenômenos climáticos (Frio/Neve)",
+        "rationale": "A neve ocorre quando a temperatura da nuvem e do ar é muito baixa, congelando a água."
+    },
+    {
+        "question": "O que devemos fazer para nos proteger de um dia de **chuva muito forte** com trovões?",
+        "answer": "Ficar dentro de casa ou em local seguro e fechar janelas",
+        "options": ["Correr para a rua", "Ficar embaixo de uma árvore", "Ficar dentro de casa ou em local seguro e fechar janelas", "Soltar pipa"],
+        "skill": "EF02GE08 - Segurança e Fenômenos Naturais",
+        "rationale": "Em tempestades, é vital buscar abrigo e evitar locais abertos ou perto de objetos altos (árvores, postes)."
+    },
 
     // Habilidade: EF02GE09 - Identificar elementos naturais e culturais de paisagens.
-    // (5 Questões)
+    // (7 Questões)
     {
         "question": "Qual é um elemento **natural** de uma paisagem?",
         "answer": "Um rio",
@@ -675,9 +913,23 @@ const questionBank_hum = [
         "skill": "EF02GE09 - Diferenciação Natural/Cultural",
         "rationale": "Elementos culturais são intervenções humanas (cultura), e naturais são da natureza."
     },
+    {
+        "question": "A **plantação de milho** (lavoura) é considerada um elemento **cultural** da paisagem por quê?",
+        "answer": "Porque ela foi cultivada e modificada pelo ser humano",
+        "options": ["Porque nasceu sozinha", "Porque ela foi cultivada e modificada pelo ser humano", "Porque é um bicho", "Porque é feita de pedra"],
+        "skill": "EF02GE09 - Elementos culturais (Paisagem)",
+        "rationale": "Embora a planta seja natural, a plantação organizada (lavoura) é uma intervenção humana."
+    },
+    {
+        "question": "Qual dos elementos abaixo é um exemplo de elemento natural que foi **modificado** pelo ser humano?",
+        "answer": "Um lago que virou represa para gerar energia",
+        "options": ["Um pássaro voando", "Um lago que virou represa para gerar energia", "O sol nascendo", "A chuva caindo"],
+        "skill": "EF02GE09 - Elementos naturais modificados",
+        "rationale": "O lago é natural, mas a represa (construção) é uma modificação cultural para uso energético."
+    },
 
     // Habilidade: EF02GE10 - Reconhecer a importância do trabalho de conservação ambiental.
-    // (4 Questões)
+    // (7 Questões)
     {
         "question": "Por que a **separação do lixo** (reciclagem) é um trabalho importante para o ambiente?",
         "answer": "Diminui a quantidade de lixo que vai para a natureza",
@@ -706,9 +958,30 @@ const questionBank_hum = [
         "skill": "EF02GE10 - Práticas de conservação",
         "rationale": "O conserto de vazamentos evita o desperdício de água potável."
     },
+    {
+        "question": "O que você está fazendo para a **conservação ambiental** quando você separa o óleo de cozinha usado em uma garrafa?",
+        "answer": "Evitando a poluição da água",
+        "options": ["Aumentando o lixo", "Evitando a poluição da água", "Fazendo um bolo", "Queimando o óleo"],
+        "skill": "EF02GE10 - Conservação (Água)",
+        "rationale": "O descarte correto do óleo de cozinha impede que ele polua a água, protegendo os rios e mares."
+    },
+    {
+        "question": "Se você vê lixo no chão da escola, o que deve fazer para ajudar na conservação?",
+        "answer": "Pegar e jogar na lixeira correta",
+        "options": ["Ignorar e continuar andando", "Pegar e jogar na lixeira correta", "Esconder debaixo da mesa", "Chutar para longe"],
+        "skill": "EF02GE10 - Práticas de conservação (Cotidiano)",
+        "rationale": "A responsabilidade individual pela limpeza e descarte correto é a base da conservação ambiental."
+    },
+    {
+        "question": "O que é **reflorestamento** e por que é importante?",
+        "answer": "Plantar novas árvores, o que ajuda o ar e o solo",
+        "options": ["Cortar mais árvores", "Plantar novas árvores, o que ajuda o ar e o solo", "Jogar lixo na floresta", "Deixar o solo seco"],
+        "skill": "EF02GE10 - Conservação (Reflorestamento)",
+        "rationale": "O reflorestamento ajuda a restaurar ecossistemas, melhorar a qualidade do ar e proteger o solo."
+    },
 
     // Habilidade: EF02GE11 - Identificar a importância e os usos dos recursos naturais (água, solo, minerais).
-    // (4 Questões)
+    // (8 Questões)
     {
         "question": "Qual recurso natural é essencial para a **respiração** dos seres vivos?",
         "answer": "Ar",
@@ -736,5 +1009,33 @@ const questionBank_hum = [
         "options": ["Jogar sujeira", "Não jogar lixo e recolher o que já existe", "Deixar a água suja", "Usar a água para lavar o carro"],
         "skill": "EF02GE11 - Práticas de preservação (Água)",
         "rationale": "Manter o lixo longe da água é a principal forma de evitar a poluição e preservar o recurso."
+    },
+    {
+        "question": "Qual recurso natural é usado para construir casas (depois de ser transformado)?",
+        "answer": "Solo (argila para tijolos)",
+        "options": ["Ar", "Solo (argila para tijolos)", "Vento", "Luz do sol"],
+        "skill": "EF02GE11 - Recurso natural (Uso do solo)",
+        "rationale": "O solo fornece a argila, matéria-prima para tijolos e telhas."
+    },
+    {
+        "question": "Por que a luz do Sol é um recurso natural importante?",
+        "answer": "É fonte de energia e calor para a vida na Terra",
+        "options": ["Faz a Terra girar", "É fonte de energia e calor para a vida na Terra", "Faz chover", "Faz o mar ficar salgado"],
+        "skill": "EF02GE11 - Recurso natural (Luz do Sol)",
+        "rationale": "A luz e o calor do Sol são fundamentais para as plantas e para o clima."
+    },
+    {
+        "question": "O que são **minérios** (ex: ferro, ouro)?",
+        "answer": "Recursos naturais retirados do subsolo (dentro da terra)",
+        "options": ["Animais", "Plantas", "Recursos naturais retirados do subsolo (dentro da terra)", "Nuvens"],
+        "skill": "EF02GE11 - Recurso natural (Minerais)",
+        "rationale": "Minérios são materiais de origem mineral explorados do interior da Terra."
+    },
+    {
+        "question": "Qual é o principal uso da **madeira** (recurso natural)?",
+        "answer": "Construir móveis, casas e fazer papel",
+        "options": ["Fazer água potável", "Construir móveis, casas e fazer papel", "Medir o tempo", "Fazer o vento"],
+        "skill": "EF02GE11 - Recurso natural (Madeira)",
+        "rationale": "A madeira tem diversos usos, sendo a fabricação de móveis e papel os mais comuns."
     }
 ];
