@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Revisão Dinâmica do 2º Ano EF - Qualidade e BNCC</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JT5Q6BV0XL"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -12,676 +14,507 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-JT5Q6BV0XL');
 </script>
-<style>
-/* Estilo base com fonte Inter (Para aparência infantil e moderna) */
- @import url('https://fonts.googleapis.com/css2?
-family=Inter:wght400;600;700;800&display=swap');
-body {
-font-family: 'Inter', sans-serif;
-background-color: #fce4ec; /* Rosa claro base */
-transition: background-color 0.5s ease-in-out;
-min-height: 100vh;
-display: flex;
-justify-content: center;
-align-items: center;
-}
-.container-box {
-max-width: 650px;
-min-height: 400px;
-}
-.theme-button {
-transition: all 0.2s;
-box-shadow: 0 4px 0 0 #d81b60; /* Sombra 3D Rosa */
-border-radius: 1rem;
-}
-.theme-button:hover {
-transform: translateY(-2px);
-box-shadow: 0 6px 0 0 #c2185b;
-}
-.theme-button:active {
-transform: translateY(2px);
-box-shadow: 0 2px 0 0 #d81b60;
-}
-.subject-card {
-background-color: #ffffff;
-border: 2px solid #ff4081;
-padding: 1.5rem;
-border-radius: 1rem;
-box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-transition: transform 0.3s ease;
-}
-.subject-card:hover {
-transform: translateY(-5px);
-}
-.report-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-gap: 1rem;
-}
-</style>
-</head>
-<body>
-<div id="app" class="w-full p-4 md:p-8">
-</div>
-
 <script src="questions_mat.js"></script>
 <script src="questions_lin.js"></script>
 <script src="questions_cie.js"></script>
 <script src="questions_ch.js"></script>
-<script type="text/javascript">
-// ATENÇÃO: A Chave de API do Gemini é mantida apenas para a ANÁLISE DE HABILIDADES (Relatório Final)
-const GEMINI_API_KEY = typeof _api_key !== 'undefined' ? _api_key :
-"AIzaSyCTrba7udUnc_rm7ejgfUcfQqTbaNXGnuw";
-// Define o tamanho fixo da sessão
-const SESSION_SIZE = 5;
 
-// --- Bancos de Questões Locais (questions_sub.js) ---
+<style>
+/* Estilo base com fonte Inter (Para aparência infantil e moderna) */
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #fce4ec; /* Rosa claro base */
+    transition: background-color 0.5s ease-in-out;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container-box {
+    max-width: 650px;
+    min-height: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+.theme-button {
+    background-color: #4CAF50; /* Verde principal */
+    transition: background-color 0.2s;
+}
+.theme-button:hover {
+    background-color: #45a049;
+}
+
+/* Cores por Matéria */
+.color-math { background-color: #ffcc80; border-color: #ff9800; } /* Laranja Claro */
+.color-portuguese { background-color: #81d4fa; border-color: #03a9f4; } /* Azul Claro */
+.color-science { background-color: #a5d6a7; border-color: #4caf50; } /* Verde Claro */
+.color-history { background-color: #ffab91; border-color: #ff5722; } /* Vermelho/Terra Claro */
+.color-final { background-color: #ce93d8; border-color: #9c27b0; } /* Roxo Claro */
+
+/* Classe para Desabilitar Opções */
+.disabled-option {
+    opacity: 0.6;
+    pointer-events: none;
+    filter: grayscale(100%);
+}
+
+/* Animação de Entrada e Saída */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app" class="container-box bg-white p-6 md:p-10 rounded-3xl shadow-2xl animate-fade-in">
+    </div>
+
+<script>
+// --- Variáveis de Estado Global ---
+const state = {
+    currentStage: 1, // 1: Seleção, 3: Atividade, 4: Feedback, 5: Relatório, 6: Fim
+    currentSubject: null,
+    subjectName: null,
+    totalQuestions: 0,
+    questions: [],
+    currentQuestionIndex: 0,
+    selectedOption: null,
+    correctAnswers: 0,
+    incorrectAnswers: 0,
+    report: {
+        totalQuestions: 0,
+        correct: 0,
+        incorrect: 0,
+        details: {}, // Armazena contagem de acertos/erros por habilidade (skill)
+    },
+    // Estado para o feedback por habilidade
+    skillFeedback: null,
+    isFinalReview: false,
+};
+
+// --- FUNÇÕES DE SETUP E UTILS ---
+
+/**
+ * Embaralha um array (algoritmo Fisher-Yates).
+ * @param {Array} array
+ */
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+/**
+ * Seleciona um subconjunto aleatório de N questões.
+ * @param {Array} bank - Banco de questões.
+ * @param {number} N - Número de questões a selecionar.
+ * @returns {Array} Subconjunto de questões.
+ */
+function selectRandomQuestions(bank, N = 10) {
+    const shuffledBank = [...bank];
+    shuffle(shuffledBank);
+    // Garante que o número de questões não exceda o tamanho do banco
+    return shuffledBank.slice(0, Math.min(N, bank.length));
+}
+
+// Objeto para carregar os bancos de questões
+// Os nomes das propriedades devem coincidir com state.currentSubject:
+// math, portuguese, science, history
 const localQuestionBanks = {
-    math: typeof questionBank_mat !== 'undefined' ? questionBank_mat : [], 
-    portuguese: typeof questionBank_lin !== 'undefined' ? questionBank_lin : [], 
-    science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [], 
-    history: typeof questionBank_ch !== 'undefined' ? questionBank_ch : [],
+    math: typeof questionBank_mat !== 'undefined' ? questionBank_mat : [],
+    portuguese: typeof questionBank_lin !== 'undefined' ? questionBank_lin : [],
+    science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [],
+    // CORREÇÃO: Trocado questionBank_ch por questionBank_hum para coincidir com o arquivo questions_ch.js
+    history: typeof questionBank_hum !== 'undefined' ? questionBank_hum : [], 
 };
-
-// Mapeamento de chaves internas para os nomes de arquivo JS para exibir no erro
-const subjectFileNames = {
-    math: 'questions_mat.js',
-    portuguese: 'questions_lin.js',
-    science: 'questions_cie.js',
-    history: 'questions_ch.js' // CORREÇÃO DA REFERÊNCIA NO ERRO
-};
-
-
-// Variável de estado global
-let state = {};
-// Variável para armazenar as estatísticas consolidadas
-let allTimeStats = {
-    math: { name: "Matemática", correct: 0, wrong: 0, total: 0, color: "blue" },
-    portuguese: { name: "Português", correct: 0, wrong: 0, total: 0, color: "green" },
-    science: { name: "Ciências", correct: 0, wrong: 0, total: 0, color: "yellow" },
-    history: { name: "Ciências Humanas (H/G)", correct: 0, wrong: 0, total: 0, color: "red" },
-};
-// Histórico de índices de questões já usadas (para evitar repetição)
-let questionsHistory = {
-    math: [],
-    portuguese: [],
-    science: [],
-    history: [],
-};
-
-// Função de utilidade para o API Call (Exponential Backoff) - Mantida para o Relatório de Habilidades
-async function fetchWithRetry(url, options, maxRetries = 5) {
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            const response = await fetch(url, options);
-            if (response.ok) return response;
-            if (response.status === 401) throw new Error("Chave de API inválida.");
-            if (response.status === 429) {
-                const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                await new Promise(resolve => setTimeout(resolve, delay));
-                continue;
-            }
-            throw new Error(`Erro HTTP: ${response.status}`);
-        } catch (error) {
-            if (i === maxRetries - 1) throw error;
-            const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-    }
-}
-
-
-// --- Estrutura das Matérias ALINHADA À BNCC (2° ANO EF)
-const subjects = {
-    math: {
-        name: "Matemática",
-        icon: "➕",
-        color: "bg-blue-500",
-        // Habilidades BNCC (Exemplos): EF02MA01, EF02MA05, EF02MA12
-        bncc_focus: "EF02MA01 (ler, escrever e comparar números naturais até 1000), EF02MA05 (construir fatos básicos da adição e subtração), EF02MA06 (resolver problemas de adição e subtração), EF02MA12 (identificar e planificar figuras planas e espaciais), EF02MA15 (comparar capacidade e massa)."
-    },
-    portuguese: {
-        name: "Português",
-        icon: "📖",
-        color: "bg-green-500",
-        // Habilidades BNCC (Exemplos): EF02LP01, EF02LP07, EF02LP15
-        bncc_focus: "EF02LP01 (ler e escrever palavras com correspondências regulares e irregulares), EF02LP07 (segmentar palavras em sílabas), EF02LP10 (identificar sinônimos e antônimos), EF02LP15 (ler e compreender textos curtos, com autonomia), EF02LP18 (planejar e produzir frases e pequenos textos)."
-    },
-    science: {
-        name: "Ciências",
-        icon: "🔬",
-        color: "bg-yellow-500",
-        // Habilidades BNCC (Exemplos): EF02CI04, EF02CI05, EF02CI06
-        bncc_focus: "EF02CI04 (descrever características de plantas e animais), EF02CI05 (identificar materiais utilizados em objetos e suas fontes), EF02CI06 (identificar e classificar os cinco sentidos), EF02CI07 (descrever o ciclo da água e a importância para a vida)."
-    },
-    history: { // Chave interna mantida como 'history' para evitar mudanças em cascata
-        name: "Ciências Humanas (H/G)", // Novo nome de exibição
-        icon: "🕰️",
-        color: "bg-red-500",
-        // Habilidades BNCC (Exemplos): EF02HI01, EF02HI02, EF02HI07
-        bncc_focus: "EF02HI01 (reconhecer o papel da família e da escola), EF02HI02 (identificar e descrever práticas e ritmos de vida no presente e passado), EF02HI07 (identificar e utilizar diferentes marcadores do tempo - dia/noite, semana, mês), EF02HI10 (selecionar objetos e documentos pessoais para análise). *Inclui também habilidades de Geografia (EF02GE...)*" // Nova descrição para BNCC
-    }
-};
-
-function generateSessionId() {
-    return 'sess-' + Date.now() + Math.random().toString(16).slice(2);
-}
-
-
-// --- Geração de Questões do Banco Local ---
-/**
- * Seleciona 5 questões únicas e aleatórias do banco local, evitando repetição.
- * As questões devem ter o formato { question, answer, options, skill, rationale, isCorrect }
- * @param {string} subjectKey - Chave da matéria (ex: 'math').
- * @returns {Array} - Array de 5 objetos de atividade formatados.
- * @throws {Error} - Se o banco de questões estiver vazio ou insuficientemente preenchido.
- */
-function getQuestionsFromLocalBank(subjectKey) {
-    const fullBank = localQuestionBanks[subjectKey];
-    const usedIndices = questionsHistory[subjectKey];
-    const totalQuestions = fullBank.length;
-
-    if (totalQuestions < SESSION_SIZE) {
-        // Se este erro ocorrer, significa que a variável questionBank_... não foi definida/carregada (ou está vazia)
-        const expectedFileName = subjectFileNames[subjectKey]; // Usa o nome corrigido para o erro
-        throw new Error(`Banco de questões para ${subjects[subjectKey].name} insuficiente. Necessário ${SESSION_SIZE}, encontrado ${totalQuestions}. Verifique o arquivo ${expectedFileName}.`);
-    }
-
-    let availableIndices = [];
-    for (let i = 0; i < totalQuestions; i++) {
-        if (!usedIndices.includes(i)) {
-            availableIndices.push(i);
-        }
-    }
-
-    // Se as questões esgotaram, reinicia o ciclo
-    if (availableIndices.length < SESSION_SIZE) {
-        console.warn(`Banco de questões esgotado para ${subjectKey}. Reiniciando o ciclo de ${totalQuestions} questões.`);
-        questionsHistory[subjectKey] = [];
-        availableIndices = [];
-        for (let i = 0; i < totalQuestions; i++) {
-            availableIndices.push(i);
-        }
-    }
-
-    const selectedQuestions = [];
-    const selectedIndicesForThisSession = [];
-    let count = 0;
-
-    while (count < SESSION_SIZE) {
-        // Seleção aleatória
-        const randomIndexInAvailable = Math.floor(Math.random() * availableIndices.length);
-        const questionIndex = availableIndices[randomIndexInAvailable];
-
-        // 3. Pega a questão, armazena o índice e remove o índice da lista de disponíveis para evitar repetição NA SESSÃO ATUAL.
-        selectedQuestions.push(JSON.parse(JSON.stringify(fullBank[questionIndex]))); // Clone para não afetar o banco original
-
-        selectedIndicesForThisSession.push(questionIndex);
-        availableIndices.splice(randomIndexInAvailable, 1);
-        count++;
-    }
-
-    // 4. Adiciona os índices usados ao histórico global (para evitar repetição em sessões futuras)
-    questionsHistory[subjectKey].push(...selectedIndicesForThisSession);
-
-    return selectedQuestions;
-}
-
-
-// --- Funções de Estado e Controle
-/**
- * Inicializa o estado da sessão.
- */
-function resetApp() {
-    state = {
-        currentStage: 1, // 1: Seleção de Tema, 2: Removido/Carregamento, 3: Atividade, 4: Feedback, 5: Relatório, 6: Fim de Sessão
-        currentSubject: null,
-        sessionActivities: [],
-        activityIndex: 0,
-        maxScore: SESSION_SIZE,
-        score: 0,
-        sessionId: generateSessionId(),
-        isLastAnswerCorrect: null
-    };
-    renderApp();
-}
 
 /**
- * Adiciona os resultados da sessão atual às estatísticas consolidadas.
+ * Função de inicialização do quiz para o assunto selecionado.
+ * @param {string} subject - Chave do assunto ('math', 'portuguese', etc.).
+ * @param {string} name - Nome completo do assunto.
+ * @param {boolean} isFinalReview - Se é a revisão final de 40 questões.
  */
-function aggregateSessionResults() {
-    const subjectKey = state.currentSubject;
-    const correct = state.score;
-    const total = state.maxScore;
-    const wrong = total - correct;
-    
-    // 1. Agrega Estatísticas
-    if (allTimeStats[subjectKey]) {
-        allTimeStats[subjectKey].correct += correct;
-        allTimeStats[subjectKey].wrong += wrong;
-        allTimeStats[subjectKey].total += total;
-    } else {
-        allTimeStats[subjectKey] = {
-            name: subjects[subjectKey] ? subjects[subjectKey].name : subjectKey,
-            correct: correct,
-            wrong: wrong,
-            total: total,
-            color: "gray"
-        };
-    }
-    console.log("Estatísticas consolidadas atualizadas.");
-}
+function startQuiz(subject, name, isFinalReview = false) {
+    let allQuestions = [];
+    state.currentSubject = subject;
+    state.subjectName = name;
+    state.isFinalReview = isFinalReview;
 
-/**
- * Prepara e inicia uma nova sessão de revisão.
- * @param {string} subjectKey - Chave da matéria (ex: 'math').
- */
-async function startSession(subjectKey) {
-    state.currentSubject = subjectKey;
-
-    try {
-        const generatedActivities = getQuestionsFromLocalBank(subjectKey);
+    if (isFinalReview) {
+        // Modo Revisão Final (40 questões)
+        const totalFinalQuestions = 40;
+        const questionsPerSubject = Math.floor(totalFinalQuestions / 4);
         
-        // 4. Configura o estado da sessão
-        state.sessionActivities = generatedActivities;
-        state.activityIndex = 0;
-        state.score = 0;
-        state.currentStage = 3; // Inicia a atividade (Stage 3)
-        renderApp();
-    } catch (error) {
-        // Em caso de falha (banco vazio), volta para a seleção e mostra o erro
-        state.currentStage = 1;
-        renderApp();
-        document.getElementById('app').querySelector('.container-box').innerHTML += `
-        <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
-        <p class="font-bold"> ❌ Erro ao Iniciar Sessão!</p>
-        <p class="text-sm">Detalhes: ${error.message}. Por favor, verifique se o banco de questões está preenchido corretamente.</p>
-        </div>
-        `;
-    }
-}
-
-/**
- * Processa a resposta do usuário e avança para a tela de feedback.
- * @param {string} selectedOption - A opção escolhida pelo usuário.
- */
-function submitAnswer(selectedOption) {
-    const currentActivity = state.sessionActivities[state.activityIndex];
-    // Verifica a resposta
-    const isCorrect = selectedOption === currentActivity.answer;
-    state.isLastAnswerCorrect = isCorrect;
-    if (isCorrect) {
-        state.score++;
-        currentActivity.isCorrect = true;
+        // Coleta 10 questões de cada matéria
+        allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.math, questionsPerSubject));
+        allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.portuguese, questionsPerSubject));
+        allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.science, questionsPerSubject));
+        allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.history, questionsPerSubject));
+        
+        // Embaralha o conjunto completo
+        shuffle(allQuestions);
     } else {
-        currentActivity.isCorrect = false;
+        // Modo de revisão por matéria (10 questões)
+        const bank = localQuestionBanks[subject];
+        if (!bank || bank.length === 0) {
+            const subjectKey = subject === 'history' ? 'Ciências Humanas (H/G)' : name;
+            const bankVariable = subject === 'history' ? 'questionBank_hum' : 
+                                 subject === 'math' ? 'questionBank_mat' :
+                                 subject === 'portuguese' ? 'questionBank_lin' :
+                                 subject === 'science' ? 'questionBank_cie' : '??';
+
+            alert(`Banco de questões para ${subjectKey} insuficiente. Necessário 5, encontrado ${bank ? bank.length : 0}. Verifique o arquivo questions_${subject.substring(0, 3)}.js. A variável esperada é: ${bankVariable}.`);
+            return; // Permanece na tela de seleção
+        }
+        allQuestions = selectRandomQuestions(bank, 10);
     }
-    // Vai para o estágio de feedback (Stage 4)
-    state.currentStage = 4;
+
+    // Reinicializa o estado para o novo quiz
+    state.totalQuestions = allQuestions.length;
+    state.questions = allQuestions.map(q => ({
+        ...q,
+        options: shuffle(q.options), // Embaralha as opções
+        answered: false,
+        userAnswer: null,
+        isCorrect: null,
+    }));
+    state.currentQuestionIndex = 0;
+    state.correctAnswers = 0;
+    state.incorrectAnswers = 0;
+    state.report = {
+        totalQuestions: state.totalQuestions,
+        correct: 0,
+        incorrect: 0,
+        details: {},
+    };
+    state.skillFeedback = null;
+
+    // Transiciona para a próxima fase
+    state.currentStage = 3; 
     renderApp();
 }
 
 /**
- * Avança para a próxima questão ou para o fim da sessão. Chamado pelo botão de feedback.
+ * Processa a resposta do usuário e avança para o feedback.
+ * @param {string} selectedAnswer - A opção selecionada pelo usuário.
+ */
+function submitAnswer(selectedAnswer) {
+    if (state.currentStage !== 3 || state.questions[state.currentQuestionIndex].answered) return;
+
+    const currentQuestion = state.questions[state.currentQuestionIndex];
+    const isCorrect = selectedAnswer === currentQuestion.answer;
+    
+    // Atualiza o estado da questão
+    currentQuestion.answered = true;
+    currentQuestion.userAnswer = selectedAnswer;
+    currentQuestion.isCorrect = isCorrect;
+
+    // Atualiza o estado geral
+    if (isCorrect) {
+        state.correctAnswers++;
+        state.report.correct++;
+    } else {
+        state.incorrectAnswers++;
+        state.report.incorrect++;
+    }
+
+    // Atualiza o relatório de habilidades
+    const skill = currentQuestion.skill.split(' - ')[0]; // Usa apenas o código da BNCC
+    if (!state.report.details[skill]) {
+        state.report.details[skill] = { correct: 0, incorrect: 0, rationale: currentQuestion.rationale, subject: state.subjectName };
+    }
+    isCorrect ? state.report.details[skill].correct++ : state.report.details[skill].incorrect++;
+    
+    // Armazena o feedback imediato da habilidade
+    state.skillFeedback = {
+        isCorrect: isCorrect,
+        rationale: currentQuestion.rationale,
+        userAnswer: selectedAnswer,
+        correctAnswer: currentQuestion.answer,
+    };
+
+    state.currentStage = 4; // Vai para a tela de Feedback
+    renderApp();
+}
+
+/**
+ * Avança para a próxima questão ou para o relatório final.
  */
 function nextQuestion() {
-    state.activityIndex++;
-    if (state.activityIndex < state.maxScore) {
-        // Se ainda houver atividades, vai para a próxima (Stage 3)
-        state.currentStage = 3;
+    state.currentQuestionIndex++;
+
+    if (state.currentQuestionIndex < state.totalQuestions) {
+        state.currentStage = 3; // Volta para Atividade
     } else {
-        // Se a sessão terminou, vai para o fim (Stage 6)
-        state.currentStage = 6;
+        state.currentStage = 5; // Vai para Relatório Final
     }
+    state.skillFeedback = null;
     renderApp();
 }
 
+// --- FUNÇÕES DE RENDERIZAÇÃO ---
+
 /**
- * Função principal que chama a API do Gemini para análise de habilidades e dicas. (MANTIDA)
- */
-async function generateSkillReportAndTips() {
-    const reportContainer = document.getElementById('skill-report-container');
-    const subjectName = subjects[state.currentSubject].name;
-    
-    if (!GEMINI_API_KEY) {
-        reportContainer.innerHTML = `
-        <div class="mt-6 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
-        <p class="font-bold"> Chave de API Ausente ou Inválida!</p>
-        <p class="text-sm">Insira a chave Gemini API no código para gerar a análise de
-        habilidades e as dicas personalizadas. Sem chave, a análise não é possível.</p>
-        </div>
-        `;
-        return;
-    }
-
-    const sessionResults = state.sessionActivities.map((activity, index) => {
-        const result = activity.isCorrect ? 'ACERTO' : 'ERRO';
-        // Usa a questão e a habilidade (código BNCC) para a análise
-        return `Questão ${index + 1}: Pergunta: "${activity.question}", Habilidade (BNCC): "${activity.skill}", Resultado: ${result}`;
-    }).join('; ');
-
-    // Prompt ajustado para tratar a habilidade como código BNCC
-    const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n' ou quebras de parágrafo) listando cada habilidade testada (incluindo o código BNCC) com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
-    const userQuery = `Analise a seguinte sessão de revisão na matéria de ${subjectName}. A criança tentou ${state.maxScore} questões. Aqui estão os resultados (Questão, Habilidade BNCC, Resultado): ${sessionResults}. Gere o relatório e as dicas.`;
-
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
-
-    const payload = {
-        contents: [{ parts: [{ text: userQuery }] }],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-            responseMimeType: "application/json",
-            responseSchema: {
-                type: "OBJECT",
-                properties: {
-                    "skill_analysis": { "type": "STRING" },
-                    "improvement_tips": { "type": "STRING" }
-                },
-                propertyOrdering: ["skill_analysis", "improvement_tips"]
-            }
-        }
-    };
-
-    reportContainer.innerHTML =`
-    <div class="mt-6 flex items-center justify-center p-4 bg-gray-50 rounded-lg shadow-inner">
-    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-pink-600"
-    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-
-    width="4"></circle>
-    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0
-    5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-    </svg>
-    <span class="text-gray-700 font-semibold">Analisando habilidades (BNCC)
-    dinamicamente...</span>
-    </div>
-    `;
-
-    try {
-        const response = await fetchWithRetry(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-        const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        if (jsonText) {
-            const parsedJson = JSON.parse(jsonText);
-            const analysis = parsedJson.skill_analysis;
-            const tips = parsedJson.improvement_tips;
-
-            reportContainer.innerHTML = `
-            <div class="mt-6 p-5 bg-gray-50 rounded-lg shadow-inner text-left">
-            <h3 class="text-2xl font-extrabold mb-3 text-pink-600"> Amostragem de 🎯
-            Habilidades (Análise BNCC)</h3>
-            
-            <pre class="mb-4 text-md text-gray-700 whitespace-pre-wrap">${analysis}</pre>
-            
-            <h3 class="text-xl font-bold mt-5 mb-2 text-indigo-600">Dicas para 
-            Melhoria:</h3>
-            <p class="text-lg text-gray-800 italic">${tips}</p>
-            </div>
-            `;
-        } else {
-            reportContainer.innerHTML = `
-            <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
-            <p class="font-bold"> ❌ Erro na Geração do Relatório:</p> 
-            <p class="text-sm">A API não retornou o conteúdo esperado.
-            Verifique a chave 
-            ou o limite de uso.</p>
-            </div>
-            `;
-        }
-    } catch (error) {
-        console.error("Erro ao chamar a API Gemini para análise:", error);
-        reportContainer.innerHTML = `
-        <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
-        <p class="font-bold"> ❌ Erro de Conexão ou API:</p>
-        <p class="text-sm">Não foi possível gerar a análise.
-        Detalhes: 
-        ${error.message}.</p>
-        </div>
-        `;
-    }
-}
-
-
-// --- Renderização de Telas (Stages) ---
-/**
- * Renderiza a tela de Seleção de Tema (Stage 1).
+ * Renderiza a tela de seleção de matéria.
  */
 function renderSelection() {
-    
-    const subjectCards = Object.keys(subjects).map(key => {
-        const subj = subjects[key];
-        // Conta as questões: se localQuestionBanks[key] é um array, .length retorna o tamanho. Se não carregou, é 0.
-        const questionCount = localQuestionBanks[key] ? localQuestionBanks[key].length : 0;
+    const totalLoaded = Object.values(localQuestionBanks).reduce((sum, bank) => sum + bank.length, 0);
 
-        return `
-        <div class="subject-card cursor-pointer hover:shadow-xl" onclick="startSession('${key}')">
-        <div class="text-4xl mb-2">${subj.icon}</div>
-        <h3 class="text-xl font-bold text-gray-800">${subj.name}</h3>
-        <p class="text-sm text-gray-500">Total de Questões: ${questionCount}. Sessão: ${SESSION_SIZE} Questões.</p>
-        </div>
-        `;
-    }).join('');
+    const isAllReady = totalLoaded >= 20; // Pelo menos 5 questões por matéria
 
     const html = `
-    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-    <h1 class="text-3xl font-extrabold mb-4 text-pink-600">Revisão Dinâmica do 2º Ano 
-    EF</h1>
-    <p class="text-gray-600 mb-6">Escolha o tema. As questões são carregadas do banco local, garantindo ineditismo por até 20 sessões!</p>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-    ${subjectCards}
-    </div>
-    ${Object.values(allTimeStats).some(stat => stat.total > 0) ?
-    `
-    <button onclick="state.currentStage = 5; renderApp();" 
-    class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-bold text-lg 
-    rounded-xl shadow-lg theme-button hover:bg-indigo-600 transition duration-150">
-    Ver Relatório de Sessões Anteriores 📊
-    </button>
-    ` : `
-    <button class="w-full md:w-auto px-6 py-3 bg-gray-400 text-white font-bold text-lg 
-    rounded-xl shadow-lg cursor-not-allowed">
-    Relatório disponível após a 1ª revisão 📊
-    </button>
-    `}
-    </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-6">
+            Revisão Dinâmica - 2º Ano EF
+        </h1>
+        <p class="text-center text-gray-600 mb-8">
+            Selecione uma matéria ou faça a Revisão Final (40 Questões).
+        </p>
+        
+        ${isAllReady ? '' : `
+            <div class="text-center p-4 mb-6 bg-yellow-100 border border-yellow-500 rounded-lg">
+                <p class="font-bold text-yellow-700">Atenção: Banco de Questões Insuficiente!</p>
+                <p class="text-sm text-yellow-600">Total de questões carregadas: ${totalLoaded}. É recomendado pelo menos 5 por matéria.</p>
+            </div>
+        `}
+
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="startQuiz('math', 'Matemática')" 
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-math ${localQuestionBanks.math.length < 5 ? 'disabled-option opacity-50' : ''}">
+                Matemática 
+                <span class="text-sm block">(${localQuestionBanks.math.length} Q)</span>
+            </button>
+
+            <button onclick="startQuiz('portuguese', 'Língua Portuguesa')" 
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-portuguese ${localQuestionBanks.portuguese.length < 5 ? 'disabled-option opacity-50' : ''}">
+                Português
+                <span class="text-sm block">(${localQuestionBanks.portuguese.length} Q)</span>
+            </button>
+
+            <button onclick="startQuiz('science', 'Ciências')" 
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-science ${localQuestionBanks.science.length < 5 ? 'disabled-option opacity-50' : ''}">
+                Ciências
+                <span class="text-sm block">(${localQuestionBanks.science.length} Q)</span>
+            </button>
+
+            <button onclick="startQuiz('history', 'Ciências Humanas (H/G)')" 
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-history ${localQuestionBanks.history.length < 5 ? 'disabled-option opacity-50' : ''}">
+                C. Humanas
+                <span class="text-sm block">(${localQuestionBanks.history.length} Q)</span>
+            </button>
+        </div>
+
+        <div class="mt-8 text-center">
+             <button onclick="startQuiz('final', 'Revisão Final', true)" 
+                class="px-6 py-3 bg-purple-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-purple-600 transition duration-150 color-final ${totalLoaded < 20 ? 'disabled-option opacity-50' : ''}">
+                Revisão Final (40 Questões)
+            </button>
+            <p class="text-sm text-gray-500 mt-2">Requer pelo menos 5 questões de cada matéria.</p>
+        </div>
     `;
     document.getElementById('app').innerHTML = html;
 }
 
 /**
- * Renderiza a tela de Atividade (Questão) (Stage 3).
+ * Renderiza a tela da atividade (questão).
  */
 function renderActivity() {
-    const currentActivity = state.sessionActivities[state.activityIndex];
-    const subj = subjects[state.currentSubject];
-    // Embaralha as opções para que a resposta correta não seja sempre a primeira
-    const shuffledOptions = [...currentActivity.options].sort(() => 0.5 - Math.random());
-    const optionsHtml = shuffledOptions.map(option => `
-    <button onclick="submitAnswer('${option.replace(/'/g, "\\'")}')"
-    class="w-full py-3 px-4 mb-3 bg-gray-100 text-gray-800 font-semibold rounded-lg 
-    border-2 border-gray-300 hover:bg-pink-100 hover:border-pink-500 transition duration-100 text-lg 
-    text-left shadow-md">
-    ${option}
-    </button>
-    `).join('');
-    // Certifique-se de que a questão também é exibida
-    const questionText = currentActivity.question || "Carregando pergunta...";
+    const current = state.questions[state.currentQuestionIndex];
+    const progress = state.currentQuestionIndex + 1;
+    const total = state.totalQuestions;
+    const percent = Math.round((progress / total) * 100);
+
+    const getSubjectColor = (subject) => {
+        if (state.isFinalReview) {
+            // No modo final, determina a cor pela 'skill' da questão (código da BNCC)
+            if (subject.startsWith('EF02MA')) return 'color-math';
+            if (subject.startsWith('EF02LP')) return 'color-portuguese';
+            if (subject.startsWith('EF02CI')) return 'color-science';
+            if (subject.startsWith('EF02HI') || subject.startsWith('EF02GE')) return 'color-history';
+            return 'color-final'; // Cor padrão
+        }
+        return `color-${state.currentSubject}`;
+    };
+
+    const colorClass = getSubjectColor(current.skill);
+
     const html = `
-    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-left border 
-    t-8 border-${subj.color.split('-')[1]}-500">
-    <div class="mb-4 flex justify-between items-center">
-    <span class="text-lg font-bold text-gray-600">${subj.icon} ${subj.name}</span>
-    <span class="text-2xl font-extrabold text-pink-600">Questão ${state.activityIndex +
-    1} / ${state.maxScore}</span>
-    </div>
-    <p class="text-2xl font-bold mb-6 text-gray-900">${questionText}</p>
-    <p class="text-xs text-gray-400 mb-4">Habilidade BNCC: 
-    ${currentActivity.skill}</p>
-    <div class="options-container">
-    ${optionsHtml}
-    </div>
-    </div>
+        <div class="mb-6 text-center">
+            <h2 class="text-2xl font-bold text-gray-700">${state.subjectName}</h2>
+            <p class="text-sm text-gray-500">Questão ${progress} de ${total}</p>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                <div class="h-2.5 rounded-full ${colorClass.replace('color-', 'bg-')}-500" style="width: ${percent}%"></div>
+            </div>
+        </div>
+        
+        <div class="p-6 rounded-xl border-2 border-dashed ${colorClass}">
+            <p class="text-xl font-semibold text-gray-800 mb-4 animate-fade-in">${current.question}</p>
+            <p class="text-xs text-gray-500 mb-4">Habilidade BNCC: ${current.skill}</p>
+            <div class="space-y-3">
+                ${current.options.map((option, index) => `
+                    <button onclick="submitAnswer('${option.replace(/'/g, "\\'")}')" 
+                        class="w-full text-left p-3 rounded-lg border-2 border-gray-300 bg-gray-50 hover:bg-gray-200 transition duration-150 font-medium text-gray-700">
+                        ${String.fromCharCode(65 + index)}. ${option}
+                    </button>
+                `).join('')}
+            </div>
+        </div>
     `;
     document.getElementById('app').innerHTML = html;
 }
 
 /**
- * Renderiza a tela de Feedback Imediato (Stage 4).
+ * Renderiza a tela de feedback após a resposta.
  */
 function renderFeedback() {
-    const isCorrect = state.isLastAnswerCorrect;
-    const message = isCorrect ?
-    "Parabéns! Você acertou! 🎉" : "Ops! Você errou. Vamos tentar a próxima! 🤔";
-    const bgColor = isCorrect ? "bg-blue-100 border-blue-500" : "bg-red-100 border-red-500";
-    const textColor = isCorrect ? "text-blue-800" : "text-red-800";
-    const buttonColor = isCorrect ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-600";
-    
-    const currentActivity = state.sessionActivities[state.activityIndex];
-    const buttonText = state.activityIndex < state.maxScore - 1 ? "Próxima Questão" : "Ver Relatório Final";
+    const current = state.questions[state.currentQuestionIndex];
+    const feedback = state.skillFeedback;
+    const isCorrect = feedback.isCorrect;
+    const subjectColor = isCorrect ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
+    const progress = state.currentQuestionIndex + 1;
+    const total = state.totalQuestions;
+
     const html = `
-    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-    <div class="p-8 rounded-2xl border-4 ${bgColor} ${textColor} animate-bounce" 
-    style="animation-duration: 0.5s;">
-    <p class="text-4xl font-extrabold mb-4">${isCorrect ?
-    "✅" : "❌"}</p>
-    <h2 class="text-3xl font-bold">${message}</h2>
-    </div>
-    
-    <div class="mt-6 p-4 bg-gray-50 rounded-lg text-left">
-    <p class="font-bold text-lg text-pink-600">Resposta Correta:</p>
-    <p class="text-xl text-gray-800">${currentActivity.answer}</p>
-    </div>
-    <button onclick="nextQuestion()" 
-    class="mt-8 px-8 py-4 ${buttonColor} text-white font-extrabold text-xl rounded 
-    xl shadow-lg theme-button transition duration-150">
-    ${buttonText}
-    </button>
-    </div>
+        <div class="text-center mb-6">
+            <h2 class="text-3xl font-extrabold ${isCorrect ? 'text-green-600' : 'text-red-600'} animate-fade-in">
+                ${isCorrect ? '🎉 Parabéns! Resposta Certa' : '😔 Ops! Resposta Errada'}
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Questão ${progress} de ${total}</p>
+        </div>
+
+        <div class="p-6 rounded-xl border-2 ${subjectColor} mb-6 animate-fade-in">
+            <p class="text-lg font-semibold mb-3">${current.question}</p>
+            
+            <p class="mt-4 text-left">
+                <span class="font-bold">Sua Resposta:</span> 
+                <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 line-through'}">
+                    ${feedback.userAnswer}
+                </span>
+            </p>
+            
+            ${!isCorrect ? `
+                <p class="mt-2 text-left">
+                    <span class="font-bold">Resposta Correta:</span> 
+                    <span class="text-green-700 font-bold">${feedback.correctAnswer}</span>
+                </p>
+            ` : ''}
+
+            <div class="mt-4 pt-3 border-t border-gray-300">
+                <p class="font-bold text-md mb-2">Por Quê? (Racional)</p>
+                <p class="text-sm text-gray-800">${feedback.rationale}</p>
+                <p class="text-xs text-gray-500 mt-2">Habilidade: ${current.skill}</p>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button onclick="nextQuestion()" 
+                class="px-8 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-blue-600 transition duration-150">
+                ${progress < total ? 'Próxima Questão' : 'Ver Relatório Final'}
+            </button>
+        </div>
     `;
     document.getElementById('app').innerHTML = html;
 }
 
 /**
- * Renderiza a tela de Relatório Consolidado (Stage 5).
+ * Renderiza a tela de relatório final.
  */
 function renderReport() {
+    const total = state.report.totalQuestions;
+    const correct = state.report.correct;
+    const incorrect = state.report.incorrect;
+    const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+    const isPassing = percentage >= 70; // Critério de aprovação (70%)
 
-    const statsEntries = Object.values(allTimeStats).filter(stat => stat.total > 0); 
-    let reportHtml = '';
-    if (statsEntries.length === 0) {
-        reportHtml = `
-        <p class="text-xl text-gray-500">Nenhum dado de sessão anterior encontrado.
-        Tente 
-        completar uma revisão primeiro!</p>
-        `;
+    // Agrupa o relatório por assunto no modo final
+    const finalReport = {};
+    if (state.isFinalReview) {
+        for (const skill in state.report.details) {
+            const detail = state.report.details[skill];
+            const subject = detail.subject;
+            if (!finalReport[subject]) {
+                finalReport[subject] = { correct: 0, incorrect: 0, total: 0, details: {} };
+            }
+            finalReport[subject].correct += detail.correct;
+            finalReport[subject].incorrect += detail.incorrect;
+            finalReport[subject].total += (detail.correct + detail.incorrect);
+            finalReport[subject].details[skill] = detail;
+        }
     } else {
-        reportHtml = statsEntries.map(stat => {
-            const percentageCorrect = stat.total > 0 ? ((stat.correct / stat.total) * 100).toFixed(0) : 0;
-            const barColor = percentageCorrect >= 70 ? 'bg-green-500' : percentageCorrect >= 50 ?
-            'bg-yellow-500' : 'bg-red-500';
-            return `
-            <div class="p-5 bg-white rounded-xl shadow-lg border-l-8 border-${stat.color.split('-')[1]}-500 
-            transition duration-300 hover:shadow-xl">
-            <h3 class="text-2xl font-bold mb-2 text-gray-800">${stat.name}</h3>
+        // Se for por matéria, usa o nome da matéria como chave única
+        finalReport[state.subjectName] = { 
+            correct: correct, 
+            incorrect: incorrect, 
+            total: total, 
+            details: state.report.details 
+        };
+    }
+
+    const getSubjectColor = (subjectName) => {
+        if (subjectName.includes('Matemática')) return 'color-math';
+        if (subjectName.includes('Português')) return 'color-portuguese';
+        if (subjectName.includes('Ciências Humanas')) return 'color-history';
+        if (subjectName.includes('Ciências')) return 'color-science';
+        return 'color-final';
+    };
+
+    const html = `
+        <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-6">
+            Relatório de Desempenho
+        </h2>
+
+        <div class="p-6 rounded-xl border-4 ${isPassing ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'} text-center mb-6 animate-fade-in">
+            <p class="text-lg font-bold ${isPassing ? 'text-green-700' : 'text-red-700'}">${state.subjectName}</p>
+            <p class="text-4xl font-extrabold mt-1 mb-2">${percentage}% de Acerto</p>
+            <p class="text-md text-gray-700">${correct} Acertos / ${incorrect} Erros (Total: ${total})</p>
+        </div>
+
+        ${Object.keys(finalReport).map(subjectName => {
+            const sub = finalReport[subjectName];
+            const subPercentage = sub.total > 0 ? Math.round((sub.correct / sub.total) * 100) : 0;
+            const subColor = getSubjectColor(subjectName);
+            const subBgClass = subColor.replace('color-', 'bg-');
             
-            <div class="mb-3 text-sm text-gray-600">
-            <span>Total de Questões: <span 
-            class="font-bold">${stat.total}</span></span> |
-            <span class="text-green-600">Acertos: <span class="font-bold">
-            ${stat.correct}</span></span> |
-            <span class="text-red-600">Erros: <span 
-            class="font-bold">${stat.wrong}</span></span>
-            </div>
-        
-            <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
-            <div class="h-4 rounded-full ${barColor}" style="width: ${percentageCorrect}
-            %; transition: width 1s ease-out;"></div>
-            <span class="absolute right-0 top-0 bottom-0 flex items-center pr-3 font-bold 
-            text-xs ${percentageCorrect > 50 ?
-            'text-white' : 'text-gray-800'}">
-            ${percentageCorrect}%
-            </span>
-            </div>
-            <p class="mt-2 text-sm text-gray-500">Aproveitamento geral.</p>
-            </div>
+            return `
+                <div class="mb-6 p-4 rounded-xl border-2 ${subColor} ${subBgClass}-50 animate-fade-in">
+                    <h3 class="text-xl font-bold text-gray-700 mb-3">${subjectName} (${subPercentage}% de Acerto)</h3>
+                    <p class="text-sm text-gray-600 mb-4">${sub.correct} Acertos / ${sub.incorrect} Erros</p>
+
+                    <h4 class="font-bold text-gray-600 mb-2 border-t pt-2">Análise por Habilidade (BNCC):</h4>
+                    <ul class="space-y-2 text-sm">
+                        ${Object.keys(sub.details).map(skill => {
+                            const detail = sub.details[skill];
+                            const skillAccuracy = detail.correct + detail.incorrect > 0 ? Math.round((detail.correct / (detail.correct + detail.incorrect)) * 100) : 0;
+                            const skillBg = skillAccuracy >= 70 ? 'bg-green-200' : skillAccuracy >= 50 ? 'bg-yellow-200' : 'bg-red-200';
+                            
+                            return `
+                                <li class="p-2 rounded-lg ${skillBg} flex justify-between items-center">
+                                    <span class="font-semibold">${skill}</span>
+                                    <span class="font-bold">${skillAccuracy}% (${detail.correct}/${detail.correct + detail.incorrect})</span>
+                                </li>
+                            `;
+                        }).join('')}
+                    </ul>
+                </div>
             `;
-        }).join('');
-        reportHtml = `<div class="report-grid">${reportHtml}</div>`;
-    }
+        }).join('')}
 
-    const html = `
-    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-    <h2 class="text-4xl font-extrabold mb-2 text-pink-600"> Relatório 📊
-    Consolidado</h2>
-    <p class="text-lg text-gray-700 mb-6">Desempenho acumulado de todas as revisões 
-    nesta sessão:</p>
-
-    ${reportHtml}
-    <button onclick="state.currentStage = 1; renderApp();" 
-    class="mt-8 w-full md:w-auto px-6 py-3 bg-red-500 text-white font-bold text-lg 
-    rounded-xl shadow-lg theme-button hover:bg-red-600 transition duration-150">
-    Voltar ao Menu Principal
-    </button>
-    </div>
+        <div class="mt-8 text-center">
+            <button onclick="state.currentStage = 1; renderApp();" 
+                class="px-6 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-blue-600 transition duration-150">
+                Começar Nova Revisão (Voltar ao Início)
+            </button>
+        </div>
     `;
     document.getElementById('app').innerHTML = html;
 }
 
-/**
- * Renderiza a tela de Fim de Sessão (Stage 6).
- */
-function renderEnd() {
-    const subj = subjects[state.currentSubject];
-    const totalQuestions = state.maxScore;
-    const correctAnswers = state.score;
-    const wrongAnswers = totalQuestions - correctAnswers;
-    
-    aggregateSessionResults(); // Agrega estatísticas
-    let feedbackMessage = "";
-    let emoji = "";
-    if (correctAnswers === totalQuestions) {
-        feedbackMessage = "Incrível! Você acertou todas as questões!";
-        emoji = "⭐"; 
-    } else if (correctAnswers >= totalQuestions * 0.7) {
-        feedbackMessage = "Muito bem! Excelente trabalho na revisão!";
-        emoji = "😊";
-    } else {
-        feedbackMessage = "Continue praticando! A repetição leva à perfeição.";
-        emoji = "👍";
-    }
-
-    const html = `
-    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center 
-    border-t-8 border-${subj.color.split('-')[1]}-500">
-    <h2 class="text-4xl font-extrabold mb-4 text-pink-600">Revisão Finalizada!
-    ${emoji}</h2>
-    <p class="text-2xl font-semibold mb-4 text-gray-800">${feedbackMessage}</p>
-    
-    <div class="my-6 p-4 bg-gray-50 rounded-lg">
-    <p class="text-lg font-bold">Resumo da Sessão de ${subj.name}:</p>
-    <p class="text-xl text-green-600 font-extrabold">Acertos: ${correctAnswers}</p>
-    <p class="text-xl text-red-600 font-extrabold">Erros: ${wrongAnswers}</p>
-    <p class="text-md text-gray-500">Total de Questões: ${totalQuestions}</p>
-    </div>
-    <div id="skill-report-container" class="text-left">
-    </div>
-    <button onclick="state.currentStage = 1; renderApp();"
-    class="mt-8 px-6 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl 
-    shadow-lg theme-button hover:bg-blue-600 transition duration-150">
-    Começar Nova Revisão (Voltar ao Início)
-    </button>
-    </div>
-    `;
-    document.getElementById('app').innerHTML = html;
-    
-    // Chama a análise da Gemini imediatamente após renderizar a tela
-    generateSkillReportAndTips();
-}
 // --- Controlador Principal (StateMachine) ---
 function renderApp() {
     try {
@@ -710,23 +543,23 @@ function renderApp() {
         // Tratamento de erro robusto
         console.error("Erro fatal na aplicação:", error);
         document.getElementById('app').innerHTML = `
-        <div class="text-center p-8 bg-red-100 border-2 border-red-500 rounded-xl">
-        <h2 class="text-2xl text-red-700">Ocorreu um Erro!</h2>
-        <p class="text-gray-600">Por favor, reinicie a página.
-        Detalhes: ${error.message}. Certifique-se de que os arquivos questions_*.js existem e não estão vazios.</p>
+            <div class="text-center p-8 bg-red-100 border-2 border-red-500 rounded-xl">
+                <h2 class="text-2xl text-red-700">Ocorreu um Erro!</h2>
+                <p class="text-gray-600">Por favor, reinicie a página.
+                Detalhes: ${error.message}. Certifique-se de que os arquivos questions_*.js existem e não estão vazios. **Verifique o console (F12) para detalhes.**</p>
 
-        <button onclick="window.location.reload();" 
-        class="mt-4 px-6
-        py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg theme-button hover:bg-red 
-        600">
-        Recarregar
-        </button>
-        </div>
+                <button onclick="window.location.reload();" 
+                    class="mt-4 px-6 py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-red-600 transition duration-150">
+                    Recarregar Página
+                </button>
+            </div>
         `;
     }
 }
+
 // Inicia a aplicação
-window.onload = resetApp;
+document.addEventListener('DOMContentLoaded', renderApp);
 </script>
+
 </body>
 </html>
