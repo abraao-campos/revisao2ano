@@ -130,8 +130,7 @@ function selectRandomQuestions(bank, N = 10) {
 const localQuestionBanks = {
     math: typeof questionBank_mat !== 'undefined' ? questionBank_mat : [],
     portuguese: typeof questionBank_lin !== 'undefined' ? questionBank_lin : [],
-    science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [],
-    // CORREÇÃO: Trocado questionBank_ch por questionBank_hum para coincidir com o arquivo questions_ch.js
+    science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [],    
     history: typeof questionBank_hum !== 'undefined' ? questionBank_hum : [], 
 };
 
@@ -563,3 +562,4 @@ document.addEventListener('DOMContentLoaded', renderApp);
 
 </body>
 </html>
+
