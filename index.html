@@ -130,7 +130,8 @@ function selectRandomQuestions(bank, N = 10) {
 const localQuestionBanks = {
     math: typeof questionBank_mat !== 'undefined' ? questionBank_mat : [],
     portuguese: typeof questionBank_lin !== 'undefined' ? questionBank_lin : [],
-    science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [],    
+    science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [],
+    // CORRIGIDO: Agora busca a variável 'questionBank_hum'
     history: typeof questionBank_hum !== 'undefined' ? questionBank_hum : [], 
 };
 
@@ -266,6 +267,12 @@ function nextQuestion() {
 function renderSelection() {
     const totalLoaded = Object.values(localQuestionBanks).reduce((sum, bank) => sum + bank.length, 0);
 
+    // Verifica se os bancos carregaram corretamente para mostrar a contagem na tela
+    const countMath = localQuestionBanks.math.length;
+    const countPortuguese = localQuestionBanks.portuguese.length;
+    const countScience = localQuestionBanks.science.length;
+    const countHistory = localQuestionBanks.history.length;
+    
     const isAllReady = totalLoaded >= 20; // Pelo menos 5 questões por matéria
 
     const html = `
@@ -285,27 +292,27 @@ function renderSelection() {
 
         <div class="grid grid-cols-2 gap-4">
             <button onclick="startQuiz('math', 'Matemática')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-math ${localQuestionBanks.math.length < 5 ? 'disabled-option opacity-50' : ''}">
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-math ${countMath < 5 ? 'disabled-option opacity-50' : ''}">
                 Matemática 
-                <span class="text-sm block">(${localQuestionBanks.math.length} Q)</span>
+                <span class="text-sm block">(${countMath} Q)</span>
             </button>
 
             <button onclick="startQuiz('portuguese', 'Língua Portuguesa')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-portuguese ${localQuestionBanks.portuguese.length < 5 ? 'disabled-option opacity-50' : ''}">
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-portuguese ${countPortuguese < 5 ? 'disabled-option opacity-50' : ''}">
                 Português
-                <span class="text-sm block">(${localQuestionBanks.portuguese.length} Q)</span>
+                <span class="text-sm block">(${countPortuguese} Q)</span>
             </button>
 
             <button onclick="startQuiz('science', 'Ciências')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-science ${localQuestionBanks.science.length < 5 ? 'disabled-option opacity-50' : ''}">
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-science ${countScience < 5 ? 'disabled-option opacity-50' : ''}">
                 Ciências
-                <span class="text-sm block">(${localQuestionBanks.science.length} Q)</span>
+                <span class="text-sm block">(${countScience} Q)</span>
             </button>
 
             <button onclick="startQuiz('history', 'Ciências Humanas (H/G)')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-history ${localQuestionBanks.history.length < 5 ? 'disabled-option opacity-50' : ''}">
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-history ${countHistory < 5 ? 'disabled-option opacity-50' : ''}">
                 C. Humanas
-                <span class="text-sm block">(${localQuestionBanks.history.length} Q)</span>
+                <span class="text-sm block">(${countHistory} Q)</span>
             </button>
         </div>
 
@@ -329,14 +336,13 @@ function renderActivity() {
     const total = state.totalQuestions;
     const percent = Math.round((progress / total) * 100);
 
-    const getSubjectColor = (subject) => {
+    const getSubjectColor = (skillCode) => {
         if (state.isFinalReview) {
-            // No modo final, determina a cor pela 'skill' da questão (código da BNCC)
-            if (subject.startsWith('EF02MA')) return 'color-math';
-            if (subject.startsWith('EF02LP')) return 'color-portuguese';
-            if (subject.startsWith('EF02CI')) return 'color-science';
-            if (subject.startsWith('EF02HI') || subject.startsWith('EF02GE')) return 'color-history';
-            return 'color-final'; // Cor padrão
+            if (skillCode.startsWith('EF02MA')) return 'color-math';
+            if (skillCode.startsWith('EF02LP')) return 'color-portuguese';
+            if (skillCode.startsWith('EF02CI')) return 'color-science';
+            if (skillCode.startsWith('EF02HI') || skillCode.startsWith('EF02GE')) return 'color-history';
+            return 'color-final'; 
         }
         return `color-${state.currentSubject}`;
     };
@@ -545,7 +551,7 @@ function renderApp() {
             <div class="text-center p-8 bg-red-100 border-2 border-red-500 rounded-xl">
                 <h2 class="text-2xl text-red-700">Ocorreu um Erro!</h2>
                 <p class="text-gray-600">Por favor, reinicie a página.
-                Detalhes: ${error.message}. Certifique-se de que os arquivos questions_*.js existem e não estão vazios. **Verifique o console (F12) para detalhes.**</p>
+                Detalhes: ${error.message}. Certifique-se de que os arquivos questions_*.js existem e não estão vazios.</p>
 
                 <button onclick="window.location.reload();" 
                     class="mt-4 px-6 py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-red-600 transition duration-150">
@@ -562,4 +568,3 @@ document.addEventListener('DOMContentLoaded', renderApp);
 
 </body>
 </html>
-
