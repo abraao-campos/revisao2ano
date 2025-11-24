@@ -131,8 +131,7 @@ const localQuestionBanks = {
     math: typeof questionBank_mat !== 'undefined' ? questionBank_mat : [],
     portuguese: typeof questionBank_lin !== 'undefined' ? questionBank_lin : [],
     science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [],
-    // CORRIGIDO: Agora busca a variável 'questionBank_hum'
-    history: typeof questionBank_hum !== 'undefined' ? questionBank_hum : [], 
+    history: typeof questionBank_ch !== 'undefined' ? questionBank_ch : [], 
 };
 
 /**
@@ -165,7 +164,7 @@ function startQuiz(subject, name, isFinalReview = false) {
         const bank = localQuestionBanks[subject];
         if (!bank || bank.length === 0) {
             const subjectKey = subject === 'history' ? 'Ciências Humanas (H/G)' : name;
-            const bankVariable = subject === 'history' ? 'questionBank_hum' : 
+            const bankVariable = subject === 'history' ? 'questionBank_ch' : 
                                  subject === 'math' ? 'questionBank_mat' :
                                  subject === 'portuguese' ? 'questionBank_lin' :
                                  subject === 'science' ? 'questionBank_cie' : '??';
@@ -568,3 +567,4 @@ document.addEventListener('DOMContentLoaded', renderApp);
 
 </body>
 </html>
+
