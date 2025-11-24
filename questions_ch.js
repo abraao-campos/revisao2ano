@@ -1,6 +1,6 @@
 const questionBank_hum = [
     // ----------------------------------------------------------------------
-    // HISTÓRIA (EF02HI01 - EF02HI11) - 50 Questões
+    // HISTÓRIA (EF02HI01 - EF02HI11) - 37 Questões
     // ----------------------------------------------------------------------
 
     // Habilidade: EF02HI01 - Reconhecer espaços de sociabilidade e grupos sociais.
@@ -229,37 +229,37 @@ const questionBank_hum = [
     {
         "question": "Na sua casa, qual **papel social** geralmente é do pai ou da mãe?",
         "answer": "Cozinhar, trabalhar e cuidar da casa",
-        "options": ["Apenas ver TV", "Cozinhar, trabalhar e cuidar da casa", "Jogar o dia todo", "Apenas brincar"],
-        "skill": "EF02HI07 - Papéis sociais (Presente - Família)",
-        "rationale": "Pais e mães, geralmente, desempenham papéis de provisão e cuidado dentro do núcleo familiar."
+        "options": ["Apenas ver TV", "Cozinhar, trabalhar e cuidar da casa", "Jogar bola o dia todo", "Ficar sem fazer nada"],
+        "skill": "EF02HI07 - Papéis sociais (Família atual)",
+        "rationale": "Os papéis sociais na família moderna costumam ser compartilhados, incluindo responsabilidades com o lar e o trabalho."
     },
     {
-        "question": "No passado, as roupas das crianças eram mais parecidas com as roupas de quem?",
-        "answer": "Adultos (miniaturas)",
-        "options": ["Super-heróis", "Adultos (miniaturas)", "Animais", "Personagens de desenho"],
-        "skill": "EF02HI07 - Práticas sociais (Vestuário - Passado)",
-        "rationale": "Antigamente, as roupas infantis costumavam ser cópias das roupas dos adultos, em tamanhos menores."
+        "question": "Qual prática de alimentação mudou com a invenção da **geladeira**?",
+        "answer": "A forma de conservar os alimentos",
+        "options": ["A forma de plantar o feijão", "A forma de conservar os alimentos", "A forma de colher a fruta", "O modo de ler o jornal"],
+        "skill": "EF02HI07 - Práticas sociais (Mudança e Tecnologia)",
+        "rationale": "A geladeira permitiu conservar alimentos por mais tempo e de forma mais segura, mudando os hábitos de consumo."
     },
     {
-        "question": "O que significa dizer que as **práticas sociais** mudam com o tempo?",
-        "answer": "A forma como fazemos as coisas é diferente de como era antes",
-        "options": ["As pessoas ficam mais velhas", "A forma como fazemos as coisas é diferente de como era antes", "O tempo para de passar", "As regras nunca mudam"],
-        "skill": "EF02HI07 - Conceito de mudança no tempo",
-        "rationale": "Práticas sociais são os hábitos e costumes que se alteram de uma época para outra."
+        "question": "Antigamente, sem o celular, qual era a principal forma de **avisar** alguém com urgência?",
+        "answer": "Telefone fixo",
+        "options": ["E-mail", "Telefone fixo", "Mensagem de texto", "Rede social"],
+        "skill": "EF02HI07 - Práticas sociais (Passado e Tecnologia)",
+        "rationale": "O telefone fixo era o principal meio de comunicação instantânea antes da popularização do celular."
     },
 
-    // Habilidade: EF02HI08 - Identificar formas de representação da passagem do tempo (calendário, relógio).
-    // (4 Questões)
+    // Habilidade: EF02HI08 - Identificar diferentes formas de medir o tempo (calendário, relógio).
+    // (5 Questões)
     {
-        "question": "Qual instrumento usamos para contar os **dias, semanas e meses** de um ano?",
+        "question": "Qual instrumento usamos para saber o dia da semana, o mês e o ano?",
         "answer": "Calendário",
-        "options": ["Balança", "Relógio", "Calendário", "Régua"],
+        "options": ["Relógio de pulso", "Calendário", "Termômetro", "Régua"],
         "skill": "EF02HI08 - Instrumentos de medida do tempo (Calendário)",
-        "rationale": "O calendário organiza o tempo em dias, semanas e meses."
+        "rationale": "O calendário mede o tempo em longos períodos: dias, semanas, meses e anos."
     },
     {
-        "question": "Qual instrumento usamos para medir a **hora exata** do dia?",
-        "answer": "Relógio",
+        "question": "Qual informação o **relógio** de pulso nos dá com mais precisão?",
+        "answer": "A hora exata do dia",
         "options": ["Em qual ano estamos", "A hora exata do dia", "Quantos anos você tem", "Quantos dias faltam para o Natal"],
         "skill": "EF02HI08 - Instrumentos de medida do tempo (Relógio)",
         "rationale": "O relógio mede intervalos curtos de tempo, como horas e minutos."
@@ -275,16 +275,23 @@ const questionBank_hum = [
         "question": "Se o seu aniversário é em **Março**, e hoje é **Janeiro**, em quantos meses ele vai chegar?",
         "answer": "2 meses (Fevereiro e Março)",
         "options": ["1 mês", "2 meses (Fevereiro e Março)", "10 meses", "Nesta semana"],
-        "skill": "EF02HI08 - Organização do tempo (Meses)",
-        "rationale": "De Janeiro a Março passam Fevereiro e Março (2 meses)."
+        "skill": "EF02HI08 - Cálculo de tempo (Meses)",
+        "rationale": "De janeiro a março são 2 meses (Fevereiro e Março)."
+    },
+    {
+        "question": "Qual objeto de medida do tempo não existia na época dos seus avós quando eram crianças?",
+        "answer": "Relógio digital",
+        "options": ["Relógio de Sol", "Relógio de pulso", "Calendário", "Relógio digital"],
+        "skill": "EF02HI08 - Instrumentos de medida do tempo (Passado)",
+        "rationale": "Relógios digitais são uma invenção mais recente em comparação com calendários e relógios de sol/analógicos."
     },
 
-    // Habilidade: EF02HI09 - Identificar e analisar documentos pessoais.
-    // (3 Questões)
+    // Habilidade: EF02HI09 - Identificar objetos e documentos pessoais (uso e função).
+    // (4 Questões)
     {
-        "question": "Qual dos documentos abaixo é obrigatório para fazer uma **matrícula** na escola?",
+        "question": "Qual documento é essencial para provar quem você é e sua nacionalidade?",
         "answer": "Certidão de Nascimento ou RG",
-        "options": ["Receita de bolo", "Lista de compras", "Certidão de Nascimento ou RG", "Bula de remédio"],
+        "options": ["Conta de luz", "Revista", "Certidão de Nascimento ou RG", "Bula de remédio"],
         "skill": "EF02HI09 - Documentos de identificação",
         "rationale": "A Certidão de Nascimento ou RG são documentos de identificação necessários para a matrícula."
     },
@@ -296,11 +303,18 @@ const questionBank_hum = [
         "rationale": "Dados pessoais são todas as informações que permitem identificar uma pessoa."
     },
     {
-        "question": "Qual informação **não** é considerada um dado pessoal?",
-        "answer": "A cor do céu",
-        "options": ["O nome completo", "A cor do céu", "A data de nascimento", "O nome do pai"],
-        "skill": "EF02HI09 - Identificação de dados pessoais",
-        "rationale": "A cor do céu é uma informação pública e não identifica uma pessoa."
+        "question": "Qual objeto pessoal de infância você guardaria por ter grande **valor afetivo**?",
+        "answer": "Um brinquedo preferido",
+        "options": ["Uma casca de banana", "Um brinquedo preferido", "Um mapa", "Um controle remoto quebrado"],
+        "skill": "EF02HI09 - Valor afetivo dos objetos",
+        "rationale": "Objetos preferidos guardam memórias e sentimentos (valor afetivo)."
+    },
+    {
+        "question": "Para que serve a **Carteira de Vacinação**?",
+        "answer": "Registrar as vacinas que você já tomou",
+        "options": ["Registrar seus desenhos", "Registrar as vacinas que você já tomou", "Anotar o nome dos amigos", "Guardar dinheiro"],
+        "skill": "EF02HI09 - Função de documentos (Saúde)",
+        "rationale": "A carteira de vacinação é um documento de saúde que registra a imunização."
     },
 
     // Habilidade: EF02HI10 - Identificar diferentes formas de trabalho (atual e histórico).
@@ -313,25 +327,25 @@ const questionBank_hum = [
         "rationale": "O agricultor trabalha no campo, plantando e colhendo alimentos."
     },
     {
-        "question": "O trabalho que transforma o leite em queijo é feito em qual local?",
-        "answer": "Indústria (Fábrica)",
-        "options": ["Campo (fazenda)", "Escola", "Indústria (Fábrica)", "Comércio (loja)"],
-        "skill": "EF02HI10 - Tipos de trabalho (Indústria)",
-        "rationale": "A transformação de matéria-prima em produto é feita na indústria."
+        "question": "O que faz um **sapateiro** (trabalho histórico)?",
+        "answer": "Conserta e faz sapatos",
+        "options": ["Conserta e faz sapatos", "Vende sorvete", "Pinta quadros", "Dirige um caminhão"],
+        "skill": "EF02HI10 - Tipos de trabalho (Histórico)",
+        "rationale": "O sapateiro é o artesão que fabrica e conserta calçados, um ofício que existe há muito tempo."
     },
     {
-        "question": "Qual trabalho envolve a venda de produtos diretamente para as pessoas?",
-        "answer": "Vendedor",
-        "options": ["Cozinheiro", "Médico", "Vendedor", "Policial"],
+        "question": "Qual trabalho é feito **dentro de uma loja** e tem o objetivo de vender produtos?",
+        "answer": "Vendedor ou Comerciário",
+        "options": ["Pedreiro", "Vendedor ou Comerciário", "Jardineiro", "Pescador"],
         "skill": "EF02HI10 - Tipos de trabalho (Comércio)",
-        "rationale": "O vendedor trabalha no comércio, vendendo mercadorias."
+        "rationale": "O vendedor ou comerciário é o profissional que realiza a atividade de comércio em lojas."
     },
     {
-        "question": "Qual trabalho mudou mais com a invenção da **máquina de escrever** e, depois, do **computador**?",
-        "answer": "O trabalho de quem escreve e organiza documentos",
-        "options": ["O trabalho do fazendeiro", "O trabalho de quem escreve e organiza documentos", "O trabalho do bombeiro", "O trabalho do pedreiro"],
-        "skill": "EF02HI10 - Mudança no trabalho por tecnologia",
-        "rationale": "Tecnologias de escrita e processamento de dados mudaram drasticamente o trabalho de secretários e escritores."
+        "question": "Qual é a principal função do **bombeiro**?",
+        "answer": "Apagar incêndios e resgatar pessoas",
+        "options": ["Dar aulas de história", "Construir casas", "Apagar incêndios e resgatar pessoas", "Entregar cartas"],
+        "skill": "EF02HI10 - Tipos de trabalho (Serviço Público)",
+        "rationale": "O bombeiro presta um serviço público essencial de salvamento e combate a incêndios."
     },
 
     // Habilidade: EF02HI11 - Identificar a importância da água e do solo.
@@ -351,19 +365,18 @@ const questionBank_hum = [
         "rationale": "O solo é a base para o crescimento das plantas e a produção agrícola."
     },
     {
-        "question": "O que devemos fazer para evitar o desperdício de **água**?",
-        "answer": "Fechar a torneira ao escovar os dentes",
-        "options": ["Tomar banhos muito longos", "Lavar o carro com mangueira aberta", "Fechar a torneira ao escovar os dentes", "Deixar a descarga ligada"],
-        "skill": "EF02HI11 - Uso consciente da água",
-        "rationale": "Fechar a torneira enquanto escova os dentes é uma prática de economia de água."
+        "question": "O que devemos fazer para que a **água** potável não acabe?",
+        "answer": "Usar apenas o necessário (economizar)",
+        "options": ["Deixar as torneiras abertas", "Usar apenas o necessário (economizar)", "Jogar lixo nos rios", "Lavar o carro com a mangueira ligada"],
+        "skill": "EF02HI11 - Conservação de recursos (Água)",
+        "rationale": "A economia (uso consciente) é a principal forma de preservar os recursos hídricos."
     },
-    // FIM - QUESTÕES DE HISTÓRIA
 
     // ----------------------------------------------------------------------
-    // GEOGRAFIA (EF02GE01 - EF02GE11) - 50 Questões
+    // GEOGRAFIA (EF02GE01 - EF02GE11) - 40 Questões
     // ----------------------------------------------------------------------
 
-    // Habilidade: EF02GE01 - Descrever e comparar caminhos, localizando-se (referenciais).
+    // Habilidade: EF02GE01 - Identificar e comparar diferentes tipos de orientação espacial (pontos de referência, sol).
     // (4 Questões)
     {
         "question": "O que é um **ponto de referência** para se localizar?",
@@ -380,33 +393,33 @@ const questionBank_hum = [
         "rationale": "O Sol nasce no Leste e se põe no Oeste, então, ir do leste para o oeste é seguir o caminho do Sol se pondo."
     },
     {
-        "question": "Qual termo é usado para descrever o movimento que você faz para ir de um lugar a outro?",
-        "answer": "Deslocamento",
-        "options": ["Paisagem", "Deslocamento", "Construção", "Estar parado"],
-        "skill": "EF02GE01 - Conceito de deslocamento",
-        "rationale": "Deslocamento é o ato de mudar de posição ou lugar."
+        "question": "Qual termo é usado para descrever um lugar que fica **em frente** a outro?",
+        "answer": "Oposto",
+        "options": ["Oposto", "Abaixo", "Em cima", "Ao lado"],
+        "skill": "EF02GE01 - Orientação relativa (Frente/Oposto)",
+        "rationale": "Oposto é a posição contrária ou em frente a algo."
     },
     {
-        "question": "Para onde você está olhando se a sua **frente** é a direção onde o sol nasce?",
-        "answer": "Leste",
-        "options": ["Oeste", "Norte", "Sul", "Leste"],
-        "skill": "EF02GE01 - Orientação solar (Leste)",
-        "rationale": "O Sol nasce na direção Leste."
+        "question": "Qual ferramenta usa a magnetização da Terra para indicar o Norte?",
+        "answer": "Bússola",
+        "options": ["Régua", "Lupa", "Bússola", "Martelo"],
+        "skill": "EF02GE01 - Instrumentos de orientação (Bússola)",
+        "rationale": "A bússola usa o campo magnético terrestre para indicar os pontos cardeais."
     },
 
-    // Habilidade: EF02GE02 - Identificar o tipo de moradia e os materiais usados.
+    // Habilidade: EF02GE02 - Comparar os diferentes tipos de moradia (condições, materiais, locais).
     // (4 Questões)
     {
-        "question": "Qual material vem da natureza e é muito usado na construção de casas no Brasil?",
-        "answer": "Madeira",
-        "options": ["Plástico", "Vidro", "Madeira", "Aço"],
-        "skill": "EF02GE02 - Materiais de construção (Brasil)",
-        "rationale": "A madeira é um recurso natural vasto no Brasil e muito utilizado na construção."
+        "question": "Qual moradia é feita de **tijolos e cimento** e é muito comum nas cidades?",
+        "answer": "Casa de alvenaria",
+        "options": ["Casa de gelo (Iglu)", "Casa de madeira", "Casa de alvenaria", "Caverna"],
+        "skill": "EF02GE02 - Tipos de moradia (Alvenaria)",
+        "rationale": "Casas de alvenaria são as construções mais comuns, feitas com materiais como tijolos e argamassa."
     },
     {
-        "question": "Qual tipo de moradia é mais comum em regiões muito frias, com neve?",
+        "question": "Qual tipo de moradia é ideal para uma região com **muita neve**?",
         "answer": "Iglu (feito de blocos de gelo)",
-        "options": ["Casa de tijolos", "Iglu (feito de blocos de gelo)", "Apartamento"],
+        "options": ["Casa de papel", "Iglu (feito de blocos de gelo)", "Apartamento", "Casa de palha"],
         "skill": "EF02GE02 - Moradia e clima (Neve)",
         "rationale": "O iglu é uma moradia temporária construída com blocos de neve compactada, ideal para regiões frias extremas."
     },
@@ -419,25 +432,25 @@ const questionBank_hum = [
     },
     {
         "question": "Qual é a principal característica de um **apartamento**?",
-        "answer": "É uma moradia que fica em um prédio com outras moradias no mesmo bloco",
-        "options": ["É sempre de madeira", "É uma moradia que fica em um prédio com outras moradias no mesmo bloco", "É uma casa no campo", "É uma caverna"],
+        "answer": "É uma moradia em um prédio com vários andares",
+        "options": ["Tem apenas um quarto", "É uma moradia em um prédio com vários andares", "Fica sempre na praia", "É feito apenas de bambu"],
         "skill": "EF02GE02 - Tipos de moradia (Apartamento)",
-        "rationale": "Apartamentos são unidades residenciais em edifícios verticais compartilhados."
+        "rationale": "Apartamentos são unidades habitacionais dentro de um edifício vertical (prédio)."
     },
 
-    // Habilidade: EF02GE03 - Comparar diferentes tipos de trabalho (campo e cidade).
-    // (4 Questões)
+    // Habilidade: EF02GE03 - Identificar e comparar os diferentes tipos de trabalho na escola e no seu entorno.
+    // (5 Questões)
     {
-        "question": "Qual trabalho é mais comum no **campo** (zona rural)?",
-        "answer": "Agricultor",
-        "options": ["Taxista", "Vendedor de loja", "Agricultor", "Professor de faculdade"],
-        "skill": "EF02GE03 - Tipos de trabalho (Campo)",
-        "rationale": "O agricultor lida com o cultivo da terra, uma atividade rural."
+        "question": "Qual trabalho é essencial para manter as **contas** da escola em dia?",
+        "answer": "Secretário ou administrador",
+        "options": ["Jardineiro", "Professor", "Secretário ou administrador", "Faxineiro"],
+        "skill": "EF02GE03 - Tipos de trabalho (Escola)",
+        "rationale": "O secretário ou administrador cuida da parte burocrática e financeira da escola."
     },
     {
-        "question": "Quem é o responsável por construir a sua casa ou um prédio novo?",
+        "question": "Qual profissional constrói a **estrutura** de uma casa ou prédio?",
         "answer": "Pedreiro e Engenheiro Civil",
-        "options": ["Cozinheiro", "Cantor", "Pedreiro e Engenheiro Civil", "Dançarino"],
+        "options": ["Cantor", "Pedreiro e Engenheiro Civil", "Dentista", "Carteiro"],
         "skill": "EF02GE03 - Tipos de trabalho (Construção)",
         "rationale": "O pedreiro e o engenheiro civil são os responsáveis pela construção de edifícios."
     },
@@ -453,37 +466,51 @@ const questionBank_hum = [
         "answer": "Motorista de ônibus",
         "options": ["Cozinheiro", "Músico", "Motorista de ônibus", "Bibliotecário"],
         "skill": "EF02GE03 - Tipos de trabalho (Serviços de transporte)",
-        "rationale": "O motorista de ônibus atua nas ruas prestando um serviço de transporte."
+        "rationale": "O motorista de ônibus é um profissional de transporte público que opera nas ruas."
+    },
+    {
+        "question": "Qual profissional do entorno é responsável por **cuidar da saúde** das pessoas?",
+        "answer": "Médico ou Enfermeiro",
+        "options": ["Padeiro", "Policial", "Médico ou Enfermeiro", "Bancário"],
+        "skill": "EF02GE03 - Tipos de trabalho (Serviços de saúde)",
+        "rationale": "Médicos e enfermeiros são os profissionais da saúde no entorno social."
     },
 
-    // Habilidade: EF02GE04 - Explicar a importância da água e do solo.
-    // (3 Questões)
+    // Habilidade: EF02GE04 - Explicar a diferença entre cidade (urbano) e campo (rural).
+    // (4 Questões)
     {
-        "question": "Por que a **água** é essencial para os seres vivos?",
-        "answer": "Porque todos os seres vivos precisam de água para viver e crescer",
-        "options": ["Apenas para lavar a louça", "Apenas para fazer gelo", "Porque todos os seres vivos precisam de água para viver e crescer", "Apenas para o banho"],
-        "skill": "EF02GE04 - Importância da água",
-        "rationale": "A água é vital para a sobrevivência de todos os seres vivos (plantas, animais e pessoas)."
+        "question": "O **campo (zona rural)** é um lugar onde predominam:",
+        "answer": "Plantações, animais e natureza",
+        "options": ["Grandes prédios e trânsito", "Plantações, animais e natureza", "Muitos carros e shoppings", "Bancos e escritórios"],
+        "skill": "EF02GE04 - Características do rural",
+        "rationale": "O campo é caracterizado pela agricultura, pecuária e elementos naturais."
     },
     {
-        "question": "O que acontece com o **solo** se ele não for bem cuidado (ex: com lixo)?",
-        "answer": "Ele fica pobre em nutrientes e impróprio para plantar",
-        "options": ["Ele fica mais duro", "Ele fica mais pobre em nutrientes e impróprio para plantar", "Ele fica brilhante", "Ele produz ouro"],
-        "skill": "EF02GE04 - Cuidados com o solo",
-        "rationale": "O solo poluído ou maltratado perde sua fertilidade, prejudicando a agricultura e o meio ambiente."
+        "question": "Qual é a principal característica da **cidade (zona urbana)**?",
+        "answer": "Concentração de prédios, lojas e pessoas",
+        "options": ["Grande número de plantações", "Concentração de prédios, lojas e pessoas", "Poucas casas e muito silêncio", "Apenas animais silvestres"],
+        "skill": "EF02GE04 - Características do urbano",
+        "rationale": "A cidade é marcada pela densidade demográfica e construções."
     },
     {
-        "question": "Qual recurso natural é a principal fonte de alimentos vegetais?",
-        "answer": "Solo (terra)",
-        "options": ["Ar", "Água", "Solo (terra)", "Rochas"],
-        "skill": "EF02GE04 - Fonte de alimentos",
-        "rationale": "O solo é a base onde as plantas crescem e produzem a maioria dos alimentos."
+        "question": "Qual palavra é mais associada à **zona rural**?",
+        "answer": "Fazenda",
+        "options": ["Metrô", "Shopping", "Semáforo", "Fazenda"],
+        "skill": "EF02GE04 - Vocabulário (Rural)",
+        "rationale": "Fazendas e sítios são típicos da zona rural."
+    },
+    {
+        "question": "O que você encontrará em maior quantidade na **zona urbana** do que na zona rural?",
+        "answer": "Semáforos e placas de trânsito",
+        "options": ["Galinhas", "Semáforos e placas de trânsito", "Tratores", "Lavouras de milho"],
+        "skill": "EF02GE04 - Comparação de elementos",
+        "rationale": "Semáforos e placas de trânsito são elementos essenciais para organizar o tráfego intenso das cidades."
     },
 
     // Habilidade: EF02GE05 - Analisar mudanças e permanências na paisagem.
-    // (3 Questões)
+    // (4 Questões)
     {
-        "question": "Qual elemento da paisagem urbana indica uma **permanência** (algo antigo que ficou)?",
+        "question": "Qual elemento é um exemplo de **permanência** (que fica muito tempo) na paisagem urbana?",
         "answer": "Um monumento histórico",
         "options": ["Um carro novo", "Um prédio em construção", "Um monumento histórico", "Um cartaz de propaganda"],
         "skill": "EF02GE05 - Permanências na paisagem",
@@ -498,18 +525,32 @@ const questionBank_hum = [
     },
     {
         "question": "O que são as **paisagens naturais**?",
-        "answer": "Lugares formados por elementos da natureza (rios, montanhas, florestas)",
-        "options": ["Lugares cheios de carros", "Lugares formados por elementos da natureza (rios, montanhas, florestas)", "Lugares com muitas casas", "Lugares apenas com prédios"],
+        "answer": "Lugares formados por elementos da natureza (rios, montanhas)",
+        "options": ["Lugares formados apenas por prédios", "Lugares formados por elementos da natureza (rios, montanhas)", "Lugares com muito lixo", "Apenas o seu quarto"],
         "skill": "EF02GE05 - Conceito de paisagem natural",
-        "rationale": "Paisagens naturais são aquelas compostas predominantemente por elementos da natureza, sem intervenção humana."
+        "rationale": "Paisagens naturais são aquelas compostas predominantemente por elementos que não foram criados ou alterados pelo ser humano."
+    },
+    {
+        "question": "O que causou a **maior mudança** na paisagem da sua rua nos últimos 50 anos?",
+        "answer": "A pavimentação (asfalto ou calçamento)",
+        "options": ["O crescimento de uma árvore", "A pavimentação (asfalto ou calçamento)", "A cor da grama", "A posição do Sol"],
+        "skill": "EF02GE05 - Agentes de transformação (Ser Humano)",
+        "rationale": "A pavimentação é uma alteração significativa e duradoura feita pelo ser humano."
     },
 
-    // Habilidade: EF02GE06 - Relacionar mudanças de temperatura e luminosidade com o dia/noite.
-    // (3 Questões)
+    // Habilidade: EF02GE06 - Identificar diferenças de luminosidade e temperatura (dia e noite).
+    // (5 Questões)
     {
-        "question": "O que faz com que a temperatura da Terra suba durante o **dia**?",
+        "question": "Qual é a principal fonte de **luz** e **calor** durante o dia?",
+        "answer": "O Sol",
+        "options": ["A Lua", "O Sol", "A lâmpada", "A vela"],
+        "skill": "EF02GE06 - Fonte de luz e calor",
+        "rationale": "O Sol é a estrela central do sistema solar, responsável pela luz e calor na Terra."
+    },
+    {
+        "question": "O que faz a Terra ficar **iluminada** e **quente** durante o dia?",
         "answer": "A presença do Sol ilumina e aquece a Terra",
-        "options": ["O vento forte", "A presença do Sol ilumina e aquece a Terra", "A Lua esfria tudo", "O calor vai para o espaço"],
+        "options": ["O vento forte faz o Sol brilhar", "A presença do Sol ilumina e aquece a Terra", "A Lua esfria tudo", "O calor vai para o espaço"],
         "skill": "EF02GE06 - Luminosidade e Temperatura (Dia)",
         "rationale": "A energia solar (luz e calor) é a principal responsável pelo aquecimento da Terra durante o dia."
     },
@@ -523,22 +564,22 @@ const questionBank_hum = [
     {
         "question": "Durante a **noite**, a temperatura do ar tende a:",
         "answer": "Diminuir (ficar mais frio)",
-        "options": ["Aumentar (ficar mais quente)", "Diminuir (ficar mais frio)", "Ficar igual ao dia", "Não variar"],
+        "options": ["Aumentar (ficar mais quente)", "Diminuir (ficar mais frio)", "Ficar igual ao dia", "Chuva forte"],
         "skill": "EF02GE06 - Temperatura (Noite)",
-        "rationale": "Sem a incidência da luz e calor do Sol, a Terra irradia calor e a temperatura ambiente tende a cair."
+        "rationale": "Sem a incidência direta do Sol, a Terra irradia o calor para o espaço, fazendo a temperatura cair."
+    },
+    {
+        "question": "Qual atividade é impossível de fazer sem luz, se você não tiver uma lanterna?",
+        "answer": "Ler um livro",
+        "options": ["Dormir", "Comer", "Ler um livro", "Caminhar"],
+        "skill": "EF02GE06 - Importância da luz",
+        "rationale": "A leitura exige luz suficiente para a visão."
     },
 
-    // Habilidade: EF02GE07 - Descrever as atividades em diferentes tipos de lugar (campo e cidade).
+    // Habilidade: EF02GE07 - Descrever as atividades de trabalho na zona rural e urbana (produção e circulação).
     // (4 Questões)
     {
-        "question": "Qual atividade é mais comum na **cidade** (zona urbana)?",
-        "answer": "Trabalhar em escritórios",
-        "options": ["Plantar milho", "Trabalhar em escritórios", "Cuidar de gado", "Colher frutas"],
-        "skill": "EF02GE07 - Comparação de espaços (Atividades na Cidade)",
-        "rationale": "Trabalhos de serviços e escritórios são característicos do ambiente urbano."
-    },
-    {
-        "question": "A produção de frutas, verduras e legumes acontece principalmente em qual espaço?",
+        "question": "A criação de animais e o cultivo de frutas e legumes acontece principalmente em qual espaço?",
         "answer": "Campo (zona rural)",
         "options": ["Praia", "Campo (zona rural)", "Indústria", "Shopping Center"],
         "skill": "EF02GE07 - Comparação de espaços (Produção de Alimentos)",
@@ -554,33 +595,47 @@ const questionBank_hum = [
     {
         "question": "O que faz um **pecuarista** (trabalhador do campo)?",
         "answer": "Cria e cuida de animais (gado, porcos, etc.)",
-        "options": ["Vende sapatos", "Cria e cuida de animais (gado, porcos, etc.)", "Ensina na escola", "Dirige um caminhão"],
+        "options": ["Vende roupas", "Cria e cuida de animais (gado, porcos, etc.)", "Faz casas", "Dirige ônibus"],
         "skill": "EF02GE07 - Tipos de trabalho (Pecuária)",
-        "rationale": "O pecuarista dedica-se à criação e manejo de animais para produção de carne, leite, etc."
+        "rationale": "A pecuária é a atividade de criação de animais."
+    },
+    {
+        "question": "O trabalho de **vender** os produtos nas lojas é parte de qual setor?",
+        "answer": "Comércio (zona urbana)",
+        "options": ["Agricultura", "Pecuária", "Indústria", "Comércio (zona urbana)"],
+        "skill": "EF02GE07 - Tipos de trabalho (Comércio)",
+        "rationale": "O comércio é a atividade de compra e venda de mercadorias, típica da zona urbana."
     },
 
-    // Habilidade: EF02GE08 - Identificar e comparar fenômenos climáticos (chuva, neve, seca).
-    // (3 Questões)
+    // Habilidade: EF02GE08 - Identificar e descrever fenômenos da natureza (chuva, vento, calor, frio).
+    // (4 Questões)
     {
-        "question": "O que acontece com a plantação quando há um período de **seca** (muito tempo sem chuva)?",
-        "answer": "A plantação seca e não cresce",
-        "options": ["A plantação fica mais verde", "A plantação seca e não cresce", "A plantação cresce mais rápido", "A plantação fica com muita água"],
+        "question": "Qual fenômeno da natureza é essencial para a agricultura, mas em excesso pode causar inundações?",
+        "answer": "Chuva",
+        "options": ["Vento", "Neve", "Chuva", "Sol forte"],
+        "skill": "EF02GE08 - Fenômenos climáticos (Chuva)",
+        "rationale": "A chuva é vital para as plantas, mas muita água de uma vez causa inundações."
+    },
+    {
+        "question": "O que o **vento** forte pode fazer?",
+        "answer": "Derrubar galhos de árvores",
+        "options": ["Fazer chover forte", "Derrubar galhos de árvores", "Aquecer a água", "Fazer o Sol nascer"],
+        "skill": "EF02GE08 - Fenômenos climáticos (Vento)",
+        "rationale": "O vento é o movimento do ar, podendo causar desde brisas leves a ventanias fortes."
+    },
+    {
+        "question": "Qual fenômeno natural é um período de longa falta de chuva?",
+        "answer": "Seca",
+        "options": ["Inundação", "Seca", "Nevasca", "Tempestade"],
         "skill": "EF02GE08 - Fenômenos climáticos (Seca)",
-        "rationale": "A falta prolongada de chuva (seca) impede o crescimento e a vida das plantas."
+        "rationale": "A seca é um período de longa ausência de chuva, causando falta de água."
     },
     {
-        "question": "Qual fenômeno climático é característico de regiões frias, mas raro no Brasil?",
-        "answer": "Neve",
-        "options": ["Chuva forte", "Sol intenso", "Vento", "Neve"],
-        "skill": "EF02GE08 - Fenômenos climáticos (Neve)",
-        "rationale": "A neve ocorre em temperaturas muito baixas e é incomum na maior parte do território brasileiro."
-    },
-    {
-        "question": "O que a **chuva** faz para o meio ambiente?",
-        "answer": "Irriga as plantas e enche os rios",
-        "options": ["Seca o solo", "Irriga as plantas e enche os rios", "Esquenta o ar", "Para o vento"],
-        "skill": "EF02GE08 - Efeitos da chuva",
-        "rationale": "A chuva é fundamental para fornecer água às plantas e repor o nível dos rios e reservatórios."
+        "question": "Se o dia está muito **quente**, o que devemos fazer para evitar problemas de saúde?",
+        "answer": "Beber muita água (hidratar-se)",
+        "options": ["Vestir casaco", "Fazer exercício pesado", "Beber muita água (hidratar-se)", "Ficar no Sol sem protetor"],
+        "skill": "EF02GE08 - Fenômenos climáticos (Calor e Saúde)",
+        "rationale": "A hidratação é crucial para regular a temperatura do corpo em dias quentes."
     },
 
     // Habilidade: EF02GE09 - Identificar elementos naturais e culturais de paisagens.
@@ -595,71 +650,71 @@ const questionBank_hum = [
     {
         "question": "Qual é um elemento **cultural** (construído pelo ser humano) de uma paisagem?",
         "answer": "Um muro de tijolos",
-        "options": ["Uma árvore centenária", "Um animal silvestre", "Um muro de tijolos", "A areia da praia"],
+        "options": ["Uma árvore centenária", "Um animal silvestre", "Um muro de tijolos", "A água de um lago"],
         "skill": "EF02GE09 - Elementos culturais",
-        "rationale": "O muro é uma construção feita pelo ser humano, sendo um elemento cultural."
+        "rationale": "O muro é uma construção humana, sendo um elemento cultural."
     },
     {
-        "question": "Qual dos elementos abaixo é **natural** e pode mudar a paisagem com o tempo?",
-        "answer": "Um vulcão",
-        "options": ["Um carro", "Uma casa", "Um vulcão", "Uma cerca"],
-        "skill": "EF02GE09 - Elementos naturais (Dinâmicos)",
-        "rationale": "Um vulcão é um elemento natural que pode causar grandes mudanças na paisagem (erupções)."
+        "question": "Qual elemento abaixo é natural?",
+        "answer": "Uma montanha",
+        "options": ["Um carro", "Um semáforo", "Uma montanha", "Uma placa"],
+        "skill": "EF02GE09 - Elementos naturais (Montanha)",
+        "rationale": "Montanhas são formas de relevo criadas pela natureza."
     },
     {
-        "question": "O que é um **elemento cultural** de uma paisagem?",
-        "answer": "Tudo que foi feito, modificado ou construído pelo ser humano",
-        "options": ["Apenas o vento", "Apenas a água do mar", "Tudo que foi feito, modificado ou construído pelo ser humano", "Apenas a luz do sol"],
-        "skill": "EF02GE09 - Conceito de elemento cultural",
-        "rationale": "O termo 'cultural' em geografia refere-se a toda intervenção humana na paisagem."
+        "question": "Qual elemento abaixo é cultural?",
+        "answer": "Uma ponte",
+        "options": ["O mar", "Uma floresta", "Uma ponte", "O ar"],
+        "skill": "EF02GE09 - Elementos culturais (Ponte)",
+        "rationale": "A ponte é uma construção feita pelo ser humano."
     },
     {
-        "question": "Uma **plantação de soja** em uma paisagem é um elemento:",
-        "answer": "Cultural (modificada pelo ser humano)",
-        "options": ["Natural (não modificado)", "Cultural (modificada pelo ser humano)", "Apenas visual", "Nenhum dos dois"],
-        "skill": "EF02GE09 - Elementos culturais (Agricultura)",
-        "rationale": "A plantação é um elemento natural, mas a forma de cultivo e a escolha da espécie é uma intervenção humana (cultural)."
+        "question": "A **diferença** entre elemento natural e cultural é que:",
+        "answer": "O natural não foi feito pelo ser humano e o cultural foi",
+        "options": ["O natural é pequeno e o cultural é grande", "O natural não foi feito pelo ser humano e o cultural foi", "O natural só existe na cidade", "O cultural só existe no campo"],
+        "skill": "EF02GE09 - Diferenciação Natural/Cultural",
+        "rationale": "Elementos culturais são intervenções humanas (cultura), e naturais são da natureza."
     },
 
-    // Habilidade: EF02GE10 - Reconhecer a importância da participação individual e coletiva.
-    // (3 Questões)
-    {
-        "question": "Por que é importante que **todos** ajudem a manter a escola limpa?",
-        "answer": "Para que o ambiente seja agradável e saudável para todos",
-        "options": ["Para que o diretor fique feliz", "Para que o ambiente seja agradável e saudável para todos", "Para que o professor limpe sozinho", "Porque é divertido"],
-        "skill": "EF02GE10 - Participação coletiva (Limpeza)",
-        "rationale": "A responsabilidade coletiva garante o bem-estar e a qualidade do ambiente para toda a comunidade."
-    },
-    {
-        "question": "Se há um problema de trânsito no seu bairro, o que a comunidade pode fazer?",
-        "answer": "Reunir-se para pedir ajuda à prefeitura (ação coletiva)",
-        "options": ["Ficar em casa", "Reunir-se para pedir ajuda à prefeitura (ação coletiva)", "Mudar de bairro", "Fazer uma lei sozinha"],
-        "skill": "EF02GE10 - Participação coletiva (Solução de problemas)",
-        "rationale": "A ação coletiva e a organização são a melhor forma de solucionar problemas comunitários junto ao governo."
-    },
-    {
-        "question": "O que significa dizer que uma tarefa é **coletiva**?",
-        "answer": "Que muitas pessoas participam e o esforço é compartilhado",
-        "options": ["Que apenas uma pessoa faz", "Que muitas pessoas participam e o esforço é compartilhado", "Que é feita em silêncio", "Que é feita de noite"],
-        "skill": "EF02GE10 - Conceito de coletivo",
-        "rationale": "O trabalho coletivo envolve a participação de um grupo, onde o esforço é compartilhado."
-    },
-
-    // Habilidade: EF02GE11 - Identificar a importância da conservação da natureza.
+    // Habilidade: EF02GE10 - Reconhecer a importância do trabalho de conservação ambiental.
     // (4 Questões)
+    {
+        "question": "Por que a **separação do lixo** (reciclagem) é um trabalho importante para o ambiente?",
+        "answer": "Diminui a quantidade de lixo que vai para a natureza",
+        "options": ["Aumenta o lixo", "Diminui a quantidade de lixo que vai para a natureza", "Faz mais poluição", "É um trabalho desnecessário"],
+        "skill": "EF02GE10 - Conservação (Reciclagem)",
+        "rationale": "A reciclagem reduz o volume de resíduos, protegendo o meio ambiente."
+    },
+    {
+        "question": "Qual é o objetivo de ter um **Parque Nacional** ou uma **Reserva Ambiental**?",
+        "answer": "Proteger a natureza, os animais e as plantas do local",
+        "options": ["Usar a terra para construir prédios", "Proteger a natureza, os animais e as plantas do local", "Causar desmatamento", "Poluir os rios"],
+        "skill": "EF02GE10 - Conservação (Áreas Protegidas)",
+        "rationale": "Áreas protegidas são criadas para conservar a biodiversidade e os ecossistemas."
+    },
     {
         "question": "O que é **conservação ambiental**?",
         "answer": "Cuidar dos recursos naturais para que não acabem",
         "options": ["Construir mais fábricas", "Cuidar dos recursos naturais para que não acabem", "Poluir os rios", "Cortar todas as árvores"],
-        "skill": "EF02GE11 - Conceito de conservação ambiental",
+        "skill": "EF02GE10 - Conceito de conservação ambiental",
         "rationale": "Conservação ambiental é a proteção e o manejo sustentável dos recursos naturais."
     },
     {
-        "question": "Como a **separação do lixo** (reciclagem) ajuda na conservação ambiental?",
-        "answer": "Diminui a quantidade de lixo jogada na natureza",
-        "options": ["Faz o lixo sumir", "Diminui a quantidade de lixo jogada na natureza", "Aumenta a poluição", "Faz as árvores crescerem"],
-        "skill": "EF02GE11 - Importância da reciclagem",
-        "rationale": "A reciclagem reduz o volume de lixo em aterros e a necessidade de extrair novos recursos da natureza."
+        "question": "Qual atividade contribui para a **conservação** da água?",
+        "answer": "Consertar vazamentos de torneiras e encanamentos",
+        "options": ["Lavar calçadas com mangueira", "Consertar vazamentos de torneiras e encanamentos", "Jogar óleo na pia", "Escovar os dentes com a torneira aberta"],
+        "skill": "EF02GE10 - Práticas de conservação",
+        "rationale": "O conserto de vazamentos evita o desperdício de água potável."
+    },
+
+    // Habilidade: EF02GE11 - Identificar a importância e os usos dos recursos naturais (água, solo, minerais).
+    // (4 Questões)
+    {
+        "question": "Qual recurso natural é essencial para a **respiração** dos seres vivos?",
+        "answer": "Ar",
+        "options": ["Solo", "Água", "Ar", "Pedra"],
+        "skill": "EF02GE11 - Recurso natural (Ar)",
+        "rationale": "O ar (oxigênio) é o recurso natural essencial para a respiração."
     },
     {
         "question": "Por que é importante **preservar** os animais silvestres?",
@@ -669,11 +724,17 @@ const questionBank_hum = [
         "rationale": "A preservação dos animais é crucial para manter a biodiversidade e o equilíbrio dos ecossistemas."
     },
     {
+        "question": "O que é um **recurso natural**?",
+        "answer": "Tudo que a natureza nos dá e usamos para viver (água, solo, ar)",
+        "options": ["Apenas o dinheiro", "Apenas a escola", "Tudo que a natureza nos dá e usamos para viver (água, solo, ar)", "Apenas o celular"],
+        "skill": "EF02GE11 - Conceito de recurso natural",
+        "rationale": "Recursos naturais são bens fornecidos pela natureza e essenciais para a vida humana."
+    },
+    {
         "question": "Qual é a melhor forma de **preservar** uma praia ou um rio?",
         "answer": "Não jogar lixo e recolher o que já existe",
-        "options": ["Jogar sujeira", "Não jogar lixo e recolher o que já existe", "Deixar a água suja", "Usar muita água"],
-        "skill": "EF02GE11 - Preservação de recursos hídricos",
-        "rationale": "A não poluição e a limpeza são ações diretas de preservação de corpos d'água."
+        "options": ["Jogar sujeira", "Não jogar lixo e recolher o que já existe", "Deixar a água suja", "Usar a água para lavar o carro"],
+        "skill": "EF02GE11 - Práticas de preservação (Água)",
+        "rationale": "Manter o lixo longe da água é a principal forma de evitar a poluição e preservar o recurso."
     }
 ];
-
