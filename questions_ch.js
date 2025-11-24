@@ -788,11 +788,10 @@ const questionBank_ch = [
         "options": ["Jogar sujeira", "Não jogar lixo e recolher o que já existe", "Deixar a água suja", "Usar a água para lavar o carro"],
         "skill": "EF02GE11 - Práticas de preservação (Água)",
         "rationale": "Manter o lixo longe da água é a principal forma de evitar a poluição e preservar o recurso."
-    },
-   
- 
- 
+    }
+    
 ];
+
 
 
 
