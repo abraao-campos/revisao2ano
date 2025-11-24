@@ -598,7 +598,7 @@ const questionBank_hum = [
     },
   
     // Habilidade: EF02GE06 - Identificar diferenças de luminosidade e temperatura (dia e noite).
-    // (5 Questões)
+    // (4 Questões)
     {
         "question": "Qual é a principal fonte de **luz** e **calor** durante o dia?",
         "answer": "O Sol",
@@ -627,17 +627,10 @@ const questionBank_hum = [
         "skill": "EF02GE06 - Temperatura (Noite)",
         "rationale": "Sem a incidência direta do Sol, a Terra irradia o calor para o espaço, fazendo a temperatura cair."
     },
-    {
-        "question": "Qual atividade é impossível de fazer sem luz, se você não tiver uma lanterna?",
-        "answer": "Ler um livro",
-        "options": ["Dormir", "Comer", "Ler um livro", "Caminhar"],
-        "skill": "EF02GE06 - Importância da luz",
-        "rationale": "A leitura exige luz suficiente para a visão."
-    },
- 
+   
 
     // Habilidade: EF02GE07 - Descrever as atividades de trabalho na zona rural e urbana (produção e circulação).
-    // (5 Questões)
+    // (4 Questões)
     {
         "question": "A criação de animais e o cultivo de frutas e legumes acontece principalmente em qual espaço?",
         "answer": "Campo (zona rural)",
@@ -666,17 +659,11 @@ const questionBank_hum = [
         "skill": "EF02GE07 - Tipos de trabalho (Comércio)",
         "rationale": "O comércio é a atividade de compra e venda de mercadorias, típica da zona urbana."
     },
-    {
-        "question": "Qual é a principal atividade do setor de **serviços** (ex: médico, professor)?",
-        "answer": "Prestar ajuda e assistência às pessoas",
-        "options": ["Construir casas", "Plantar alimentos", "Prestar ajuda e assistência às pessoas", "Fabricar objetos"],
-        "skill": "EF02GE07 - Tipos de trabalho (Serviços)",
-        "rationale": "O setor de serviços oferece atividades não-materiais, como educação, saúde e transporte."
-    },
+  
   
 
     // Habilidade: EF02GE08 - Identificar e descrever fenômenos da natureza (chuva, vento, calor, frio).
-    // (5 Questões)
+    // (4 Questões)
     {
         "question": "Qual fenômeno da natureza é essencial para a agricultura, mas em excesso pode causar inundações?",
         "answer": "Chuva",
@@ -705,17 +692,10 @@ const questionBank_hum = [
         "skill": "EF02GE08 - Fenômenos climáticos (Calor e Saúde)",
         "rationale": "A hidratação é crucial para regular a temperatura do corpo em dias quentes."
     },
-    {
-        "question": "Qual fenômeno causa a queda de **neve**?",
-        "answer": "Baixa temperatura e umidade do ar",
-        "options": ["Muito calor", "Muita poeira", "Baixa temperatura e umidade do ar", "Vento fraco"],
-        "skill": "EF02GE08 - Fenômenos climáticos (Frio/Neve)",
-        "rationale": "A neve ocorre quando a temperatura da nuvem e do ar é muito baixa, congelando a água."
-    },
-  
+    
 
     // Habilidade: EF02GE09 - Identificar elementos naturais e culturais de paisagens.
-    // (6 Questões)
+    // (5 Questões)
     {
         "question": "Qual é um elemento **natural** de uma paisagem?",
         "answer": "Um rio",
@@ -751,17 +731,10 @@ const questionBank_hum = [
         "skill": "EF02GE09 - Diferenciação Natural/Cultural",
         "rationale": "Elementos culturais são intervenções humanas (cultura), e naturais são da natureza."
     },
-    {
-        "question": "A **plantação de milho** (lavoura) é considerada um elemento **cultural** da paisagem por quê?",
-        "answer": "Porque ela foi cultivada e modificada pelo ser humano",
-        "options": ["Porque nasceu sozinha", "Porque ela foi cultivada e modificada pelo ser humano", "Porque é um bicho", "Porque é feita de pedra"],
-        "skill": "EF02GE09 - Elementos culturais (Paisagem)",
-        "rationale": "Embora a planta seja natural, a plantação organizada (lavoura) é uma intervenção humana."
-    },
-    
+       
 
     // Habilidade: EF02GE10 - Reconhecer a importância do trabalho de conservação ambiental.
-    // (6 Questões)
+    // (5 Questões)
     {
         "question": "Por que a **separação do lixo** (reciclagem) é um trabalho importante para o ambiente?",
         "answer": "Diminui a quantidade de lixo que vai para a natureza",
@@ -797,17 +770,10 @@ const questionBank_hum = [
         "skill": "EF02GE10 - Conservação (Água)",
         "rationale": "O descarte correto do óleo de cozinha impede que ele polua a água, protegendo os rios e mares."
     },
-    {
-        "question": "Se você vê lixo no chão da escola, o que deve fazer para ajudar na conservação?",
-        "answer": "Pegar e jogar na lixeira correta",
-        "options": ["Ignorar e continuar andando", "Pegar e jogar na lixeira correta", "Esconder debaixo da mesa", "Chutar para longe"],
-        "skill": "EF02GE10 - Práticas de conservação (Cotidiano)",
-        "rationale": "A responsabilidade individual pela limpeza e descarte correto é a base da conservação ambiental."
-    },
- 
+   
 
     // Habilidade: EF02GE11 - Identificar a importância e os usos dos recursos naturais (água, solo, minerais).
-    // (7 Questões)
+    // (5 Questões)
     {
         "question": "Qual recurso natural é essencial para a **respiração** dos seres vivos?",
         "answer": "Ar",
@@ -843,20 +809,8 @@ const questionBank_hum = [
         "skill": "EF02GE11 - Recurso natural (Uso do solo)",
         "rationale": "O solo fornece a argila, matéria-prima para tijolos e telhas."
     },
-    {
-        "question": "Por que a luz do Sol é um recurso natural importante?",
-        "answer": "É fonte de energia e calor para a vida na Terra",
-        "options": ["Faz a Terra girar", "É fonte de energia e calor para a vida na Terra", "Faz chover", "Faz o mar ficar salgado"],
-        "skill": "EF02GE11 - Recurso natural (Luz do Sol)",
-        "rationale": "A luz e o calor do Sol são fundamentais para as plantas e para o clima."
-    },
-    {
-        "question": "O que são **minérios** (ex: ferro, ouro)?",
-        "answer": "Recursos naturais retirados do subsolo (dentro da terra)",
-        "options": ["Animais", "Plantas", "Recursos naturais retirados do subsolo (dentro da terra)", "Nuvens"],
-        "skill": "EF02GE11 - Recurso natural (Minerais)",
-        "rationale": "Minérios são materiais de origem mineral explorados do interior da Terra."
-    },
+ 
  
 ];
+
 
