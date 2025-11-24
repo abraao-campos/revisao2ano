@@ -4,7 +4,7 @@ const questionBank_hum = [
     // ----------------------------------------------------------------------
 
     // Habilidade: EF02HI01 - Reconhecer espaços de sociabilidade e grupos sociais.
-    // (6 Questões)
+    // (5 Questões)
     {
         "question": "Qual dos locais abaixo é um espaço de **sociabilidade** onde você pode encontrar pessoas de diferentes famílias?",
         "answer": "Praça",
@@ -40,13 +40,7 @@ const questionBank_hum = [
         "skill": "EF02HI01 - Regras de convivência",
         "rationale": "O respeito é fundamental para a harmonia e o convívio em qualquer grupo social."
     },
-    {
-        "question": "Qual é a principal responsabilidade de um aluno em um grupo social da escola?",
-        "answer": "Ajudar os colegas e obedecer as regras",
-        "options": ["Falar o tempo todo", "Fazer o que quiser", "Ajudar os colegas e obedecer as regras", "Não participar de nada"],
-        "skill": "EF02HI01 - Regras na Escola",
-        "rationale": "Em grupo, a responsabilidade inclui o convívio harmonioso e seguir normas."
-    },
+   
     
     // Habilidade: EF02HI02 - Identificar formas de registro da história (memória, relatos, objetos).
     // (4 Questões)
@@ -734,7 +728,7 @@ const questionBank_hum = [
        
 
     // Habilidade: EF02GE10 - Reconhecer a importância do trabalho de conservação ambiental.
-    // (5 Questões)
+    // (4 Questões)
     {
         "question": "Por que a **separação do lixo** (reciclagem) é um trabalho importante para o ambiente?",
         "answer": "Diminui a quantidade de lixo que vai para a natureza",
@@ -763,17 +757,10 @@ const questionBank_hum = [
         "skill": "EF02GE10 - Práticas de conservação",
         "rationale": "O conserto de vazamentos evita o desperdício de água potável."
     },
-    {
-        "question": "O que você está fazendo para a **conservação ambiental** quando você separa o óleo de cozinha usado em uma garrafa?",
-        "answer": "Evitando a poluição da água",
-        "options": ["Aumentando o lixo", "Evitando a poluição da água", "Fazendo um bolo", "Queimando o óleo"],
-        "skill": "EF02GE10 - Conservação (Água)",
-        "rationale": "O descarte correto do óleo de cozinha impede que ele polua a água, protegendo os rios e mares."
-    },
-   
+      
 
     // Habilidade: EF02GE11 - Identificar a importância e os usos dos recursos naturais (água, solo, minerais).
-    // (5 Questões)
+    // (4 Questões)
     {
         "question": "Qual recurso natural é essencial para a **respiração** dos seres vivos?",
         "answer": "Ar",
@@ -802,15 +789,10 @@ const questionBank_hum = [
         "skill": "EF02GE11 - Práticas de preservação (Água)",
         "rationale": "Manter o lixo longe da água é a principal forma de evitar a poluição e preservar o recurso."
     },
-    {
-        "question": "Qual recurso natural é usado para construir casas (depois de ser transformado)?",
-        "answer": "Solo (argila para tijolos)",
-        "options": ["Ar", "Solo (argila para tijolos)", "Vento", "Luz do sol"],
-        "skill": "EF02GE11 - Recurso natural (Uso do solo)",
-        "rationale": "O solo fornece a argila, matéria-prima para tijolos e telhas."
-    },
+   
  
  
 ];
+
 
 
