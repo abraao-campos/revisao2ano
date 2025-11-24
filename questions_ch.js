@@ -1,4 +1,4 @@
-const questionBank_ch = [
+const questionBank_hum = [
     // ----------------------------------------------------------------------
     // HISTÓRIA (EF02HI01 - EF02HI11) - 50 Questões
     // ----------------------------------------------------------------------
@@ -676,3 +676,4 @@ const questionBank_ch = [
         "rationale": "A não poluição e a limpeza são ações diretas de preservação de corpos d'água."
     }
 ];
+
