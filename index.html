@@ -1,801 +1,722 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revisão Dinâmica do 2º Ano EF - Qualidade e BNCC</title>
-    <!-- Carrega o Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JT5Q6BV0XL"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-JT5Q6BV0XL');
-    </script>
-    
-    <!-- Fim Google Analytics -->
-
-    <style>
-        /* Estilo base com fonte Inter (Para aparência infantil e moderna) */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fce4ec; /* Rosa claro base */
-            transition: background-color 0.5s ease-in-out;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container-box {
-            max-width: 650px;
-            min-height: 400px;
-        }
-
-        .theme-button {
-            transition: all 0.2s;
-            box-shadow: 0 4px 0 0 #d81b60; /* Sombra 3D Rosa */
-            border-radius: 1rem;
-        }
-
-        .theme-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 0 #c2185b;
-        }
-
-        .theme-button:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 0 #d81b60;
-        }
-
-        .subject-card {
-            background-color: #ffffff;
-            border: 2px solid #ff4081;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .subject-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .report-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisão Dinâmica do 2º Ano EF - Qualidade e BNCC</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JT5Q6BV0XL"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-JT5Q6BV0XL');
+</script>
+<style>
+/* Estilo base com fonte Inter (Para aparência infantil e moderna) */
+ @import url('https://fonts.googleapis.com/css2?
+family=Inter:wght400;600;700;800&display=swap');
+body {
+font-family: 'Inter', sans-serif;
+background-color: #fce4ec; /* Rosa claro base */
+transition: background-color 0.5s ease-in-out;
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.container-box {
+max-width: 650px;
+min-height: 400px;
+}
+.theme-button {
+transition: all 0.2s;
+box-shadow: 0 4px 0 0 #d81b60; /* Sombra 3D Rosa */
+border-radius: 1rem;
+}
+.theme-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 0 0 #c2185b;
+}
+.theme-button:active {
+transform: translateY(2px);
+box-shadow: 0 2px 0 0 #d81b60;
+}
+.subject-card {
+background-color: #ffffff;
+border: 2px solid #ff4081;
+padding: 1.5rem;
+border-radius: 1rem;
+box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s ease;
+}
+.subject-card:hover {
+transform: translateY(-5px);
+}
+.report-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 1rem;
+}
+</style>
 </head>
 <body>
+<div id="app" class="w-full p-4 md:p-8">
+</div>
 
-    <div id="app" class="w-full p-4 md:p-8">
-        <!-- O conteúdo será injetado aqui pelo JavaScript -->
+<script src="questions_mat.js"></script>
+<script src="questions_lin.js"></script>
+<script src="questions_cie.js"></script>
+<script src="questions_his.js"></script>
+<script type="text/javascript">
+// ATENÇÃO: A Chave de API do Gemini é mantida apenas para a ANÁLISE DE HABILIDADES (Relatório Final)
+const GEMINI_API_KEY = typeof _api_key !== 'undefined' ? _api_key :
+"AIzaSyCTrba7udUnc_rm7ejgfUcfQqTbaNXGnuw";
+// Define o tamanho fixo da sessão
+const SESSION_SIZE = 5;
+
+// --- Bancos de Questões Locais (questions_sub.js) ---
+// Estes arrays serão preenchidos pelos scripts externos (questions_*.js)
+const localQuestionBanks = {
+    math: typeof mathQuestions !== 'undefined' ? mathQuestions : [],
+    portuguese: typeof portugueseQuestions !== 'undefined' ? portugueseQuestions : [],
+    science: typeof scienceQuestions !== 'undefined' ? scienceQuestions : [],
+    history: typeof historyQuestions !== 'undefined' ? historyQuestions : [],
+};
+
+
+// Variável de estado global
+let state = {};
+// Variável para armazenar as estatísticas consolidadas
+let allTimeStats = {
+    math: { name: "Matemática", correct: 0, wrong: 0, total: 0, color: "blue" },
+    portuguese: { name: "Português", correct: 0, wrong: 0, total: 0, color: "green" },
+    science: { name: "Ciências", correct: 0, wrong: 0, total: 0, color: "yellow" },
+    history: { name: "História", correct: 0, wrong: 0, total: 0, color: "red" },
+};
+// Histórico de índices de questões já usadas (para evitar repetição)
+let questionsHistory = {
+    math: [],
+    portuguese: [],
+    science: [],
+    history: [],
+};
+
+// Função de utilidade para o API Call (Exponential Backoff) - Mantida para o Relatório de Habilidades
+async function fetchWithRetry(url, options, maxRetries = 5) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return response;
+            if (response.status === 401) throw new Error("Chave de API inválida.");
+            if (response.status === 429) {
+                const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                await new Promise(resolve => setTimeout(resolve, delay));
+                continue;
+            }
+            throw new Error(`Erro HTTP: ${response.status}`);
+        } catch (error) {
+            if (i === maxRetries - 1) throw error;
+            const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+}
+
+
+// --- Estrutura das Matérias ALINHADA À BNCC (2° ANO EF)
+const subjects = {
+    math: {
+        name: "Matemática",
+        icon: "➕",
+        color: "bg-blue-500",
+        // Habilidades BNCC (Exemplos): EF02MA01, EF02MA05, EF02MA12
+        bncc_focus: "EF02MA01 (ler, escrever e comparar números naturais até 1000), EF02MA05 (construir fatos básicos da adição e subtração), EF02MA06 (resolver problemas de adição e subtração), EF02MA12 (identificar e planificar figuras planas e espaciais), EF02MA15 (comparar capacidade e massa)."
+    },
+    portuguese: {
+        name: "Português",
+        icon: "📖",
+        color: "bg-green-500",
+        // Habilidades BNCC (Exemplos): EF02LP01, EF02LP07, EF02LP15
+        bncc_focus: "EF02LP01 (ler e escrever palavras com correspondências regulares e irregulares), EF02LP07 (segmentar palavras em sílabas), EF02LP10 (identificar sinônimos e antônimos), EF02LP15 (ler e compreender textos curtos, com autonomia), EF02LP18 (planejar e produzir frases e pequenos textos)."
+    },
+    science: {
+        name: "Ciências",
+        icon: "🔬",
+        color: "bg-yellow-500",
+        // Habilidades BNCC (Exemplos): EF02CI04, EF02CI05, EF02CI06
+        bncc_focus: "EF02CI04 (descrever características de plantas e animais), EF02CI05 (identificar materiais utilizados em objetos e suas fontes), EF02CI06 (identificar e classificar os cinco sentidos), EF02CI07 (descrever o ciclo da água e a importância para a vida)."
+    },
+    history: {
+        name: "História",
+        icon: "🕰️",
+        color: "bg-red-500",
+        // Habilidades BNCC (Exemplos): EF02HI01, EF02HI02, EF02HI07
+        bncc_focus: "EF02HI01 (reconhecer o papel da família e da escola), EF02HI02 (identificar e descrever práticas e ritmos de vida no presente e passado), EF02HI07 (identificar e utilizar diferentes marcadores do tempo - dia/noite, semana, mês), EF02HI10 (selecionar objetos e documentos pessoais para análise)."
+    }
+};
+
+function generateSessionId() {
+    return 'sess-' + Date.now() + Math.random().toString(16).slice(2);
+}
+
+
+// --- Geração de Questões do Banco Local ---
+/**
+ * Seleciona 5 questões únicas e aleatórias do banco local, evitando repetição.
+ * As questões devem ter o formato { question, answer, options, skill, rationale, isCorrect }
+ * @param {string} subjectKey - Chave da matéria (ex: 'math').
+ * @returns {Array} - Array de 5 objetos de atividade formatados.
+ * @throws {Error} - Se o banco de questões estiver vazio ou insuficientemente preenchido.
+ */
+function getQuestionsFromLocalBank(subjectKey) {
+    const fullBank = localQuestionBanks[subjectKey];
+    const usedIndices = questionsHistory[subjectKey];
+    const totalQuestions = fullBank.length;
+
+    if (totalQuestions < SESSION_SIZE) {
+        throw new Error(`Banco de questões para ${subjects[subjectKey].name} insuficiente. Necessário ${SESSION_SIZE}, encontrado ${totalQuestions}. Verifique o arquivo questions_${subjectKey}.js.`);
+    }
+
+    let availableIndices = [];
+    for (let i = 0; i < totalQuestions; i++) {
+        if (!usedIndices.includes(i)) {
+            availableIndices.push(i);
+        }
+    }
+
+    // Se as questões esgotaram, reinicia o ciclo
+    if (availableIndices.length < SESSION_SIZE) {
+        console.warn(`Banco de questões esgotado para ${subjectKey}. Reiniciando o ciclo de ${totalQuestions} questões.`);
+        questionsHistory[subjectKey] = [];
+        availableIndices = [];
+        for (let i = 0; i < totalQuestions; i++) {
+            availableIndices.push(i);
+        }
+    }
+
+    const selectedQuestions = [];
+    const selectedIndicesForThisSession = [];
+    let count = 0;
+
+    while (count < SESSION_SIZE) {
+        // Seleção aleatória
+        const randomIndexInAvailable = Math.floor(Math.random() * availableIndices.length);
+        const questionIndex = availableIndices[randomIndexInAvailable];
+
+        // 3. Pega a questão, armazena o índice e remove o índice da lista de disponíveis para evitar repetição NA SESSÃO ATUAL.
+        selectedQuestions.push(JSON.parse(JSON.stringify(fullBank[questionIndex]))); // Clone para não afetar o banco original
+
+        selectedIndicesForThisSession.push(questionIndex);
+        availableIndices.splice(randomIndexInAvailable, 1);
+        count++;
+    }
+
+    // 4. Adiciona os índices usados ao histórico global (para evitar repetição em sessões futuras)
+    questionsHistory[subjectKey].push(...selectedIndicesForThisSession);
+
+    return selectedQuestions;
+}
+
+
+// --- Funções de Estado e Controle
+/**
+ * Inicializa o estado da sessão.
+ */
+function resetApp() {
+    state = {
+        currentStage: 1, // 1: Seleção de Tema, 2: Removido/Carregamento, 3: Atividade, 4: Feedback, 5: Relatório, 6: Fim de Sessão
+        currentSubject: null,
+        sessionActivities: [],
+        activityIndex: 0,
+        maxScore: SESSION_SIZE,
+        score: 0,
+        sessionId: generateSessionId(),
+        isLastAnswerCorrect: null
+    };
+    renderApp();
+}
+
+/**
+ * Adiciona os resultados da sessão atual às estatísticas consolidadas.
+ */
+function aggregateSessionResults() {
+    const subjectKey = state.currentSubject;
+    const correct = state.score;
+    const total = state.maxScore;
+    const wrong = total - correct;
+    
+    // 1. Agrega Estatísticas
+    if (allTimeStats[subjectKey]) {
+        allTimeStats[subjectKey].correct += correct;
+        allTimeStats[subjectKey].wrong += wrong;
+        allTimeStats[subjectKey].total += total;
+    } else {
+        allTimeStats[subjectKey] = {
+            name: subjects[subjectKey] ? subjects[subjectKey].name : subjectKey,
+            correct: correct,
+            wrong: wrong,
+            total: total,
+            color: "gray"
+        };
+    }
+    console.log("Estatísticas consolidadas atualizadas.");
+}
+
+/**
+ * Prepara e inicia uma nova sessão de revisão.
+ * @param {string} subjectKey - Chave da matéria (ex: 'math').
+ */
+async function startSession(subjectKey) {
+    state.currentSubject = subjectKey;
+
+    try {
+        const generatedActivities = getQuestionsFromLocalBank(subjectKey);
+        
+        // 4. Configura o estado da sessão
+        state.sessionActivities = generatedActivities;
+        state.activityIndex = 0;
+        state.score = 0;
+        state.currentStage = 3; // Inicia a atividade (Stage 3)
+        renderApp();
+    } catch (error) {
+        // Em caso de falha (banco vazio), volta para a seleção e mostra o erro
+        state.currentStage = 1;
+        renderApp();
+        document.getElementById('app').querySelector('.container-box').innerHTML += `
+        <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
+        <p class="font-bold"> ❌ Erro ao Iniciar Sessão!</p>
+        <p class="text-sm">Detalhes: ${error.message}. Por favor, verifique se o banco de questões está preenchido corretamente.</p>
+        </div>
+        `;
+    }
+}
+
+/**
+ * Processa a resposta do usuário e avança para a tela de feedback.
+ * @param {string} selectedOption - A opção escolhida pelo usuário.
+ */
+function submitAnswer(selectedOption) {
+    const currentActivity = state.sessionActivities[state.activityIndex];
+    // Verifica a resposta
+    const isCorrect = selectedOption === currentActivity.answer;
+    state.isLastAnswerCorrect = isCorrect;
+    if (isCorrect) {
+        state.score++;
+        currentActivity.isCorrect = true;
+    } else {
+        currentActivity.isCorrect = false;
+    }
+    // Vai para o estágio de feedback (Stage 4)
+    state.currentStage = 4;
+    renderApp();
+}
+
+/**
+ * Avança para a próxima questão ou para o fim da sessão. Chamado pelo botão de feedback.
+ */
+function nextQuestion() {
+    state.activityIndex++;
+    if (state.activityIndex < state.maxScore) {
+        // Se ainda houver atividades, vai para a próxima (Stage 3)
+        state.currentStage = 3;
+    } else {
+        // Se a sessão terminou, vai para o fim (Stage 6)
+        state.currentStage = 6;
+    }
+    renderApp();
+}
+
+/**
+ * Função principal que chama a API do Gemini para análise de habilidades e dicas. (MANTIDA)
+ */
+async function generateSkillReportAndTips() {
+    const reportContainer = document.getElementById('skill-report-container');
+    const subjectName = subjects[state.currentSubject].name;
+    
+    if (!GEMINI_API_KEY) {
+        reportContainer.innerHTML = `
+        <div class="mt-6 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
+        <p class="font-bold"> Chave de API Ausente ou Inválida!</p>
+        <p class="text-sm">Insira a chave Gemini API no código para gerar a análise de
+        habilidades e as dicas personalizadas. Sem chave, a análise não é possível.</p>
+        </div>
+        `;
+        return;
+    }
+
+    const sessionResults = state.sessionActivities.map((activity, index) => {
+        const result = activity.isCorrect ? 'ACERTO' : 'ERRO';
+        // Usa a questão e a habilidade (código BNCC) para a análise
+        return `Questão ${index + 1}: Pergunta: "${activity.question}", Habilidade (BNCC): "${activity.skill}", Resultado: ${result}`;
+    }).join('; ');
+
+    // Prompt ajustado para tratar a habilidade como código BNCC
+    const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n' ou quebras de parágrafo) listando cada habilidade testada (incluindo o código BNCC) com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
+    const userQuery = `Analise a seguinte sessão de revisão na matéria de ${subjectName}. A criança tentou ${state.maxScore} questões. Aqui estão os resultados (Questão, Habilidade BNCC, Resultado): ${sessionResults}. Gere o relatório e as dicas.`;
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+
+    const payload = {
+        contents: [{ parts: [{ text: userQuery }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: "OBJECT",
+                properties: {
+                    "skill_analysis": { "type": "STRING" },
+                    "improvement_tips": { "type": "STRING" }
+                },
+                propertyOrdering: ["skill_analysis", "improvement_tips"]
+            }
+        }
+    };
+
+    reportContainer.innerHTML =`
+    <div class="mt-6 flex items-center justify-center p-4 bg-gray-50 rounded-lg shadow-inner">
+    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-pink-600"
+    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-
+    width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0
+    5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <span class="text-gray-700 font-semibold">Analisando habilidades (BNCC)
+    dinamicamente...</span>
     </div>
+    `;
 
-    <script type="text/javascript">
-        // Variável GLOBAL para a chave da API do Gemini.
-        const GEMINI_API_KEY = typeof __api_key !== 'undefined' ? __api_key : "AIzaSyBnkQJjybsmbb1W1oAZz7pUGadNiisjKxU"; 
+    try {
+        const response = await fetchWithRetry(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
         
-        // Define o tamanho fixo da sessão
-        const SESSION_SIZE = 5; 
-
-        // Variável de estado global
-        let state = {};
-
-        // Variável para armazenar as estatísticas consolidadas
-        let allTimeStats = {
-            math: { name: "Matemática", correct: 0, wrong: 0, total: 0, color: "blue" },
-            portuguese: { name: "Português", correct: 0, wrong: 0, total: 0, color: "green" },
-            science: { name: "Ciências", correct: 0, wrong: 0, total: 0, color: "yellow" },
-            history: { name: "História", correct: 0, wrong: 0, total: 0, color: "red" },
-        };
-        
-        // NOVO: Histórico de todas as questões geradas nesta sessão do navegador
-        let questionsHistory = {
-            math: [],
-            portuguese: [],
-            science: [],
-            history: [],
-        };
-
-
-        // --- Estrutura das Matérias ALINHADA À BNCC (2º ANO EF) ---
-        const subjects = {
-            math: {
-                name: "Matemática",
-                icon: "🔢",
-                color: "bg-blue-500",
-                // Habilidades BNCC (Exemplos): EF02MA01, EF02MA05, EF02MA12
-                bncc_focus: "EF02MA01 (ler, escrever e comparar números naturais até 1000), EF02MA05 (construir fatos básicos da adição e subtração), EF02MA06 (resolver problemas de adição e subtração), EF02MA12 (identificar e planificar figuras planas e espaciais), EF02MA15 (comparar capacidade e massa)."
-            },
-            portuguese: {
-                name: "Português",
-                icon: "📖",
-                color: "bg-green-500",
-                // Habilidades BNCC (Exemplos): EF02LP01, EF02LP07, EF02LP15
-                bncc_focus: "EF02LP01 (ler e escrever palavras com correspondências regulares e irregulares), EF02LP07 (segmentar palavras em sílabas), EF02LP10 (identificar sinônimos e antônimos), EF02LP15 (ler e compreender textos curtos, com autonomia), EF02LP18 (planejar e produzir frases e pequenos textos)."
-            },
-            science: {
-                name: "Ciências",
-                icon: "🔬",
-                color: "bg-yellow-500",
-                // Habilidades BNCC (Exemplos): EF02CI04, EF02CI05, EF02CI06
-                bncc_focus: "EF02CI04 (descrever características de plantas e animais), EF02CI05 (identificar materiais utilizados em objetos e suas fontes), EF02CI06 (identificar e classificar os cinco sentidos), EF02CI07 (descrever o ciclo da água e a importância para a vida)."
-            },
-            history: {
-                name: "História",
-                icon: "🏛️",
-                color: "bg-red-500",
-                // Habilidades BNCC (Exemplos): EF02HI01, EF02HI02, EF02HI07
-                bncc_focus: "EF02HI01 (reconhecer o papel da família e da escola), EF02HI02 (identificar e descrever práticas e ritmos de vida no presente e passado), EF02HI07 (identificar e utilizar diferentes marcadores do tempo - dia/noite, semana, mês), EF02HI10 (selecionar objetos e documentos pessoais para análise)."
-            }
-        };
-
-        function generateSessionId() {
-            return 'sess-' + Date.now() + Math.random().toString(16).slice(2);
-        }
-
-        // Função de utilidade para o API Call (Exponential Backoff)
-        async function fetchWithRetry(url, options, maxRetries = 5) {
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (response.ok) return response;
-                    if (response.status === 401) throw new Error("Chave de API inválida.");
-                    if (response.status === 429) {
-                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        continue;
-                    }
-                    throw new Error(`Erro HTTP: ${response.status}`); 
-                } catch (error) {
-                    if (i === maxRetries - 1) throw error;
-                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                }
-            }
-        }
-
-        // --- Geração de Questões Dinâmicas (PROMPT OTIMIZADO PARA BNCC E INEDITISMO) ---
-
-        /**
-         * Chama a Gemini API para gerar 5 questões de múltipla escolha para o tema, alinhadas à BNCC.
-         * @param {string} subjectKey - Chave da matéria (ex: 'math').
-         * @returns {Promise<Array>} - Array de objetos de atividade formatados.
-         */
-        async function generateQuestionsFromGemini(subjectKey) {
-            const subjectData = subjects[subjectKey];
-            const subjectName = subjectData.name;
-            const bnccFocus = subjectData.bncc_focus;
-            
-            // Lógica para inclusão do Histórico
-            const history = questionsHistory[subjectKey];
-            let historyPrompt = "";
-
-            if (history.length > 0) {
-                // Envia as últimas 15 questões para economizar no contexto
-                const recentHistory = history.slice(-15); 
-                const formattedHistory = recentHistory.map((q, index) => 
-                    `[#${index+1}] Habilidade: ${q.skill}, Questão: "${q.question}"`
-                ).join('\n');
-                
-                historyPrompt = `
-
-    --- HISTÓRICO DE QUESTÕES JÁ TRABALHADAS NESTA MATÉRIA (EVITAR REPETIÇÃO) ---
-    Você deve garantir que as novas 5 questões sejam **substancialmente diferentes** das questões listadas abaixo, focando em diversidade de habilidades ou, se a habilidade for repetida, usando um novo cenário/contexto:
-    ${formattedHistory}
-    --- FIM DO HISTÓRICO ---
-                `;
-            }
-
-            // PROMPT MELHORADO PARA INCLUIR EXIGÊNCIA DA BNCC, DIVERSIDADE E INEDITISMO
-            const systemPrompt = `Você é um gerador de questões acadêmicas de alta qualidade para estudantes do 2º ano do Ensino Fundamental. Crie ${SESSION_SIZE} perguntas únicas e **inéditas** sobre o tema solicitado. Cada pergunta deve ser uma questão de múltipla escolha com 4 opções, sendo 1 correta e 3 incorretas, mas plausíveis. O tom deve ser simples e infantil. Garanta que as ${SESSION_SIZE} questões sejam **distintas**, abordando diferentes habilidades e formatos. **É essencial evitar repetição de conceitos ou estruturas de frases semelhantes, especialmente em relação ao histórico fornecido.** O output deve ser um array JSON estrito, sem nenhum texto extra.`;
-            
-            const userQuery = `Gere ${SESSION_SIZE} questões inéditas para alunos do 2º ano do Ensino Fundamental, na matéria de ${subjectName}. As questões devem ser variadas e alinhadas estritamente com as seguintes habilidades da BNCC: ${bnccFocus}. Inclua o código da BNCC (ex: EF02MA01) no campo 'skill' de cada questão. ${historyPrompt}`;
-            
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "ARRAY",
-                        items: {
-                            type: "OBJECT",
-                            properties: {
-                                "question": { "type": "STRING", "description": "O texto da questão, adequado para um aluno do 2º ano." },
-                                "correct_answer": { "type": "STRING", "description": "A única resposta correta para a questão." },
-                                "incorrect_options": { "type": "ARRAY", "items": { "type": "STRING" }, "description": "Três opções de resposta plausíveis, mas incorretas." },
-                                "skill": { "type": "STRING", "description": "A habilidade específica da BNCC testada, incluindo o código (ex: 'EF02MA01 - Leitura de números')." },
-                                "rationale": { "type": "STRING", "description": "Uma curta explicação do porquê a resposta está correta, para ser usada no relatório final." }
-                            },
-                            required: ["question", "correct_answer", "incorrect_options", "skill", "rationale"]
-                        }
-                    }
-                }
-            };
-            
-            try {
-                const response = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                
-                if (jsonText) {
-                    const generatedQuestions = JSON.parse(jsonText);
-                    
-                    // Converte o formato da API para o formato interno do aplicativo
-                    return generatedQuestions.map(q => {
-                        return {
-                            question: q.question,
-                            answer: q.correct_answer, 
-                            options: [q.correct_answer, ...q.incorrect_options], // Combina e embaralha depois no renderActivity
-                            skill: q.skill, // Agora contém o código BNCC
-                            rationale: q.rationale,
-                            isCorrect: null 
-                        };
-                    });
-                } else {
-                    console.error("API response missing JSON content:", result);
-                    throw new Error("A API não retornou o formato de questões esperado.");
-                }
-            } catch (error) {
-                console.error("Erro ao chamar a API Gemini para gerar questões:", error);
-                throw new Error(`Falha ao gerar questões: ${error.message}. Verifique sua chave de API.`);
-            }
-        }
-
-        // --- Funções de Estado e Controle ---
-
-        /**
-         * Inicializa o estado da sessão.
-         */
-        function resetApp() {
-            state = {
-                currentStage: 1, // 1: Seleção de Tema, 2: Transição/Carregamento, 3: Atividade, 4: Feedback, 5: Relatório, 6: Fim de Sessão
-                currentSubject: null,
-                sessionActivities: [], 
-                activityIndex: 0,
-                maxScore: SESSION_SIZE, 
-                score: 0,
-                sessionId: generateSessionId(),
-                isLastAnswerCorrect: null 
-            };
-            renderApp();
-        }
-
-        /**
-         * Adiciona os resultados da sessão atual às estatísticas consolidadas E ao histórico.
-         */
-        function aggregateSessionResults() {
-            const subjectKey = state.currentSubject;
-            const correct = state.score;
-            const total = state.maxScore;
-            const wrong = total - correct;
-
-            // 1. Agrega Estatísticas
-            if (allTimeStats[subjectKey]) {
-                allTimeStats[subjectKey].correct += correct;
-                allTimeStats[subjectKey].wrong += wrong;
-                allTimeStats[subjectKey].total += total;
-            } else {
-                allTimeStats[subjectKey] = {
-                    name: subjects[subjectKey] ? subjects[subjectKey].name : subjectKey,
-                    correct: correct,
-                    wrong: wrong,
-                    total: total,
-                    color: "gray"
-                };
-            }
-            
-            // 2. Adiciona ao Histórico de Questões (para evitar repetição na próxima geração)
-            state.sessionActivities.forEach(activity => {
-                questionsHistory[subjectKey].push({
-                    question: activity.question,
-                    skill: activity.skill // Inclui a BNCC para análise de diversidade
-                });
-            });
-
-            console.log("Estatísticas e Histórico consolidados atualizados.");
-        }
-
-        /**
-         * Prepara e inicia uma nova sessão de revisão.
-         * @param {string} subjectKey - Chave da matéria (ex: 'math').
-         */
-        async function startSession(subjectKey) {
-            state.currentSubject = subjectKey;
-            state.currentStage = 2; // Inicia a transição/carregamento
-            renderApp(); // Renderiza a tela de carregamento
-
-            if (!GEMINI_API_KEY) {
-                state.currentStage = 1; 
-                renderApp();
-                // Exibir alerta na tela inicial ou em um modal personalizado
-                document.getElementById('app').querySelector('.container-box').innerHTML += `
-                    <div class="mt-6 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
-                        <p class="font-bold">🔑 Chave de API Ausente!</p>
-                        <p class="text-sm">Por favor, insira sua chave Gemini API no código-fonte para gerar questões dinamicamente.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            try {
-                const generatedActivities = await generateQuestionsFromGemini(subjectKey);
-                
-                // 4. Configura o estado da sessão
-                state.sessionActivities = generatedActivities;
-                state.activityIndex = 0;
-                state.score = 0;
-                state.currentStage = 3; // Inicia a atividade
-                renderApp();
-
-            } catch (error) {
-                // Em caso de falha na API, volta para a seleção e mostra o erro
-                state.currentStage = 1;
-                renderApp();
-                 document.getElementById('app').querySelector('.container-box').innerHTML += `
-                    <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
-                        <p class="font-bold">❌ Erro na Geração de Questões!</p>
-                        <p class="text-sm">Detalhes: ${error.message}</p>
-                    </div>
-                `;
-            }
-        }
-
-        /**
-         * Processa a resposta do usuário e avança para a tela de feedback.
-         * @param {string} selectedOption - A opção escolhida pelo usuário.
-         */
-        function submitAnswer(selectedOption) {
-            const currentActivity = state.sessionActivities[state.activityIndex];
-            
-            // Verifica a resposta
-            const isCorrect = selectedOption === currentActivity.answer;
-            state.isLastAnswerCorrect = isCorrect;
-
-            if (isCorrect) {
-                state.score++;
-                currentActivity.isCorrect = true; 
-            } else {
-                 currentActivity.isCorrect = false;
-            }
-            
-            // Vai para o estágio de feedback (Stage 4)
-            state.currentStage = 4;
-            renderApp();
-        }
-        
-        /**
-         * Avança para a próxima questão ou para o fim da sessão. Chamado pelo botão de feedback.
-         */
-        function nextQuestion() {
-            state.activityIndex++;
-            if (state.activityIndex < state.maxScore) {
-                // Se ainda houver atividades, vai para a próxima (Stage 3)
-                state.currentStage = 3; 
-            } else {
-                // Se a sessão terminou, vai para o fim (Stage 6)
-                state.currentStage = 6;
-            }
-            renderApp();
-        }
-
-        /**
-         * Função principal que chama a API do Gemini para análise de habilidades e dicas.
-         */
-        async function generateSkillReportAndTips() {
-            const reportContainer = document.getElementById('skill-report-container');
-            const subjectName = subjects[state.currentSubject].name;
-            
-            if (!GEMINI_API_KEY) {
-                reportContainer.innerHTML = `
-                    <div class="mt-6 p-4 bg-yellow-100 text-yellow-800 rounded-lg">
-                        <p class="font-bold">🔑 Chave de API Ausente!</p>
-                        <p class="text-sm">Insira a chave Gemini API no código para gerar a análise de habilidades e as dicas personalizadas.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const sessionResults = state.sessionActivities.map((activity, index) => {
-                const result = activity.isCorrect ? 'ACERTO' : 'ERRO';
-                // Usa a questão e a habilidade (código BNCC) para a análise
-                return `Questão ${index + 1}: Pergunta: "${activity.question}", Habilidade (BNCC): "${activity.skill}", Resultado: ${result}`;
-            }).join('; ');
-
-            // Prompt ajustado para tratar a habilidade como código BNCC
-            const systemPrompt = "Você é um professor/tutor de 2º ano do Ensino Fundamental, amigável e encorajador. Sua tarefa é analisar os resultados da sessão de revisão e fornecer feedback construtivo. O feedback deve ser estritamente em Português do Brasil. O campo 'skill_analysis' deve ser um relatório formatado com quebras de linha (usando '\\n' ou quebras de parágrafo) listando cada habilidade testada (incluindo o código BNCC) com o número da questão e o resultado (ACERTO/ERRO), de forma que cada item fique em sua própria linha para melhor leitura. O campo 'improvement_tips' deve ser um pequeno texto (máximo 3 frases) com dicas específicas para a criança melhorar nas habilidades que ela errou, mantendo um tom positivo e simples.";
-            
-            const userQuery = `Analise a seguinte sessão de revisão na matéria de ${subjectName}. A criança tentou ${state.maxScore} questões. Aqui estão os resultados (Questão, Habilidade BNCC, Resultado): ${sessionResults}. Gere o relatório e as dicas.`;
-            
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            "skill_analysis": { "type": "STRING" },
-                            "improvement_tips": { "type": "STRING" }
-                        },
-                        propertyOrdering: ["skill_analysis", "improvement_tips"]
-                    }
-                }
-            };
+        if (jsonText) {
+            const parsedJson = JSON.parse(jsonText);
+            const analysis = parsedJson.skill_analysis;
+            const tips = parsedJson.improvement_tips;
 
             reportContainer.innerHTML = `
-                <div class="mt-6 flex items-center justify-center p-4 bg-gray-50 rounded-lg shadow-inner">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span class="text-gray-700 font-semibold">Analisando habilidades (BNCC) dinamicamente...</span>
-                </div>
-            `;
-
-            try {
-                const response = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                
-                if (jsonText) {
-                    const parsedJson = JSON.parse(jsonText);
-                    const analysis = parsedJson.skill_analysis;
-                    const tips = parsedJson.improvement_tips;
-
-                    reportContainer.innerHTML = `
-                        <div class="mt-6 p-5 bg-gray-50 rounded-lg shadow-inner text-left">
-                            <h3 class="text-2xl font-extrabold mb-3 text-pink-600">🎯 Amostragem de Habilidades (Análise BNCC)</h3>
-                            
-                            <pre class="mb-4 text-md text-gray-700 whitespace-pre-wrap">${analysis}</pre>
-                            
-                            <h3 class="text-xl font-bold mt-5 mb-2 text-indigo-600">Dicas para Melhoria:</h3>
-                            <p class="text-lg text-gray-800 italic">${tips}</p>
-                        </div>
-                    `;
-                } else {
-                    reportContainer.innerHTML = `
-                        <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
-                            <p class="font-bold">❌ Erro na Geração do Relatório:</p>
-                            <p class="text-sm">A API não retornou o conteúdo esperado. Verifique a chave ou o limite de uso.</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error("Erro ao chamar a API Gemini para análise:", error);
-                 reportContainer.innerHTML = `
-                    <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
-                        <p class="font-bold">❌ Erro de Conexão ou API:</p>
-                        <p class="text-sm">Não foi possível gerar a análise. Detalhes: ${error.message}.</p>
-                    </div>
-                `;
-            }
-        }
-
-
-        // --- Renderização de Telas (Stages) ---
-
-        /**
-         * Renderiza a tela de Seleção de Tema (Stage 1).
-         */
-        function renderSelection() {
+            <div class="mt-6 p-5 bg-gray-50 rounded-lg shadow-inner text-left">
+            <h3 class="text-2xl font-extrabold mb-3 text-pink-600"> Amostragem de 🎯
+            Habilidades (Análise BNCC)</h3>
             
-            const subjectCards = Object.keys(subjects).map(key => {
-                const subj = subjects[key];
-
-                return `
-                    <div class="subject-card cursor-pointer hover:shadow-xl" onclick="startSession('${key}')">
-                        <div class="text-4xl mb-2">${subj.icon}</div>
-                        <h3 class="text-xl font-bold text-gray-800">${subj.name}</h3>
-                        <p class="text-sm text-gray-500">Sessão: ${SESSION_SIZE} Questões.</p>
-                        <!-- O foco BNCC e o texto "Alinhamento BNCC" foram removidos da exibição conforme solicitado -->
-                    </div>
-                `;
-            }).join('');
-
-            const html = `
-                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-                    <h1 class="text-3xl font-extrabold mb-4 text-pink-600">Revisão Dinâmica do 2º Ano EF</h1>
-                    <p class="text-gray-600 mb-6">Escolha o tema. A cada sessão, a Gemini criará ${SESSION_SIZE} questões inéditas e alinhadas à BNCC para você!</p>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                        ${subjectCards}
-                    </div>
-
-                    ${Object.values(allTimeStats).some(stat => stat.total > 0) ? `
-                        <button onclick="state.currentStage = 5; renderApp();" 
-                                class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-bold text-lg rounded-xl shadow-lg theme-button hover:bg-indigo-600 transition duration-150">
-                            📊 Ver Relatório de Sessões Anteriores
-                        </button>
-                    ` : `
-                        <button class="w-full md:w-auto px-6 py-3 bg-gray-400 text-white font-bold text-lg rounded-xl shadow-lg cursor-not-allowed">
-                            📊 Relatório disponível após a 1ª revisão
-                        </button>
-                    `}
-                </div>
-            `;
-            document.getElementById('app').innerHTML = html;
-        }
-
-        /**
-         * Renderiza a tela de Transição/Carregamento (Stage 2).
-         */
-        function renderTransition() {
-            const subj = subjects[state.currentSubject];
-            const html = `
-                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-                    <h2 class="text-4xl font-extrabold mb-4 text-pink-600">Gerando Questões...</h2>
-                    <p class="text-xl text-gray-700 mb-8">A Gemini está criando ${SESSION_SIZE} novos desafios alinhados à BNCC e totalmente inéditos para você em ${subj.name} ${subj.icon}.</p>
-                    
-                    <div class="flex justify-center items-center">
-                        <svg class="animate-spin h-10 w-10 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    </div>
-                    <p class="text-lg text-gray-500 mt-4">Pode demorar alguns segundos...</p>
-                </div>
-            `;
-            document.getElementById('app').innerHTML = html;
-        }
-
-        /**
-         * Renderiza a tela de Atividade (Questão) (Stage 3).
-         */
-        function renderActivity() {
-            const currentActivity = state.sessionActivities[state.activityIndex];
-            const subj = subjects[state.currentSubject];
-
-            // Embaralha as opções para que a resposta correta não seja sempre a primeira
-            const shuffledOptions = [...currentActivity.options].sort(() => 0.5 - Math.random());
-
-            const optionsHtml = shuffledOptions.map(option => `
-                <button onclick="submitAnswer('${option.replace(/'/g, "\\'")}')"
-                        class="w-full py-3 px-4 mb-3 bg-gray-100 text-gray-800 font-semibold rounded-lg border-2 border-gray-300 hover:bg-pink-100 hover:border-pink-500 transition duration-100 text-lg text-left shadow-md">
-                    ${option}
-                </button>
-            `).join('');
+            <pre class="mb-4 text-md text-gray-700 whitespace-pre-wrap">${analysis}</pre>
             
-            // Certifique-se de que a questão também é exibida
-            const questionText = currentActivity.question || "Carregando pergunta...";
-
-            const html = `
-                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-left border-t-8 border-${subj.color.split('-')[1]}-500">
-                    <div class="mb-4 flex justify-between items-center">
-                        <span class="text-lg font-bold text-gray-600">${subj.icon} ${subj.name}</span>
-                        <span class="text-2xl font-extrabold text-pink-600">Questão ${state.activityIndex + 1} / ${state.maxScore}</span>
-                    </div>
-
-                    <p class="text-2xl font-bold mb-6 text-gray-900">${questionText}</p>
-                    <p class="text-xs text-gray-400 mb-4">Habilidade BNCC: ${currentActivity.skill}</p>
-
-                    <div class="options-container">
-                        ${optionsHtml}
-                    </div>
-                </div>
+            <h3 class="text-xl font-bold mt-5 mb-2 text-indigo-600">Dicas para 
+            Melhoria:</h3>
+            <p class="text-lg text-gray-800 italic">${tips}</p>
+            </div>
             `;
-            document.getElementById('app').innerHTML = html;
+        } else {
+            reportContainer.innerHTML = `
+            <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
+            <p class="font-bold"> ❌ Erro na Geração do Relatório:</p> 
+            <p class="text-sm">A API não retornou o conteúdo esperado.
+            Verifique a chave 
+            ou o limite de uso.</p>
+            </div>
+            `;
         }
+    } catch (error) {
+        console.error("Erro ao chamar a API Gemini para análise:", error);
+        reportContainer.innerHTML = `
+        <div class="mt-6 p-4 bg-red-100 text-red-800 rounded-lg">
+        <p class="font-bold"> ❌ Erro de Conexão ou API:</p>
+        <p class="text-sm">Não foi possível gerar a análise.
+        Detalhes: 
+        ${error.message}.</p>
+        </div>
+        `;
+    }
+}
+
+
+// --- Renderização de Telas (Stages) ---
+/**
+ * Renderiza a tela de Seleção de Tema (Stage 1).
+ */
+function renderSelection() {
+    
+    const subjectCards = Object.keys(subjects).map(key => {
+        const subj = subjects[key];
+        const questionCount = localQuestionBanks[key].length;
+
+        return `
+        <div class="subject-card cursor-pointer hover:shadow-xl" onclick="startSession('${key}')">
+        <div class="text-4xl mb-2">${subj.icon}</div>
+        <h3 class="text-xl font-bold text-gray-800">${subj.name}</h3>
+        <p class="text-sm text-gray-500">Total de Questões: ${questionCount}. Sessão: ${SESSION_SIZE} Questões.</p>
+        </div>
+        `;
+    }).join('');
+
+    const html = `
+    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
+    <h1 class="text-3xl font-extrabold mb-4 text-pink-600">Revisão Dinâmica do 2º Ano 
+    EF</h1>
+    <p class="text-gray-600 mb-6">Escolha o tema. As questões são carregadas do banco local, garantindo ineditismo por até 20 sessões!</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+    ${subjectCards}
+    </div>
+    ${Object.values(allTimeStats).some(stat => stat.total > 0) ?
+    `
+    <button onclick="state.currentStage = 5; renderApp();" 
+    class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-bold text-lg 
+    rounded-xl shadow-lg theme-button hover:bg-indigo-600 transition duration-150">
+    Ver Relatório de Sessões Anteriores 📊
+    </button>
+    ` : `
+    <button class="w-full md:w-auto px-6 py-3 bg-gray-400 text-white font-bold text-lg 
+    rounded-xl shadow-lg cursor-not-allowed">
+    Relatório disponível após a 1ª revisão 📊
+    </button>
+    `}
+    </div>
+    `;
+    document.getElementById('app').innerHTML = html;
+}
+
+/**
+ * Renderiza a tela de Atividade (Questão) (Stage 3).
+ */
+function renderActivity() {
+    const currentActivity = state.sessionActivities[state.activityIndex];
+    const subj = subjects[state.currentSubject];
+    // Embaralha as opções para que a resposta correta não seja sempre a primeira
+    const shuffledOptions = [...currentActivity.options].sort(() => 0.5 - Math.random());
+    const optionsHtml = shuffledOptions.map(option => `
+    <button onclick="submitAnswer('${option.replace(/'/g, "\\'")}')"
+    class="w-full py-3 px-4 mb-3 bg-gray-100 text-gray-800 font-semibold rounded-lg 
+    border-2 border-gray-300 hover:bg-pink-100 hover:border-pink-500 transition duration-100 text-lg 
+    text-left shadow-md">
+    ${option}
+    </button>
+    `).join('');
+    // Certifique-se de que a questão também é exibida
+    const questionText = currentActivity.question || "Carregando pergunta...";
+    const html = `
+    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-left border 
+    t-8 border-${subj.color.split('-')[1]}-500">
+    <div class="mb-4 flex justify-between items-center">
+    <span class="text-lg font-bold text-gray-600">${subj.icon} ${subj.name}</span>
+    <span class="text-2xl font-extrabold text-pink-600">Questão ${state.activityIndex +
+    1} / ${state.maxScore}</span>
+    </div>
+    <p class="text-2xl font-bold mb-6 text-gray-900">${questionText}</p>
+    <p class="text-xs text-gray-400 mb-4">Habilidade BNCC: 
+    ${currentActivity.skill}</p>
+    <div class="options-container">
+    ${optionsHtml}
+    </div>
+    </div>
+    `;
+    document.getElementById('app').innerHTML = html;
+}
+
+/**
+ * Renderiza a tela de Feedback Imediato (Stage 4).
+ */
+function renderFeedback() {
+    const isCorrect = state.isLastAnswerCorrect;
+    const message = isCorrect ?
+    "Parabéns! Você acertou! 🎉" : "Ops! Você errou. Vamos tentar a próxima! 🤔";
+    const bgColor = isCorrect ? "bg-blue-100 border-blue-500" : "bg-red-100 border-red-500";
+    const textColor = isCorrect ? "text-blue-800" : "text-red-800";
+    const buttonColor = isCorrect ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-600";
+    
+    const currentActivity = state.sessionActivities[state.activityIndex];
+    const buttonText = state.activityIndex < state.maxScore - 1 ? "Próxima Questão" : "Ver Relatório Final";
+    const html = `
+    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
+    <div class="p-8 rounded-2xl border-4 ${bgColor} ${textColor} animate-bounce" 
+    style="animation-duration: 0.5s;">
+    <p class="text-4xl font-extrabold mb-4">${isCorrect ?
+    "✅" : "❌"}</p>
+    <h2 class="text-3xl font-bold">${message}</h2>
+    </div>
+    
+    <div class="mt-6 p-4 bg-gray-50 rounded-lg text-left">
+    <p class="font-bold text-lg text-pink-600">Resposta Correta:</p>
+    <p class="text-xl text-gray-800">${currentActivity.answer}</p>
+    </div>
+    <button onclick="nextQuestion()" 
+    class="mt-8 px-8 py-4 ${buttonColor} text-white font-extrabold text-xl rounded 
+    xl shadow-lg theme-button transition duration-150">
+    ${buttonText}
+    </button>
+    </div>
+    `;
+    document.getElementById('app').innerHTML = html;
+}
+
+/**
+ * Renderiza a tela de Relatório Consolidado (Stage 5).
+ */
+function renderReport() {
+
+    const statsEntries = Object.values(allTimeStats).filter(stat => stat.total > 0); 
+    let reportHtml = '';
+    if (statsEntries.length === 0) {
+        reportHtml = `
+        <p class="text-xl text-gray-500">Nenhum dado de sessão anterior encontrado.
+        Tente 
+        completar uma revisão primeiro!</p>
+        `;
+    } else {
+        reportHtml = statsEntries.map(stat => {
+            const percentageCorrect = stat.total > 0 ? ((stat.correct / stat.total) * 100).toFixed(0) : 0;
+            const barColor = percentageCorrect >= 70 ? 'bg-green-500' : percentageCorrect >= 50 ?
+            'bg-yellow-500' : 'bg-red-500';
+            return `
+            <div class="p-5 bg-white rounded-xl shadow-lg border-l-8 border-${stat.color.split('-')[1]}-500 
+            transition duration-300 hover:shadow-xl">
+            <h3 class="text-2xl font-bold mb-2 text-gray-800">${stat.name}</h3>
+            
+            <div class="mb-3 text-sm text-gray-600">
+            <span>Total de Questões: <span 
+            class="font-bold">${stat.total}</span></span> |
+            <span class="text-green-600">Acertos: <span class="font-bold">
+            ${stat.correct}</span></span> |
+            <span class="text-red-600">Erros: <span 
+            class="font-bold">${stat.wrong}</span></span>
+            </div>
         
-        /**
-         * Renderiza a tela de Feedback Imediato (Stage 4).
-         */
-        function renderFeedback() {
-            const isCorrect = state.isLastAnswerCorrect;
-            const message = isCorrect ? "Parabéns! Você acertou! 🎉" : "Ops! Você errou. Vamos tentar a próxima! 🤔";
-            const bgColor = isCorrect ? "bg-blue-100 border-blue-500" : "bg-red-100 border-red-500";
-            const textColor = isCorrect ? "text-blue-800" : "text-red-800";
-            const buttonColor = isCorrect ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-600";
-            
-            const currentActivity = state.sessionActivities[state.activityIndex];
-
-            const buttonText = state.activityIndex < state.maxScore - 1 ? "Próxima Questão" : "Ver Relatório Final";
-
-            const html = `
-                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-                    <div class="p-8 rounded-2xl border-4 ${bgColor} ${textColor} animate-bounce" style="animation-duration: 0.5s;">
-                        <p class="text-4xl font-extrabold mb-4">${isCorrect ? "✅" : "❌"}</p>
-                        <h2 class="text-3xl font-bold">${message}</h2>
-                    </div>
-                    
-                    <div class="mt-6 p-4 bg-gray-50 rounded-lg text-left">
-                        <p class="font-bold text-lg text-pink-600">Resposta Correta:</p>
-                        <p class="text-xl text-gray-800">${currentActivity.answer}</p>
-                    </div>
-
-                    <button onclick="nextQuestion()" 
-                            class="mt-8 px-8 py-4 ${buttonColor} text-white font-extrabold text-xl rounded-xl shadow-lg theme-button transition duration-150">
-                        ${buttonText}
-                    </button>
-                </div>
+            <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
+            <div class="h-4 rounded-full ${barColor}" style="width: ${percentageCorrect}
+            %; transition: width 1s ease-out;"></div>
+            <span class="absolute right-0 top-0 bottom-0 flex items-center pr-3 font-bold 
+            text-xs ${percentageCorrect > 50 ?
+            'text-white' : 'text-gray-800'}">
+            ${percentageCorrect}%
+            </span>
+            </div>
+            <p class="mt-2 text-sm text-gray-500">Aproveitamento geral.</p>
+            </div>
             `;
-            document.getElementById('app').innerHTML = html;
+        }).join('');
+        reportHtml = `<div class="report-grid">${reportHtml}</div>`;
+    }
+
+    const html = `
+    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
+    <h2 class="text-4xl font-extrabold mb-2 text-pink-600"> Relatório 📊
+    Consolidado</h2>
+    <p class="text-lg text-gray-700 mb-6">Desempenho acumulado de todas as revisões 
+    nesta sessão:</p>
+
+    ${reportHtml}
+    <button onclick="state.currentStage = 1; renderApp();" 
+    class="mt-8 w-full md:w-auto px-6 py-3 bg-red-500 text-white font-bold text-lg 
+    rounded-xl shadow-lg theme-button hover:bg-red-600 transition duration-150">
+    Voltar ao Menu Principal
+    </button>
+    </div>
+    `;
+    document.getElementById('app').innerHTML = html;
+}
+
+/**
+ * Renderiza a tela de Fim de Sessão (Stage 6).
+ */
+function renderEnd() {
+    const subj = subjects[state.currentSubject];
+    const totalQuestions = state.maxScore;
+    const correctAnswers = state.score;
+    const wrongAnswers = totalQuestions - correctAnswers;
+    
+    aggregateSessionResults(); // Agrega estatísticas
+    let feedbackMessage = "";
+    let emoji = "";
+    if (correctAnswers === totalQuestions) {
+        feedbackMessage = "Incrível! Você acertou todas as questões!";
+        emoji = "⭐"; 
+    } else if (correctAnswers >= totalQuestions * 0.7) {
+        feedbackMessage = "Muito bem! Excelente trabalho na revisão!";
+        emoji = "😊";
+    } else {
+        feedbackMessage = "Continue praticando! A repetição leva à perfeição.";
+        emoji = "👍";
+    }
+
+    const html = `
+    <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center 
+    border-t-8 border-${subj.color.split('-')[1]}-500">
+    <h2 class="text-4xl font-extrabold mb-4 text-pink-600">Revisão Finalizada!
+    ${emoji}</h2>
+    <p class="text-2xl font-semibold mb-4 text-gray-800">${feedbackMessage}</p>
+    
+    <div class="my-6 p-4 bg-gray-50 rounded-lg">
+    <p class="text-lg font-bold">Resumo da Sessão de ${subj.name}:</p>
+    <p class="text-xl text-green-600 font-extrabold">Acertos: ${correctAnswers}</p>
+    <p class="text-xl text-red-600 font-extrabold">Erros: ${wrongAnswers}</p>
+    <p class="text-md text-gray-500">Total de Questões: ${totalQuestions}</p>
+    </div>
+    <div id="skill-report-container" class="text-left">
+    </div>
+    <button onclick="state.currentStage = 1; renderApp();"
+    class="mt-8 px-6 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl 
+    shadow-lg theme-button hover:bg-blue-600 transition duration-150">
+    Começar Nova Revisão (Voltar ao Início)
+    </button>
+    </div>
+    `;
+    document.getElementById('app').innerHTML = html;
+    
+    // Chama a análise da Gemini imediatamente após renderizar a tela
+    generateSkillReportAndTips();
+}
+// --- Controlador Principal (StateMachine) ---
+function renderApp() {
+    try {
+        switch (state.currentStage) {
+            case 1:
+            renderSelection();
+            break;
+            // case 2 (renderTransition) foi removido
+            case 3:
+            renderActivity();
+            break;
+            case 4: 
+            renderFeedback();
+            break;
+            case 5:
+            renderReport(); 
+            break;
+            case 6:
+            renderEnd(); 
+            break;
+            default:
+            renderSelection();
+            break;
         }
+    } catch (error) {
+        // Tratamento de erro robusto
+        console.error("Erro fatal na aplicação:", error);
+        document.getElementById('app').innerHTML = `
+        <div class="text-center p-8 bg-red-100 border-2 border-red-500 rounded-xl">
+        <h2 class="text-2xl text-red-700">Ocorreu um Erro!</h2>
+        <p class="text-gray-600">Por favor, reinicie a página.
+        Detalhes: ${error.message}. Certifique-se de que os arquivos questions_*.js existem e não estão vazios.</p>
 
-
-        /**
-         * Renderiza a tela de Relatório Consolidado (Stage 5).
-         */
-        function renderReport() {
-            const statsEntries = Object.values(allTimeStats).filter(stat => stat.total > 0); 
-
-            let reportHtml = '';
-            
-            if (statsEntries.length === 0) {
-                reportHtml = `
-                    <p class="text-xl text-gray-500">Nenhum dado de sessão anterior encontrado. Tente completar uma revisão primeiro!</p>
-                `;
-            } else {
-                reportHtml = statsEntries.map(stat => {
-                    const percentageCorrect = stat.total > 0 ? ((stat.correct / stat.total) * 100).toFixed(0) : 0;
-                    const barColor = percentageCorrect >= 70 ? 'bg-green-500' : percentageCorrect >= 50 ? 'bg-yellow-500' : 'bg-red-500';
-
-                    return `
-                        <div class="p-5 bg-white rounded-xl shadow-lg border-l-8 border-${stat.color}-500 transition duration-300 hover:shadow-xl">
-                            <h3 class="text-2xl font-bold mb-2 text-gray-800">${stat.name}</h3>
-                            
-                            <div class="mb-3 text-sm text-gray-600">
-                                <span>Total de Questões: <span class="font-bold">${stat.total}</span></span> |
-                                <span class="text-green-600">Acertos: <span class="font-bold">${stat.correct}</span></span> |
-                                <span class="text-red-600">Erros: <span class="font-bold">${stat.wrong}</span></span>
-                            </div>
-
-                            <div class="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
-                                <div class="h-4 rounded-full ${barColor}" style="width: ${percentageCorrect}%; transition: width 1s ease-out;"></div>
-                                <span class="absolute right-0 top-0 bottom-0 flex items-center pr-3 font-bold text-xs ${percentageCorrect > 50 ? 'text-white' : 'text-gray-800'}">
-                                    ${percentageCorrect}%
-                                </span>
-                            </div>
-                            <p class="mt-2 text-sm text-gray-500">Aproveitamento geral.</p>
-                        </div>
-                    `;
-                }).join('');
-
-                reportHtml = `<div class="report-grid">${reportHtml}</div>`;
-            }
-
-            const html = `
-                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center">
-                    <h2 class="text-4xl font-extrabold mb-2 text-pink-600">📊 Relatório Consolidado</h2>
-                    <p class="text-lg text-gray-700 mb-6">Desempenho acumulado de todas as revisões nesta sessão:</p>
-                    
-                    ${reportHtml}
-
-                    <button onclick="state.currentStage = 1; renderApp();" 
-                            class="mt-8 w-full md:w-auto px-6 py-3 bg-red-500 text-white font-bold text-lg rounded-xl shadow-lg theme-button hover:bg-red-600 transition duration-150">
-                        Voltar ao Menu Principal
-                    </button>
-                </div>
-            `;
-            document.getElementById('app').innerHTML = html;
-        }
-
-        /**
-         * Renderiza a tela de Fim de Sessão (Stage 6).
-         */
-        function renderEnd() {
-            const subj = subjects[state.currentSubject];
-            const totalQuestions = state.maxScore;
-            const correctAnswers = state.score;
-            const wrongAnswers = totalQuestions - correctAnswers;
-            
-            aggregateSessionResults(); // Agrega estatísticas E armazena questões no histórico
-
-            let feedbackMessage = "";
-            let emoji = "";
-            if (correctAnswers === totalQuestions) {
-                feedbackMessage = "Incrível! Você acertou todas as questões!";
-                emoji = "⭐";
-            } else if (correctAnswers >= totalQuestions * 0.7) {
-                feedbackMessage = "Muito bem! Excelente trabalho na revisão!";
-                emoji = "😊";
-            } else {
-                feedbackMessage = "Continue praticando! A repetição leva à perfeição.";
-                emoji = "👍";
-            }
-
-            const html = `
-                <div class="container-box mx-auto bg-white p-8 rounded-2xl shadow-2xl text-center border-t-8 border-${subj.color.split('-')[1]}-500">
-                    <h2 class="text-4xl font-extrabold mb-4 text-pink-600">Revisão Finalizada! ${emoji}</h2>
-                    <p class="text-2xl font-semibold mb-4 text-gray-800">${feedbackMessage}</p>
-                    
-                    <div class="my-6 p-4 bg-gray-50 rounded-lg">
-                        <p class="text-lg font-bold">Resumo da Sessão de ${subj.name}:</p>
-                        <p class="text-xl text-green-600 font-extrabold">Acertos: ${correctAnswers}</p>
-                        <p class="text-xl text-red-600 font-extrabold">Erros: ${wrongAnswers}</p>
-                        <p class="text-md text-gray-500">Total de Questões: ${totalQuestions}</p>
-                    </div>
-
-                    <!-- CONTAINER PARA O RELATÓRIO DE HABILIDADES GERADO PELA API -->
-                    <div id="skill-report-container" class="text-left">
-                        <!-- Conteúdo será injetado pela função generateSkillReportAndTips -->
-                    </div>
-
-                    <button onclick="state.currentStage = 1; renderApp();" 
-                            class="mt-8 px-6 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl shadow-lg theme-button hover:bg-blue-600 transition duration-150">
-                        Começar Nova Revisão (Voltar ao Início)
-                    </button>
-                </div>
-            `;
-            document.getElementById('app').innerHTML = html;
-            
-            // Chama a análise da Gemini imediatamente após renderizar a tela
-            generateSkillReportAndTips();
-        }
-
-        // --- Controlador Principal (StateMachine) ---
-        function renderApp() {
-            try {
-                switch (state.currentStage) {
-                    case 1:
-                        renderSelection();
-                        break;
-                    case 2:
-                        renderTransition();
-                        break;
-                    case 3:
-                        renderActivity();
-                        break;
-                    case 4: 
-                        renderFeedback();
-                        break;
-                    case 5:
-                        renderReport(); 
-                        break;
-                    case 6:
-                        renderEnd(); 
-                        break;
-                    default:
-                        renderSelection();
-                        break;
-                }
-            } catch (error) {
-                // Tratamento de erro robusto
-                console.error("Erro fatal na aplicação:", error);
-                document.getElementById('app').innerHTML = `
-                    <div class="text-center p-8 bg-red-100 border-2 border-red-500 rounded-xl">
-                        <h2 class="text-2xl text-red-700">Ocorreu um Erro!</h2>
-                        <p class="text-gray-600">Por favor, reinicie a página. Detalhes: ${error.message}</p>
-                        <button onclick="window.location.reload();" 
-                                class="mt-4 px-6 py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg theme-button hover:bg-red-600">
-                            Recarregar
-                        </button>
-                    </div>
-                `;
-            }
-        }
-
-        // Inicia a aplicação
-        window.onload = resetApp;
-    </script>
+        <button onclick="window.location.reload();" 
+        class="mt-4 px-6
+        py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg theme-button hover:bg-red 
+        600">
+        Recarregar
+        </button>
+        </div>
+        `;
+    }
+}
+// Inicia a aplicação
+window.onload = resetApp;
+</script>
 </body>
 </html>
-
-
-
-
