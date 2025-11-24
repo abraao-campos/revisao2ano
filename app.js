@@ -1,6 +1,6 @@
 // ===============================================
 // ARQUIVO: app.js
-// Lógica Principal do Quiz (Revisada com Relatório Detalhado da BNCC)
+// Lógica Principal do Quiz (Revisada com Relatório Detalhado da BNCC e Histórico Acumulado)
 // ===============================================
 
 // 1. VARIÁVEIS DE ESTADO (STATE)
@@ -13,11 +13,19 @@ const state = {
     selectedComponent: null, // 'mat', 'lin', 'cn', 'ch'
     activeQuestions: [],     // As 5 questões selecionadas para o quiz
     currentQuestionIndex: 0, // Índice da questão atual (0 a 4)
-    score: 0,                // Pontuação total
-    attempted: 0,
-    // NOVO: Armazena o desempenho por Habilidade (BNCC Skill)
+    score: 0,                // Pontuação total na rodada atual
+    attempted: 0,            // Questões respondidas na rodada atual
+    // Armazena o desempenho por Habilidade (BNCC Skill) para o relatório atual
     // Exemplo: {'EF02MA01': {total: 2, correct: 1, name: "Descrição da habilidade"}}
-    skillResults: {} 
+    skillResults: {}, 
+    // NOVO: Armazena resultados acumulados por componente em todas as sessões
+    // Exemplo: {'mat': {total: 15, correct: 10}, 'lin': {total: 10, correct: 8}}
+    cumulativeResults: {
+        'mat': {total: 0, correct: 0},
+        'lin': {total: 0, correct: 0},
+        'cn': {total: 0, correct: 0},
+        'ch': {total: 0, correct: 0}
+    }
 };
 
 // 2. CONFIGURAÇÃO
@@ -87,12 +95,60 @@ function getThemeInfo(component) {
     }
 }
 
+// NOVO: Agrega os resultados da rodada atual ao histórico cumulativo
+function aggregateCumulativeResults() {
+    if (state.selectedComponent && state.attempted === MAX_QUESTIONS) {
+        const component = state.selectedComponent;
+        state.cumulativeResults[component].total += MAX_QUESTIONS;
+        state.cumulativeResults[component].correct += state.score;
+    }
+}
+
+
 // 4. FUNÇÕES DE RENDERIZAÇÃO (VIEWS)
 
 /**
  * Renderiza a tela de seleção de componente (Stage 1).
  */
 function renderSelection() {
+    
+    // NOVO: Gera o HTML para o Resumo Acumulado
+    const cumulativeSummary = Object.keys(state.cumulativeResults).map(component => {
+        const result = state.cumulativeResults[component];
+        if (result.total > 0) {
+            const theme = getThemeInfo(component);
+            const percentage = Math.round((result.correct / result.total) * 100);
+            const errors = result.total - result.correct;
+            // Define a cor da porcentagem
+            const colorClass = percentage >= 70 ? 'text-green-600' : percentage >= 50 ? 'text-yellow-600' : 'text-red-600';
+            
+            return `
+                <div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-md border-l-4 ${theme.color.replace('bg-', 'border-')}">
+                    <span class="font-bold text-lg text-gray-700">${theme.icon.split(' ')[1]}</span>
+                    <div class="text-right flex flex-col sm:flex-row sm:space-x-4">
+                        <span class="font-bold ${colorClass} text-base">${result.correct} Acertos</span>
+                        <span class="font-bold text-red-500 text-base">${errors} Erros</span> 
+                        <span class="text-sm text-gray-500">(${result.total} Total)</span>
+                    </div>
+                </div>
+            `;
+        }
+        return '';
+    }).filter(html => html !== '').join('');
+
+    const hasHistory = cumulativeSummary.length > 0;
+    
+    const historyBlock = hasHistory ? `
+        <div class="mt-12 p-6 bg-gray-50 rounded-2xl max-w-2xl mx-auto shadow-lg border-t border-gray-200">
+            <h4 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2 text-left">📊 Histórico Acumulado de Revisões</h4>
+            <div class="space-y-3">
+                ${cumulativeSummary}
+            </div>
+            <p class="mt-4 text-sm text-gray-500">O histórico é mantido durante esta sessão de navegação.</p>
+        </div>
+    ` : '';
+    // FIM DO NOVO BLOCO
+
     document.getElementById('app').innerHTML = `
         <div class="text-center p-8">
             <h1 class="text-4xl font-extrabold text-gray-800 mb-6">👋 Olá! Escolha o Componente Curricular:</h1>
@@ -116,6 +172,8 @@ function renderSelection() {
                     <span class="font-bold text-lg text-yellow-700">Ciências Humanas</span>
                 </button>
             </div>
+            
+            ${historyBlock} <!-- Insere o bloco de histórico aqui -->
         </div>
     `;
 }
@@ -129,6 +187,8 @@ function renderActivity() {
 
     if (!currentQ) {
         // Se todas as questões foram respondidas, move para o relatório final
+        // ATENÇÃO: Esta é uma verificação de segurança, a transição principal é feita em nextQuestion()
+        aggregateCumulativeResults();
         state.currentStage = 5; 
         return renderApp();
     }
@@ -233,7 +293,7 @@ function renderReport() {
             <h3 class="text-xl text-gray-600 mb-6">${theme.title}</h3>
 
             <div class="mb-8 p-4 bg-indigo-50 rounded-xl">
-                <p class="text-base text-gray-700 font-semibold">Total de Acertos:</p>
+                <p class="text-base text-gray-700 font-semibold">Total de Acertos na Rodada:</p>
                 <p class="text-6xl font-extrabold ${scoreColor} mt-1">${state.score} / ${MAX_QUESTIONS}</p>
                 <p class="text-xl text-gray-700 mt-2">${finalMessage}</p>
             </div>
@@ -257,7 +317,7 @@ function renderReport() {
                     class="w-full px-6 py-3 bg-gray-500 text-white font-bold text-xl rounded-xl shadow-lg transition duration-150 hover:bg-gray-600"
                     onclick="resetApp()"
                 >
-                    🏠 Escolher Novo Componente
+                    🏠 Escolher Novo Componente (Ver Histórico)
                 </button>
             </div>
         </div>
@@ -318,7 +378,14 @@ function checkAnswer(selectedOption) {
  */
 function nextQuestion() {
     state.currentQuestionIndex++;
-    state.currentStage = 3; // Mudar para a etapa de atividade (ou relatório se for a última)
+    
+    if (state.currentQuestionIndex >= MAX_QUESTIONS) {
+        aggregateCumulativeResults(); // NOVO: Agrega resultados antes de ir para o relatório
+        state.currentStage = 5; // Mudar para o relatório final
+    } else {
+        state.currentStage = 3; // Mudar para a etapa de atividade
+    }
+    
     renderApp();
 }
 
