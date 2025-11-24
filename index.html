@@ -9,28 +9,31 @@
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JT5Q6BV0XL"></script>
 <script>
-window.dataLayer = window.dataLayer || [];
+window.dataLayer = window.dataLayer ||
+ [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-JT5Q6BV0XL');
 </script>
+
 <script src="questions_mat.js"></script>
 <script src="questions_lin.js"></script>
-<script src="questions_cie.js"></script>
+<script src="questions_cn.js"></script>
 <script src="questions_ch.js"></script>
 
 <style>
 /* Estilo base com fonte Inter (Para aparência infantil e moderna) */
  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-body {
+ body {
     font-family: 'Inter', sans-serif;
-    background-color: #fce4ec; /* Rosa claro base */
+    /* Fundo com Gradiente Suave */
+    background: linear-gradient(135deg, #fce4ec 0%, #e0f7fa 100%); 
     transition: background-color 0.5s ease-in-out;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+ }
 .container-box {
     max-width: 650px;
     min-height: 400px;
@@ -44,12 +47,15 @@ body {
     background-color: #45a049;
 }
 
-/* Cores por Matéria */
-.color-math { background-color: #ffcc80; border-color: #ff9800; } /* Laranja Claro */
-.color-portuguese { background-color: #81d4fa; border-color: #03a9f4; } /* Azul Claro */
-.color-science { background-color: #a5d6a7; border-color: #4caf50; } /* Verde Claro */
-.color-history { background-color: #ffab91; border-color: #ff5722; } /* Vermelho/Terra Claro */
-.color-final { background-color: #ce93d8; border-color: #9c27b0; } /* Roxo Claro */
+/* Cores por Matéria (Novos Nomes de Área) */
+.color-math { background-color: #ffcc80; border-color: #ff9800;
+ } /* Matemática (Laranja Claro) */
+.color-portuguese { background-color: #81d4fa; border-color: #03a9f4; } /* Linguagens (Azul Claro) */
+.color-science { background-color: #a5d6a7; border-color: #4caf50;
+ } /* C. Natureza (Verde Claro) */
+.color-history { background-color: #ffab91; border-color: #ff5722; } /* C. Humanas (Vermelho/Terra Claro) */
+.color-final { background-color: #ce93d8; border-color: #9c27b0;
+ } /* Revisão Final (Roxo Claro) */
 
 /* Classe para Desabilitar Opções */
 .disabled-option {
@@ -60,7 +66,8 @@ body {
 
 /* Animação de Entrada e Saída */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(10px);
+ }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -89,7 +96,8 @@ const state = {
     incorrectAnswers: 0,
     report: {
         totalQuestions: 0,
-        correct: 0,
+        correct: 
+ 0,
         incorrect: 0,
         details: {}, // Armazena contagem de acertos/erros por habilidade (skill)
     },
@@ -97,7 +105,6 @@ const state = {
     skillFeedback: null,
     isFinalReview: false,
 };
-
 // --- FUNÇÕES DE SETUP E UTILS ---
 
 /**
@@ -107,7 +114,7 @@ const state = {
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+ [array[i], array[j]] = [array[j], array[i]];
     }
 }
 
@@ -120,7 +127,7 @@ function shuffle(array) {
 function selectRandomQuestions(bank, N = 10) {
     const shuffledBank = [...bank];
     shuffle(shuffledBank);
-    // Garante que o número de questões não exceda o tamanho do banco
+ // Garante que o número de questões não exceda o tamanho do banco
     return shuffledBank.slice(0, Math.min(N, bank.length));
 }
 
@@ -130,7 +137,9 @@ function selectRandomQuestions(bank, N = 10) {
 const localQuestionBanks = {
     math: typeof questionBank_mat !== 'undefined' ? questionBank_mat : [],
     portuguese: typeof questionBank_lin !== 'undefined' ? questionBank_lin : [],
-    science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [],
+    // 🚨 VARIÁVEL CORRIGIDA: questionBank_cn
+    science: typeof questionBank_cn !== 'undefined' ? questionBank_cn : [],
+    // 🚨 VARIÁVEL CORRIGIDA: questionBank_ch
     history: typeof questionBank_ch !== 'undefined' ? questionBank_ch : [], 
 };
 
@@ -144,47 +153,53 @@ function startQuiz(subject, name, isFinalReview = false) {
     let allQuestions = [];
     state.currentSubject = subject;
     state.subjectName = name;
-    state.isFinalReview = isFinalReview;
+ state.isFinalReview = isFinalReview;
 
     if (isFinalReview) {
         // Modo Revisão Final (40 questões)
         const totalFinalQuestions = 40;
-        const questionsPerSubject = Math.floor(totalFinalQuestions / 4);
+ const questionsPerSubject = Math.floor(totalFinalQuestions / 4);
         
         // Coleta 10 questões de cada matéria
         allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.math, questionsPerSubject));
-        allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.portuguese, questionsPerSubject));
+ allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.portuguese, questionsPerSubject));
         allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.science, questionsPerSubject));
         allQuestions = allQuestions.concat(selectRandomQuestions(localQuestionBanks.history, questionsPerSubject));
-        
-        // Embaralha o conjunto completo
+ // Embaralha o conjunto completo
         shuffle(allQuestions);
-    } else {
+ } else {
         // Modo de revisão por matéria (10 questões)
         const bank = localQuestionBanks[subject];
-        if (!bank || bank.length === 0) {
-            const subjectKey = subject === 'history' ? 'Ciências Humanas (H/G)' : name;
-            const bankVariable = subject === 'history' ? 'questionBank_ch' : 
-                                 subject === 'math' ? 'questionBank_mat' :
-                                 subject === 'portuguese' ? 'questionBank_lin' :
-                                 subject === 'science' ? 'questionBank_cie' : '??';
+ if (!bank || bank.length === 0) {
+            // Usa o 'name' (Ciências Humanas, Linguagens, etc.) para o alerta
+            const subjectKey = name; 
+            
+            // 🚨 VARIÁVEL CORRIGIDA NO ALERTA
+            const bankVariable = subject === 'history' ?
+ 'questionBank_ch' : 
+                                 subject === 'math' ?
+ 'questionBank_mat' :
+                                 subject === 'portuguese' ?
+ 'questionBank_lin' :
+                                 subject === 'science' ?
+ 'questionBank_cn' : '??'; // CORRIGIDO: _cn
 
             alert(`Banco de questões para ${subjectKey} insuficiente. Necessário 5, encontrado ${bank ? bank.length : 0}. Verifique o arquivo questions_${subject.substring(0, 3)}.js. A variável esperada é: ${bankVariable}.`);
-            return; // Permanece na tela de seleção
+ return; // Permanece na tela de seleção
         }
         allQuestions = selectRandomQuestions(bank, 10);
-    }
+ }
 
     // Reinicializa o estado para o novo quiz
     state.totalQuestions = allQuestions.length;
-    state.questions = allQuestions.map(q => ({
+ state.questions = allQuestions.map(q => ({
         ...q,
         options: shuffle(q.options), // Embaralha as opções
         answered: false,
         userAnswer: null,
         isCorrect: null,
     }));
-    state.currentQuestionIndex = 0;
+ state.currentQuestionIndex = 0;
     state.correctAnswers = 0;
     state.incorrectAnswers = 0;
     state.report = {
@@ -193,12 +208,12 @@ function startQuiz(subject, name, isFinalReview = false) {
         incorrect: 0,
         details: {},
     };
-    state.skillFeedback = null;
+ state.skillFeedback = null;
 
     // Transiciona para a próxima fase
     state.currentStage = 3; 
     renderApp();
-}
+ }
 
 /**
  * Processa a resposta do usuário e avança para o feedback.
@@ -208,27 +223,28 @@ function submitAnswer(selectedAnswer) {
     if (state.currentStage !== 3 || state.questions[state.currentQuestionIndex].answered) return;
 
     const currentQuestion = state.questions[state.currentQuestionIndex];
-    const isCorrect = selectedAnswer === currentQuestion.answer;
+ const isCorrect = selectedAnswer === currentQuestion.answer;
     
     // Atualiza o estado da questão
     currentQuestion.answered = true;
-    currentQuestion.userAnswer = selectedAnswer;
+ currentQuestion.userAnswer = selectedAnswer;
     currentQuestion.isCorrect = isCorrect;
 
     // Atualiza o estado geral
     if (isCorrect) {
         state.correctAnswers++;
-        state.report.correct++;
+ state.report.correct++;
     } else {
         state.incorrectAnswers++;
         state.report.incorrect++;
-    }
+ }
 
     // Atualiza o relatório de habilidades
-    const skill = currentQuestion.skill.split(' - ')[0]; // Usa apenas o código da BNCC
+    const skill = currentQuestion.skill.split(' - ')[0];
+ // Usa apenas o código da BNCC
     if (!state.report.details[skill]) {
         state.report.details[skill] = { correct: 0, incorrect: 0, rationale: currentQuestion.rationale, subject: state.subjectName };
-    }
+ }
     isCorrect ? state.report.details[skill].correct++ : state.report.details[skill].incorrect++;
     
     // Armazena o feedback imediato da habilidade
@@ -238,25 +254,25 @@ function submitAnswer(selectedAnswer) {
         userAnswer: selectedAnswer,
         correctAnswer: currentQuestion.answer,
     };
-
-    state.currentStage = 4; // Vai para a tela de Feedback
+ state.currentStage = 4; // Vai para a tela de Feedback
     renderApp();
-}
+ }
 
 /**
  * Avança para a próxima questão ou para o relatório final.
  */
 function nextQuestion() {
     state.currentQuestionIndex++;
-
-    if (state.currentQuestionIndex < state.totalQuestions) {
-        state.currentStage = 3; // Volta para Atividade
+ if (state.currentQuestionIndex < state.totalQuestions) {
+        state.currentStage = 3;
+ // Volta para Atividade
     } else {
-        state.currentStage = 5; // Vai para Relatório Final
+        state.currentStage = 5;
+ // Vai para Relatório Final
     }
     state.skillFeedback = null;
     renderApp();
-}
+ }
 
 // --- FUNÇÕES DE RENDERIZAÇÃO ---
 
@@ -265,62 +281,63 @@ function nextQuestion() {
  */
 function renderSelection() {
     const totalLoaded = Object.values(localQuestionBanks).reduce((sum, bank) => sum + bank.length, 0);
-
-    // Verifica se os bancos carregaram corretamente para mostrar a contagem na tela
-    const countMath = localQuestionBanks.math.length;
-    const countPortuguese = localQuestionBanks.portuguese.length;
-    const countScience = localQuestionBanks.science.length;
-    const countHistory = localQuestionBanks.history.length;
-    
-    const isAllReady = totalLoaded >= 20; // Pelo menos 5 questões por matéria
+ const isAllReady = totalLoaded >= 20; // Pelo menos 5 questões por matéria
 
     const html = `
         <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-6">
             Revisão Dinâmica - 2º Ano EF
         </h1>
         <p class="text-center text-gray-600 mb-8">
-            Selecione uma matéria ou faça a Revisão Final (40 Questões).
-        </p>
+            Selecione uma área do conhecimento ou faça a Revisão Final (40 Questões).
+ </p>
         
-        ${isAllReady ? '' : `
+        ${isAllReady ?
+ '' : `
             <div class="text-center p-4 mb-6 bg-yellow-100 border border-yellow-500 rounded-lg">
                 <p class="font-bold text-yellow-700">Atenção: Banco de Questões Insuficiente!</p>
-                <p class="text-sm text-yellow-600">Total de questões carregadas: ${totalLoaded}. É recomendado pelo menos 5 por matéria.</p>
+                <p class="text-sm text-yellow-600">Total de questões carregadas: ${totalLoaded}.
+ É recomendado pelo menos 5 por área.</p>
             </div>
         `}
 
         <div class="grid grid-cols-2 gap-4">
             <button onclick="startQuiz('math', 'Matemática')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-math ${countMath < 5 ? 'disabled-option opacity-50' : ''}">
-                Matemática 
-                <span class="text-sm block">(${countMath} Q)</span>
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-math ${localQuestionBanks.math.length < 5 ? 'disabled-option opacity-50' : ''}">
+              
+                Matemática 📐
+                <span class="text-sm block">(${localQuestionBanks.math.length} Q)</span>
             </button>
 
-            <button onclick="startQuiz('portuguese', 'Língua Portuguesa')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-portuguese ${countPortuguese < 5 ? 'disabled-option opacity-50' : ''}">
-                Português
-                <span class="text-sm block">(${countPortuguese} Q)</span>
+            <button onclick="startQuiz('portuguese', 'Linguagens')" 
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-portuguese ${localQuestionBanks.portuguese.length < 5 ? 'disabled-option opacity-50' : ''}">
+                
+                Linguagens 📖
+                <span class="text-sm block">(${localQuestionBanks.portuguese.length} Q)</span>
             </button>
 
-            <button onclick="startQuiz('science', 'Ciências')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-science ${countScience < 5 ? 'disabled-option opacity-50' : ''}">
-                Ciências
-                <span class="text-sm block">(${countScience} Q)</span>
+            <button onclick="startQuiz('science', 'Ciências da Natureza')" 
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-science ${localQuestionBanks.science.length < 5 ?
+'disabled-option opacity-50' : ''}">
+                Ciências da Natureza 🔬
+                <span class="text-sm block">(${localQuestionBanks.science.length} Q)</span>
             </button>
 
-            <button onclick="startQuiz('history', 'Ciências Humanas (H/G)')" 
-                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-history ${countHistory < 5 ? 'disabled-option opacity-50' : ''}">
-                C. Humanas
-                <span class="text-sm block">(${countHistory} Q)</span>
+            <button onclick="startQuiz('history', 'Ciências Humanas')" 
+                class="p-4 rounded-xl text-center font-bold text-lg border-b-4 border-l-2 hover:shadow-lg transition duration-150 color-history ${localQuestionBanks.history.length < 5 ?
+'disabled-option opacity-50' : ''}">
+                Ciências Humanas 🗺️
+                <span class="text-sm block">(${localQuestionBanks.history.length} Q)</span>
             </button>
         </div>
 
         <div class="mt-8 text-center">
              <button onclick="startQuiz('final', 'Revisão Final', true)" 
-                class="px-6 py-3 bg-purple-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-purple-600 transition duration-150 color-final ${totalLoaded < 20 ? 'disabled-option opacity-50' : ''}">
-                Revisão Final (40 Questões)
+             
+                class="px-6 py-3 bg-purple-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-purple-600 transition duration-150 color-final ${totalLoaded < 20 ?
+'disabled-option opacity-50' : ''}">
+                Revisão Final ✨ (40 Questões)
             </button>
-            <p class="text-sm text-gray-500 mt-2">Requer pelo menos 5 questões de cada matéria.</p>
+            <p class="text-sm text-gray-500 mt-2">Requer pelo menos 5 questões de cada área.</p>
         </div>
     `;
     document.getElementById('app').innerHTML = html;
@@ -330,21 +347,32 @@ function renderSelection() {
  * Renderiza a tela da atividade (questão).
  */
 function renderActivity() {
+    // 🚨 Proteção para evitar o erro 'Cannot read properties of undefined (reading 'map')'
+    if (state.questions.length === 0) {
+        state.currentStage = 1; // Volta à seleção
+        alert("Erro: Não há questões carregadas para iniciar o quiz. Verifique seus arquivos de questões.");
+        return renderApp();
+    }
+    
     const current = state.questions[state.currentQuestionIndex];
-    const progress = state.currentQuestionIndex + 1;
+    const progress = state.currentQuestionIndex + 
+ 1;
     const total = state.totalQuestions;
     const percent = Math.round((progress / total) * 100);
 
-    const getSubjectColor = (skillCode) => {
+    const getSubjectColor = (subject) => {
         if (state.isFinalReview) {
-            if (skillCode.startsWith('EF02MA')) return 'color-math';
-            if (skillCode.startsWith('EF02LP')) return 'color-portuguese';
-            if (skillCode.startsWith('EF02CI')) return 'color-science';
-            if (skillCode.startsWith('EF02HI') || skillCode.startsWith('EF02GE')) return 'color-history';
-            return 'color-final'; 
+            // No modo final, determina a cor pela 'skill' da questão (código da BNCC)
+            if (subject.startsWith('EF02MA')) return 'color-math';
+            if (subject.startsWith('EF02LP')) return 'color-portuguese';
+        
+            if (subject.startsWith('EF02CI')) return 'color-science';
+            if (subject.startsWith('EF02HI') ||
+ subject.startsWith('EF02GE')) return 'color-history';
+            return 'color-final'; // Cor padrão
         }
         return `color-${state.currentSubject}`;
-    };
+ };
 
     const colorClass = getSubjectColor(current.skill);
 
@@ -354,7 +382,8 @@ function renderActivity() {
             <p class="text-sm text-gray-500">Questão ${progress} de ${total}</p>
             <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                 <div class="h-2.5 rounded-full ${colorClass.replace('color-', 'bg-')}-500" style="width: ${percent}%"></div>
-            </div>
+           
+ </div>
         </div>
         
         <div class="p-6 rounded-xl border-2 border-dashed ${colorClass}">
@@ -362,15 +391,17 @@ function renderActivity() {
             <p class="text-xs text-gray-500 mb-4">Habilidade BNCC: ${current.skill}</p>
             <div class="space-y-3">
                 ${current.options.map((option, index) => `
-                    <button onclick="submitAnswer('${option.replace(/'/g, "\\'")}')" 
+    
+                 <button onclick="submitAnswer('${option.replace(/'/g, "\\'")}')" 
                         class="w-full text-left p-3 rounded-lg border-2 border-gray-300 bg-gray-50 hover:bg-gray-200 transition duration-150 font-medium text-gray-700">
-                        ${String.fromCharCode(65 + index)}. ${option}
+                        ${String.fromCharCode(65 + index)}.
+ ${option}
                     </button>
                 `).join('')}
             </div>
         </div>
     `;
-    document.getElementById('app').innerHTML = html;
+ document.getElementById('app').innerHTML = html;
 }
 
 /**
@@ -380,14 +411,15 @@ function renderFeedback() {
     const current = state.questions[state.currentQuestionIndex];
     const feedback = state.skillFeedback;
     const isCorrect = feedback.isCorrect;
-    const subjectColor = isCorrect ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
+ const subjectColor = isCorrect ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
     const progress = state.currentQuestionIndex + 1;
-    const total = state.totalQuestions;
+ const total = state.totalQuestions;
 
     const html = `
         <div class="text-center mb-6">
             <h2 class="text-3xl font-extrabold ${isCorrect ? 'text-green-600' : 'text-red-600'} animate-fade-in">
-                ${isCorrect ? '🎉 Parabéns! Resposta Certa' : '😔 Ops! Resposta Errada'}
+                ${isCorrect ?
+'🥳 Acertou! Resposta Correta' : '😢 Errou! Resposta Incorreta'}
             </h2>
             <p class="text-sm text-gray-500 mt-1">Questão ${progress} de ${total}</p>
         </div>
@@ -395,22 +427,27 @@ function renderFeedback() {
         <div class="p-6 rounded-xl border-2 ${subjectColor} mb-6 animate-fade-in">
             <p class="text-lg font-semibold mb-3">${current.question}</p>
             
-            <p class="mt-4 text-left">
+            <p 
+ class="mt-4 text-left">
                 <span class="font-bold">Sua Resposta:</span> 
                 <span class="${isCorrect ? 'text-green-700 font-bold' : 'text-red-700 line-through'}">
                     ${feedback.userAnswer}
                 </span>
             </p>
+         
             
-            ${!isCorrect ? `
+            ${!isCorrect ?
+ `
                 <p class="mt-2 text-left">
                     <span class="font-bold">Resposta Correta:</span> 
                     <span class="text-green-700 font-bold">${feedback.correctAnswer}</span>
                 </p>
             ` : ''}
 
-            <div class="mt-4 pt-3 border-t border-gray-300">
-                <p class="font-bold text-md mb-2">Por Quê? (Racional)</p>
+       
+          <div class="mt-4 pt-3 border-t border-gray-300">
+                <p class="font-bold text-md mb-2">Por Quê?
+ (Racional)</p>
                 <p class="text-sm text-gray-800">${feedback.rationale}</p>
                 <p class="text-xs text-gray-500 mt-2">Habilidade: ${current.skill}</p>
             </div>
@@ -418,12 +455,14 @@ function renderFeedback() {
 
         <div class="text-center">
             <button onclick="nextQuestion()" 
-                class="px-8 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-blue-600 transition duration-150">
-                ${progress < total ? 'Próxima Questão' : 'Ver Relatório Final'}
+                class="px-8 py-3 bg-blue-500 
+ text-white font-bold text-xl rounded-xl shadow-lg hover:bg-blue-600 transition duration-150">
+                ${progress < total ?
+ 'Próxima Questão' : 'Ver Relatório Final'}
             </button>
         </div>
     `;
-    document.getElementById('app').innerHTML = html;
+ document.getElementById('app').innerHTML = html;
 }
 
 /**
@@ -433,21 +472,22 @@ function renderReport() {
     const total = state.report.totalQuestions;
     const correct = state.report.correct;
     const incorrect = state.report.incorrect;
-    const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
-    const isPassing = percentage >= 70; // Critério de aprovação (70%)
+ const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+    const isPassing = percentage >= 70;
+ // Critério de aprovação (70%)
 
     // Agrupa o relatório por assunto no modo final
     const finalReport = {};
-    if (state.isFinalReview) {
+ if (state.isFinalReview) {
         for (const skill in state.report.details) {
             const detail = state.report.details[skill];
-            const subject = detail.subject;
+ const subject = detail.subject;
             if (!finalReport[subject]) {
                 finalReport[subject] = { correct: 0, incorrect: 0, total: 0, details: {} };
-            }
+ }
             finalReport[subject].correct += detail.correct;
             finalReport[subject].incorrect += detail.incorrect;
-            finalReport[subject].total += (detail.correct + detail.incorrect);
+ finalReport[subject].total += (detail.correct + detail.incorrect);
             finalReport[subject].details[skill] = detail;
         }
     } else {
@@ -456,18 +496,18 @@ function renderReport() {
             correct: correct, 
             incorrect: incorrect, 
             total: total, 
-            details: state.report.details 
+            details: 
+ state.report.details 
         };
-    }
+ }
 
     const getSubjectColor = (subjectName) => {
         if (subjectName.includes('Matemática')) return 'color-math';
-        if (subjectName.includes('Português')) return 'color-portuguese';
+        if (subjectName.includes('Linguagens')) return 'color-portuguese';
         if (subjectName.includes('Ciências Humanas')) return 'color-history';
-        if (subjectName.includes('Ciências')) return 'color-science';
+        if (subjectName.includes('Ciências da Natureza')) return 'color-science';
         return 'color-final';
     };
-
     const html = `
         <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-6">
             Relatório de Desempenho
@@ -476,6 +516,7 @@ function renderReport() {
         <div class="p-6 rounded-xl border-4 ${isPassing ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'} text-center mb-6 animate-fade-in">
             <p class="text-lg font-bold ${isPassing ? 'text-green-700' : 'text-red-700'}">${state.subjectName}</p>
             <p class="text-4xl font-extrabold mt-1 mb-2">${percentage}% de Acerto</p>
+    
             <p class="text-md text-gray-700">${correct} Acertos / ${incorrect} Erros (Total: ${total})</p>
         </div>
 
@@ -483,40 +524,43 @@ function renderReport() {
             const sub = finalReport[subjectName];
             const subPercentage = sub.total > 0 ? Math.round((sub.correct / sub.total) * 100) : 0;
             const subColor = getSubjectColor(subjectName);
+           
             const subBgClass = subColor.replace('color-', 'bg-');
             
             return `
                 <div class="mb-6 p-4 rounded-xl border-2 ${subColor} ${subBgClass}-50 animate-fade-in">
                     <h3 class="text-xl font-bold text-gray-700 mb-3">${subjectName} (${subPercentage}% de Acerto)</h3>
+                    
                     <p class="text-sm text-gray-600 mb-4">${sub.correct} Acertos / ${sub.incorrect} Erros</p>
 
                     <h4 class="font-bold text-gray-600 mb-2 border-t pt-2">Análise por Habilidade (BNCC):</h4>
                     <ul class="space-y-2 text-sm">
                         ${Object.keys(sub.details).map(skill => {
+                 
                             const detail = sub.details[skill];
                             const skillAccuracy = detail.correct + detail.incorrect > 0 ? Math.round((detail.correct / (detail.correct + detail.incorrect)) * 100) : 0;
                             const skillBg = skillAccuracy >= 70 ? 'bg-green-200' : skillAccuracy >= 50 ? 'bg-yellow-200' : 'bg-red-200';
-                            
                             return `
                                 <li class="p-2 rounded-lg ${skillBg} flex justify-between items-center">
                                     <span class="font-semibold">${skill}</span>
+                        
                                     <span class="font-bold">${skillAccuracy}% (${detail.correct}/${detail.correct + detail.incorrect})</span>
                                 </li>
                             `;
-                        }).join('')}
+ }).join('')}
                     </ul>
                 </div>
             `;
-        }).join('')}
+ }).join('')}
 
         <div class="mt-8 text-center">
-            <button onclick="state.currentStage = 1; renderApp();" 
-                class="px-6 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-blue-600 transition duration-150">
+            <button onclick="state.currentStage = 1; renderApp();"
+ class="px-6 py-3 bg-blue-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-blue-600 transition duration-150">
                 Começar Nova Revisão (Voltar ao Início)
             </button>
         </div>
     `;
-    document.getElementById('app').innerHTML = html;
+ document.getElementById('app').innerHTML = html;
 }
 
 // --- Controlador Principal (StateMachine) ---
@@ -525,40 +569,40 @@ function renderApp() {
         switch (state.currentStage) {
             case 1:
             renderSelection();
-            break;
+ break;
             // case 2 (renderTransition) foi removido
             case 3:
             renderActivity();
-            break;
+ break;
             case 4: 
             renderFeedback();
             break;
-            case 5:
+ case 5:
             renderReport(); 
             break;
-            case 6:
+ case 6:
             renderEnd(); 
             break;
-            default:
+ default:
             renderSelection();
             break;
-        }
+ }
     } catch (error) {
         // Tratamento de erro robusto
         console.error("Erro fatal na aplicação:", error);
-        document.getElementById('app').innerHTML = `
+ document.getElementById('app').innerHTML = `
             <div class="text-center p-8 bg-red-100 border-2 border-red-500 rounded-xl">
                 <h2 class="text-2xl text-red-700">Ocorreu um Erro!</h2>
                 <p class="text-gray-600">Por favor, reinicie a página.
-                Detalhes: ${error.message}. Certifique-se de que os arquivos questions_*.js existem e não estão vazios.</p>
+                Detalhes: ${error.message}. Certifique-se de que os arquivos questions_*.js existem e não estão vazios. **Verifique o console (F12) para detalhes.**</p>
 
-                <button onclick="window.location.reload();" 
-                    class="mt-4 px-6 py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-red-600 transition duration-150">
+                <button onclick="window.location.reload();"
+ class="mt-4 px-6 py-3 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-red-600 transition duration-150">
                     Recarregar Página
                 </button>
             </div>
         `;
-    }
+ }
 }
 
 // Inicia a aplicação
@@ -567,4 +611,3 @@ document.addEventListener('DOMContentLoaded', renderApp);
 
 </body>
 </html>
-
