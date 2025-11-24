@@ -76,12 +76,19 @@ const GEMINI_API_KEY = typeof _api_key !== 'undefined' ? _api_key :
 const SESSION_SIZE = 5;
 
 // --- Bancos de Questões Locais (questions_sub.js) ---
-// Esta seção está correta, mapeando as variáveis (questionBank_...)
 const localQuestionBanks = {
     math: typeof questionBank_mat !== 'undefined' ? questionBank_mat : [], 
     portuguese: typeof questionBank_lin !== 'undefined' ? questionBank_lin : [], 
     science: typeof questionBank_cie !== 'undefined' ? questionBank_cie : [], 
     history: typeof questionBank_ch !== 'undefined' ? questionBank_ch : [],
+};
+
+// Mapeamento de chaves internas para os nomes de arquivo JS para exibir no erro
+const subjectFileNames = {
+    math: 'questions_mat.js',
+    portuguese: 'questions_lin.js',
+    science: 'questions_cie.js',
+    history: 'questions_ch.js' // CORREÇÃO DA REFERÊNCIA NO ERRO
 };
 
 
@@ -176,7 +183,8 @@ function getQuestionsFromLocalBank(subjectKey) {
 
     if (totalQuestions < SESSION_SIZE) {
         // Se este erro ocorrer, significa que a variável questionBank_... não foi definida/carregada (ou está vazia)
-        throw new Error(`Banco de questões para ${subjects[subjectKey].name} insuficiente. Necessário ${SESSION_SIZE}, encontrado ${totalQuestions}. Verifique o arquivo questions_${subjectKey}.js.`);
+        const expectedFileName = subjectFileNames[subjectKey]; // Usa o nome corrigido para o erro
+        throw new Error(`Banco de questões para ${subjects[subjectKey].name} insuficiente. Necessário ${SESSION_SIZE}, encontrado ${totalQuestions}. Verifique o arquivo ${expectedFileName}.`);
     }
 
     let availableIndices = [];
